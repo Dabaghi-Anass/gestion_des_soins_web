@@ -1,0 +1,12 @@
+:root{
+    --link-clr : #216fe6;
+    --link-h-clr : #0654c9;
+}
+
+.link{
+    color : var(--link-clr);
+}
+.link:hover{
+    color : var(--link-h-clr);
+    text-decoration: underline var(--link-clr);
+}
