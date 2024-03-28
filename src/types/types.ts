@@ -7,11 +7,11 @@ export type RegisterUserFormData = {
 	[key: string]: string | undefined;
 };
 export type UserProfile = {
-	birthDate: Date;
-	phoneNumber: string;
+	birthDate?: Date;
+	phoneNumber?: string;
 	address?: string;
 	imageUrl?: string;
-	gender: string;
+	gender?: string;
 	[key : string]: any;
 };
 export type User = {

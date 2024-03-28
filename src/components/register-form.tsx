@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { z } from "zod";
 
-const NotRefinedRegisterSchema= z
+const NotRefinedRegisterSchema = z
 	.object({
 		firstName: z
 			.string()
@@ -44,23 +44,23 @@ const NotRefinedRegisterSchema= z
 		confirmPassword: z.string().nullish(),
 	})
 
-const RegisterSchema= NotRefinedRegisterSchema
+const RegisterSchema = NotRefinedRegisterSchema
 	.refine((data) => data.password === data.confirmPassword, {
 		message: "Passwords Must Match",
 		path: ["confirmPassword"],
 	})
 type Props = {
-    onNext: () => void;
+	onNext: (user: RegisterUserFormData) => void;
 };
 
-export default function RegisterForm({onNext}: Props) {
-    const [formError , setFormError] = useState<string | null>(null)
-	const [emailVerificationMessage , setEmailVerificationMessage] = useState<string>("A verification link has been sent to your email address please visit it and return")
+export default function RegisterForm({ onNext }: Props) {
+	const [formError, setFormError] = useState<string | null>(null)
+	const [emailVerificationMessage, setEmailVerificationMessage] = useState<string>("A verification link has been sent to your email address please visit it and return")
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [user, setUser] = useState<RegisterUserFormData>({});
 	const [loading, setLoading] = useState<boolean>(false);
 	const [showEmailToast, setShowEmailToast] = useState<boolean>(false);
-    const validateFields = (data: any) => {
+	const validateFields = (data: any) => {
 		setUser(data)
 		const validationObj = RegisterSchema.safeParse(data);
 		if (!validationObj.success) {
@@ -73,7 +73,7 @@ export default function RegisterForm({onNext}: Props) {
 			}
 			setErrors(errors);
 			return null;
-		}else {
+		} else {
 			setErrors({});
 			return validationObj.data;
 		}
@@ -85,17 +85,17 @@ export default function RegisterForm({onNext}: Props) {
 		userClone[name] = value;
 		setUser(userClone);
 		if (name === "confirmPassword") {
-			if(!user.password) setUser({...user, password: ""})
+			if (!user.password) setUser({ ...user, password: "" })
 			const isValid = value === user.password;
 			if (!isValid) {
-				setErrors(prev => ({...prev, [name]: "Passwords Must Match"}));
+				setErrors(prev => ({ ...prev, [name]: "Passwords Must Match" }));
 			} else {
 				const errorsCopy = { ...errors };
 				delete errorsCopy[name];
 				setErrors(errorsCopy);
 			}
 		} else {
-			const schema = NotRefinedRegisterSchema.pick({[name]: true});
+			const schema = NotRefinedRegisterSchema.pick({ [name]: true });
 			const validationObj = schema.safeParse({ [name]: value });
 			if (!validationObj.success) {
 				const errors: {
@@ -105,7 +105,7 @@ export default function RegisterForm({onNext}: Props) {
 					let path: string = error.path[0] as string;
 					errors[path] = error.message;
 				}
-				setErrors(prev => ({...prev, ...errors}));
+				setErrors(prev => ({ ...prev, ...errors }));
 			} else {
 				const errorsCopy = { ...errors };
 				delete errorsCopy[name];
@@ -114,7 +114,7 @@ export default function RegisterForm({onNext}: Props) {
 		}
 	}
 	const handleSubmit = async (data: any) => {
-		const userDetails : any = validateFields(data);
+		const userDetails: any = validateFields(data);
 		if (!userDetails) return;
 		setFormError(null)
 		setLoading(true);
@@ -131,7 +131,7 @@ export default function RegisterForm({onNext}: Props) {
 			else {
 				setFormError(response.message)
 			}
-		}catch(fetchingError : any) {
+		} catch (fetchingError: any) {
 			setFormError("An error occurred while registering Please try again Later : " + fetchingError.message)
 		}
 		setLoading(false);
@@ -146,9 +146,9 @@ export default function RegisterForm({onNext}: Props) {
 		}
 		if (!registred.done) {
 			setEmailVerificationMessage(registred.message ?? "User Not Verified")
-		} else if(registred.done){
+		} else if (registred.done) {
 			setEmailVerificationMessage(registred.message ?? "Email Verified Succefully")
-			onNext();
+			onNext(user);
 		}
 		setLoading(false);
 	}
@@ -156,20 +156,20 @@ export default function RegisterForm({onNext}: Props) {
 		<div className="w-full h-full hidden lg:flex  flex-col items-center gap-2 justify-center filter">
 			<h1 className='text-slate-800 text-2xl font-semibold'>Créer Un Compte</h1>
 			<p className='text-slate-600'>toutes vos donées sont bien securisé</p>
-			<Image src={bgImage.src} alt="register image" className=""  width={500} height={500} />
+			<Image src={bgImage.src} alt="register image" className="" width={500} height={500} />
 		</div>
-		<div className="h-screen w-full flex flex-col gap-4 items-center justify-center">
-        {formError && <div className="text-red-600 text-center py-2 px-2 w-full rounded flex items-center justify-center gap-2 text-2xl">{formError}</div>}
+		<div className="h-screen w-full flex flex-col gap-4 items-center">
+			{formError && <div className="text-red-600 text-center py-2 px-2 w-full rounded flex items-center justify-center gap-2 text-2xl">{formError}</div>}
 			<Form
 				onSubmit={handleSubmit}
-				className='flex flex-col gap-4 p-4 w-100 md:min-w-[500px] relative'>
+				className='flex flex-col gap-4 p-4 w-full max-w-xl md:min-w-[500px] relative'>
 				{loading && <Loading />}
-			{showEmailToast && <div className="absolute text-green-600 bg-primary-foreground text-center py-2 px-2 w-full rounded text-sm flex flex-col items-center justify-center gap-4 inset-0 border border-green-600 font-bold z-0">{emailVerificationMessage}
-			<Button onClick={handleConfirmEmail} type='button' className="text-sm" variant="outline">I confirmed My Email</Button>
-			<Button onClick={() => {
-				setShowEmailToast(false)
-			}} className="text-sm" variant="secondary" type='reset'>Cancel</Button>
-			</div>}
+				{showEmailToast && <div className="absolute text-green-600 bg-primary-foreground text-center py-2 px-2 w-full rounded text-sm flex flex-col items-center justify-center gap-4 inset-0 border border-green-600 font-bold z-0">{emailVerificationMessage}
+					<Button onClick={handleConfirmEmail} type='button' className="text-sm" variant="outline">I confirmed My Email</Button>
+					<Button onClick={() => {
+						setShowEmailToast(false)
+					}} className="text-sm" variant="secondary" type='reset'>Cancel</Button>
+				</div>}
 				<Form.Input
 					onChange={validateField}
 					error={errors.firstName}
@@ -199,7 +199,7 @@ export default function RegisterForm({onNext}: Props) {
 					type='password'
 					label="Password"
 					placeholder='enter your password'
-					/>
+				/>
 				<Form.Input
 					onChange={validateField}
 					error={errors.confirmPassword}
@@ -214,6 +214,6 @@ export default function RegisterForm({onNext}: Props) {
 					<Link className="link text-sm" href="/">go to login page</Link>
 				</div>
 			</Form>
-    </div>
+		</div>
 	</section>
 }

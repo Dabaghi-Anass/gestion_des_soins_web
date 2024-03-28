@@ -1,9 +1,10 @@
 "use client";
 import ProfileForm from "@/components/finalize-profile";
+import ProfileImageSelect from "@/components/image-select-form";
 import RegisterForm from "@/components/register-form";
-import { Progress } from "@/components/ui/progress";
+import { StepProgress } from "@/components/ui/progress-steps";
 import UserTypeSelector from "@/components/user-type-selector";
-import { Role, User } from "@/types/types";
+import { RegisterUserFormData, Role, User, UserProfile } from "@/types/types";
 import { useState } from "react";
 import { toast } from "sonner";
 export default function RegisterPage() {
@@ -19,24 +20,40 @@ export default function RegisterPage() {
 		})
 	}
 	const components = [
-		<RegisterForm onNext={() => {
-			handleNext("Account Created", "Account has been created and verified successfully")
+		<RegisterForm onNext={(userData: RegisterUserFormData) => {
+			if (!userData || !user) return;
+			setUser({ ...user, ...userData });
+			handleNext("Account Created", "Account has been created and verified successfully");
 		}} />,
 		<UserTypeSelector
 			onNext={(role: Role | undefined) => {
 				if (!user || !role) return;
 				setUser({ ...user, role: role.toString() })
-				setCurrentComponentIndex(2)
+				setCurrentComponentIndex(p => p + 1)
 			}}
 			onBack={() => setCurrentComponentIndex(p => p - 1)}
 		/>,
-		<ProfileForm onNext={() => { }} onBack={() => { }} />
+		<ProfileForm onNext={(profile: UserProfile) => {
+			if (!user) return;
+			setUser({ ...user, profile })
+			handleNext("Profile Update", "Profile updated successfully")
+		}} onBack={() => {
+			setCurrentComponentIndex(p => p - 1)
+		}} />,
+		<ProfileImageSelect gender={true} onNext={(imageUrl) => {
+			if (!user) return;
+			const profile = { ...user.profile, imageUrl }
+			setUser({ ...user, profile })
+			handleSubmitUser();
+		}} onBack={() => {
+			setCurrentComponentIndex(p => p - 1)
+		}} />,
 	]
+	function handleSubmitUser() {
+		console.log(user)
+	}
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50'>
-		<div className="flex gap-4 w-[800px] p-8 items-center">
-			<Progress value={(currentComponentIndex / components.length) * 100} />
-			<span className="w-[100px] font-bold text-slate-500">{currentComponentIndex} / {components.length}</span>
-		</div>
-		{components[currentComponentIndex]}
+		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
+		{components[currentComponentIndex - 1]}
 	</main>;
 }

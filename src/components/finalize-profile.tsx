@@ -29,7 +29,7 @@ const RegisterSchema = z
 
 {/* <img src="https://flagsapi.com/BE/flat/64.png"> */ }
 type Props = {
-  onNext: () => void;
+  onNext: (profile: UserProfile) => void;
   onBack: () => void;
 }
 export default function ProfileForm({ onNext, onBack }: Props) {
@@ -105,13 +105,15 @@ export default function ProfileForm({ onNext, onBack }: Props) {
     //   setFormError("An error occurred while registering Please try again Later : " + fetchingError.message)
     // }
     // setLoading(false);
+    onNext(profile);
   };
-  return <section className="flex justify-between w-full">
-    <div className="h-screen w-full flex flex-col gap-4 items-center justify-center">
+  return <section className="flex flex-col items-center w-full">
+    <h1 className="md:text-3xl mb-8">Dites-nous en plus à propos de vous</h1>
+    <div className="h-screen w-full flex flex-col gap-4 items-center">
       {formError && <div className="text-red-600 text-center py-2 px-2 w-full rounded flex items-center justify-center gap-2 text-2xl">{formError}</div>}
       <Form
         onSubmit={handleSubmit}
-        className='flex flex-col gap-4 p-4 w-100 md:min-w-[500px] relative'>
+        className='flex flex-col gap-4 px-4 w-full max-w-xl md:min-w-[500px] relative'>
         {loading && <Loading />}
         <Form.Input
           onChange={validateField}
@@ -128,7 +130,10 @@ export default function ProfileForm({ onNext, onBack }: Props) {
           placeholder='entrer votre address'
         />
         <Label className="text-slate-400">Sexe</Label>
-        <Select>
+        <Select onValueChange={(value) => {
+          const profileClone = { ...profile, gender: value };
+          setProfile(profileClone);
+        }}>
           <SelectTrigger>
             <SelectValue placeholder="choisie votre sexe" />
           </SelectTrigger>
@@ -139,7 +144,8 @@ export default function ProfileForm({ onNext, onBack }: Props) {
         </Select>
         <Label className="text-slate-400">Birth Date</Label>
         <DatePicker onPickDate={console.log} />
-        <Form.Button disabled={Object.keys(errors).length > 0}>Save Profile</Form.Button>
+        <Form.Button onClick={handleSubmit} disabled={Object.keys(errors).length > 0}>Save Profile</Form.Button>
+        <Form.Button onClick={onBack} variant="outline">retourne</Form.Button>
       </Form>
     </div>
   </section >
