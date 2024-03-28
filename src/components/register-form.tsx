@@ -1,6 +1,6 @@
 "use client";
 import api from '@/api/api';
-import bgImage from "@/assets/images/Mobile.svg";
+import bgImage from "@/assets/svgs/people.svg";
 import Form from "@/components/form";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/ui/loading";
@@ -152,9 +152,9 @@ export default function RegisterForm({onNext}: Props) {
 		setLoading(false);
 	}
 	return <section className="flex justify-between w-full">
-		<div className="w-full h-full hidden lg:flex  flex-col items-center gap-2 justify-center filter hue-rotate-[140deg]">
+		<div className="w-full h-full hidden lg:flex  flex-col items-center gap-2 justify-center filter">
 			<h1 className='text-slate-800 text-2xl font-semibold'>Créer Un Compte</h1>
-			<p className='text-slate-600 mb-8'>toutes vos donées sont bien securisé</p>
+			<p className='text-slate-600'>toutes vos donées sont bien securisé</p>
 			<Image src={bgImage.src} alt="register image" className=""  width={500} height={500} />
 		</div>
 		<div className="h-screen w-full flex flex-col gap-4 items-center justify-center">

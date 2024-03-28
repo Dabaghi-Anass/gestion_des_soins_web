@@ -1,14 +1,14 @@
 :root{
-    --link-clr : #216fe6;
-    --link-h-clr : #0654c9;
+    --primary-clr : #216fe6;
+    --primary-clr-dark : #0654c9;
 }
 
 .link{
-    color : var(--link-clr);
+    color : var(--primary-clr);
 }
 .link:hover{
-    color : var(--link-h-clr);
-    text-decoration: underline var(--link-clr);
+    color : var(--primary-clr-dark);
+    text-decoration: underline var(--primary-clr-dark);
 }
 
 /* custom scrollbar */
@@ -28,29 +28,34 @@
 /* Handle */
 
 ::-webkit-scrollbar-thumb {
-    background: #216fe6;
+    background: var(--primary-clr);
 }
 
 /* Handle on hover */
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #0654c9;
+    background: var(--primary-clr-dark);
+}
+.user-type-container{
+    overflow: hidden;
 }
 .role-image-overlay{
-    background: linear-gradient(rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(var(--primary-clr-dark) , var(--primary-clr));
     position: absolute;
     inset: 0;
+    height : 50%;
+    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
     font-size: 1.5rem;
-    opacity: 0;
-    transition: opacity 0.3s;
+    transition: transform 0.3s;
+    transform: translateY(200%);
 }
-.role-image-overlay:hover , .role-image-overlay:focus{
-    opacity: 1;
+:is(.user-type-container:hover,.user-type-container:focus) > .role-image-overlay {
+    transform: translateY(100%);
 }
 .aria-selected .role-image-overlay{
-    opacity: 1;
+    transform: translateY(100%);
 }
