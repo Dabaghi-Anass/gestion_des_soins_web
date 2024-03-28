@@ -1,9 +1,34 @@
-import axios from "axios";
 const http = {
-    get: axios.get,
-    post: axios.post,
-    put: axios.put,
-    delete: axios.delete,
+    get: (url: string) => fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-auth": localStorage.getItem("x-auth") || ""
+        }
+    }),
+    post: (url: string, body: any) => fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-auth": localStorage.getItem("x-auth") || ""
+        },
+        body: JSON.stringify(body)
+    }),
+    put: (url: string, body: any) => fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-auth": localStorage.getItem("x-auth") || ""
+        },
+        body: JSON.stringify(body)
+    }).then(res => res.json()),
+    delete: (url: string) => fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-auth": localStorage.getItem("x-auth") || ""
+        }
+    }),
 }
 
 

@@ -10,3 +10,47 @@
     color : var(--link-h-clr);
     text-decoration: underline var(--link-clr);
 }
+
+/* custom scrollbar */
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    background: #216fe6;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0654c9;
+}
+.role-image-overlay{
+    background: linear-gradient(rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.role-image-overlay:hover , .role-image-overlay:focus{
+    opacity: 1;
+}
+.aria-selected .role-image-overlay{
+    opacity: 1;
+}
