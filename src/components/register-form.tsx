@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { z } from "zod";
+
 const NotRefinedRegisterSchema= z
 	.object({
 		firstName: z

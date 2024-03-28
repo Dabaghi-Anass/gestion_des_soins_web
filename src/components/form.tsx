@@ -34,10 +34,10 @@ function Form({ children, onSubmit, ...props }: FormProps) {
 	);
 }
 
-function FormInput({ name, error ,label ,...props }: FormInputProps) {
+function FormInput({ name, error, label, ...props }: FormInputProps) {
 	const { register } = useFormContext();
 	return <div>
-		{label && <Label className="pb-4 block text-gray-400" htmlFor={name}>{label}</Label> }
+		{label && <Label className="pb-4 block text-slate-400" htmlFor={name}>{label}</Label>}
 		<Input {...register(name)} {...props} />
 		{error && <FormErrorMessage>{error}</FormErrorMessage>}
 	</div>;
@@ -73,7 +73,7 @@ function FormErrorMessage(props: React.PropsWithChildren<{}>) {
 	return (
 		<div className="text-red-900 bg-red-100 py-2 px-2 rounded text-sm flex items-center gap-2 w-full max-w-full">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-6 h-6 ${props.className}`}>
-  				<path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+				<path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
 			</svg>
 			<div className="break-words text-wrap max-w-[300px] truncate text-ellipsis">{props.children}</div>
 		</div>

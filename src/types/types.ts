@@ -7,13 +7,12 @@ export type RegisterUserFormData = {
 	[key: string]: string | undefined;
 };
 export type UserProfile = {
-	firstName: string;
-	lastName: string;
-	birthDate: string;
+	birthDate: Date;
 	phoneNumber: string;
 	address?: string;
 	imageUrl?: string;
 	gender: string;
+	[key : string]: any;
 };
 export type User = {
 	firstName?: string;
@@ -24,10 +23,10 @@ export type User = {
 	profile?: UserProfile;
 };
 export enum Role {
-  Doctor = "DOCTOR",
+	Doctor = "DOCTOR",
   Nurse = "NURSE",
   CareGiver = "CAREGIVER",
   Companion = "COMPANION",
 }
 
-
+export type RegisterProfileFormData = UserProfile;
