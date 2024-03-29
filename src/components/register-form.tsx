@@ -125,14 +125,15 @@ export default function RegisterForm({ onNext }: Props) {
 		try {
 			const response = await api.registerUser(userDetails as User);
 			if (response.done) {
-				setShowEmailToast(true)
+				setShowEmailToast(p => true)
 				localStorage.setItem("x-auth", response.token);
-			}
-			else {
+				setUser(prev => ({ ...prev, ...response.user }));
+			} else {
 				setFormError(response.message)
 			}
 		} catch (fetchingError: any) {
-			setFormError("An error occurred while registering Please try again Later : " + fetchingError.message)
+			console.log(fetchingError.message)
+			setFormError("An error occurred while registering Please try again Later")
 		}
 		setLoading(false);
 	};
@@ -166,9 +167,6 @@ export default function RegisterForm({ onNext }: Props) {
 				{loading && <Loading />}
 				{showEmailToast && <div className="absolute text-green-600 bg-primary-foreground text-center py-2 px-2 w-full rounded text-sm flex flex-col items-center justify-center gap-4 inset-0 border border-green-600 font-bold z-0">{emailVerificationMessage}
 					<Button onClick={handleConfirmEmail} type='button' className="text-sm" variant="outline">I confirmed My Email</Button>
-					<Button onClick={() => {
-						setShowEmailToast(false)
-					}} className="text-sm" variant="secondary" type='reset'>Cancel</Button>
 				</div>}
 				<Form.Input
 					onChange={validateField}

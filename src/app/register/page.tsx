@@ -1,14 +1,18 @@
 "use client";
+import api from "@/api/api";
 import ProfileForm from "@/components/finalize-profile";
 import ProfileImageSelect from "@/components/image-select-form";
 import RegisterForm from "@/components/register-form";
+import Loading from "@/components/ui/loading";
 import { StepProgress } from "@/components/ui/progress-steps";
 import UserTypeSelector from "@/components/user-type-selector";
 import { RegisterUserFormData, Role, User, UserProfile } from "@/types/types";
+import { Eraser } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 export default function RegisterPage() {
-	const [currentComponentIndex, setCurrentComponentIndex] = useState<number>(1);
+	const [currentComponentIndex, setCurrentComponentIndex] = useState<number>(1); //starts from 1
+	const [loading, setLoading] = useState<boolean>(false);
 	const [user, setUser] = useState<User | null>({
 		username: "",
 		password: "",
@@ -49,11 +53,24 @@ export default function RegisterPage() {
 			setCurrentComponentIndex(p => p - 1)
 		}} />,
 	]
-	function handleSubmitUser() {
-		console.log(user)
+	async function handleSubmitUser() {
+		setLoading(true)
+		if (!user) return;
+		const userFromDb: any = await api.saveUserWithProfile(user);
+		if (userFromDb != null) {
+			setUser({ ...userFromDb });
+			window.location.replace("/")
+		} else {
+			toast("Profile Update Failed", {
+				description: "Profile update failed please try again later",
+				icon: <Eraser />
+			});
+		}
+		setLoading(false)
 	}
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
+		{loading && <Loading />}
 		{components[currentComponentIndex - 1]}
 	</main>;
 }

@@ -55,7 +55,10 @@ export default function ProfileImageSelect({ onNext, onBack, gender }: Props) {
         <div className="button-group flex gap-4 w-full justify-center">
           <Form.Button variant="outline" onClick={onBack}>retourne</Form.Button>
           <Form.Button onClick={handleSubmit}>Save Image</Form.Button>
-          <Form.Button variant="outline" onClick={() => onNext(image)}>Je Prefer pas</Form.Button>
+          <Form.Button variant="outline" onClick={() => {
+            const image = gender ? defaultUserImageMale.src : defaultUserImageFemale.src;
+            onNext(image)
+          }}>Je Prefer pas</Form.Button>
         </div>
       </Form>
     </div>

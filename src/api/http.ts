@@ -2,7 +2,6 @@ const http = {
     get: (url: string) => fetch(url, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
             "x-auth": localStorage.getItem("x-auth") || ""
         }
     }),

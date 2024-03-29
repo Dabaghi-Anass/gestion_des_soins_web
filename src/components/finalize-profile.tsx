@@ -138,8 +138,8 @@ export default function ProfileForm({ onNext, onBack }: Props) {
             <SelectValue placeholder="choisie votre sexe" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="male">👨‍⚕️ Homme</SelectItem>
-            <SelectItem value="female">👩‍⚕️ Femme</SelectItem>
+            <SelectItem value="MALE">👨‍⚕️ Homme</SelectItem>
+            <SelectItem value="FEMALE">👩‍⚕️ Femme</SelectItem>
           </SelectContent>
         </Select>
         <Label className="text-slate-400">Birth Date</Label>

@@ -21,6 +21,7 @@ export type User = {
 	password: string | null;
 	role?: string;
 	profile?: UserProfile;
+	uid?: string;
 };
 export enum Role {
 	Doctor = "DOCTOR",
