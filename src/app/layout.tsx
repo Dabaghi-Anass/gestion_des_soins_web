@@ -1,3 +1,4 @@
+import NavBar from "@/components/navbar";
 import { Toaster } from "@/components/ui/sonner";
 import "@/styles/index.css";
 import type { Metadata } from "next";
@@ -13,10 +14,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+
   return (
     <html lang="en">
       <body className={inter.className}>
+        <NavBar />
         <Toaster />
         {children}
       </body>

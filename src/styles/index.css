@@ -68,3 +68,29 @@
 .progress-bar-container{
     width : min(700px , 100%);
 }
+.nav-link{
+    position: relative;
+}
+.nav-link::after{
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background: var(--primary-clr);
+    bottom: 0;
+    left: 0;
+    transform: translateY(120%);
+    transition: width 0.2s ease-in-out;
+}
+.nav-link:hover::after{
+    width: 100%;
+}
+.only-md-screen{
+    @apply hidden md:flex
+}
+.only-small-screen{
+    @apply block md:hidden
+}
+.only-lg-screen{
+    @apply hidden lg:flex
+}
