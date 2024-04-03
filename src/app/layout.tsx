@@ -2,6 +2,7 @@ import NavBar from "@/components/navbar";
 import SideNav from "@/components/side-nav";
 import { Toaster } from "@/components/ui/sonner";
 import StoreProvider from "@/lib/storeProvider";
+import { cn } from "@/lib/utils";
 import "@/styles/index.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -18,12 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={cn(inter.className, "max-h-screen")}>
         <StoreProvider>
-          <NavBar />
+          <SideNav />
           <Toaster />
-          <div className="flex w-full h-full">
-            <SideNav />
+          <div className="flex flex-col w-full h-full">
+            <NavBar />
             <main className="main-content">
               {children}
             </main>

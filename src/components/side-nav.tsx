@@ -1,34 +1,54 @@
-
 "use client"
+import { AppLogo } from "@/components/logo";
 import WithToolTip from "@/components/ui/with-tooltip";
-import { Activity, FileText, Home, MessageCircle } from "lucide-react";
+import { Activity, ArrowLeft, ArrowRight, Home, Sheet } from "lucide-react";
 import Link from 'next/link';
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Button } from "./ui/button";
 export default function SideNav() {
-  const [open, setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(true)
   const path = usePathname();
   const authPage = path === "/login" || path === "/register";
   if (authPage) return null;
-  return <aside className={`bg-white border-r border-gray-200 ${open ? "w-[300px]" : "w-[68px]"} h-full`}>
-    <nav className="flex flex-col gap-6 px-4 py-8">
+  return <aside className={`side-nav bg-white border-r border-gray-200 ${open ? "w-[200px]" : "w-[68px]"} transition-all duration-300 h-full relative`}>
+    <Button className="open-aside-btn w-8 p-2 rounded-full" variant="outline" onClick={() => setOpen(!open)}>
+      {open ? <ArrowLeft color="#888" /> : <ArrowRight color="#888" />}
+    </Button>
+    <nav className="flex flex-col gap-6 p-4">
+      <Link href="/">
+        <AppLogo navOpen={open} />
+      </Link>
       <Link href="/">
         <WithToolTip description="home">
-          <Home className="text-gray-400 hover:text-primary transition duration-300" />
+          <div className="mt-8 nav-link flex gap-4 items-center text-gray-400 hover:text-primary transition duration-300">
+            <Home />
+            {open && <div>home</div>}
+          </div>
         </WithToolTip>
       </Link>
-      <Link href="/doctors"><WithToolTip description="home">
-        <Activity className="text-gray-400 hover:text-primary transition duration-300" />
-      </WithToolTip>
-      </Link>
-      <Link href="/requests">
-        <WithToolTip description="home">
-          <MessageCircle className="text-gray-400 hover:text-primary transition duration-300" />
+      <Link href="/">
+        <WithToolTip description="activity">
+          <div className="nav-link flex gap-4 items-center text-gray-400 hover:text-primary transition duration-300">
+            <Activity />
+            {open && <div>Activity</div>}
+          </div>
         </WithToolTip>
       </Link>
-      <Link href="/documents">
+      <Link href="/">
         <WithToolTip description="home">
-          <FileText className="text-gray-400 hover:text-primary transition duration-300" />
+          <div className="nav-link flex gap-4 items-center text-gray-400 hover:text-primary transition duration-300">
+            <Sheet />
+            {open && <div>home</div>}
+          </div>
+        </WithToolTip>
+      </Link>
+      <Link href="/">
+        <WithToolTip description="home">
+          <div className="nav-link flex gap-4 items-center text-gray-400 hover:text-primary transition duration-300">
+            <Home />
+            {open && <div>home</div>}
+          </div>
         </WithToolTip>
       </Link>
     </nav>

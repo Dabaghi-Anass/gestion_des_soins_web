@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 export default function RegisterPage() {
 	const router = useRouter()
-	const [currentComponentIndex, setCurrentComponentIndex] = useState<number>(1); //starts from 1
+	const [currentComponentIndex, setCurrentComponentIndex] = useState<number>(0); //starts from 1
 	const [loading, setLoading] = useState<boolean>(false);
 	const currentUser = useAppSelector((state: any) => state.UserReducer);
 	const [user, setUser] = useState<User | null>(null);
@@ -90,7 +90,10 @@ export default function RegisterPage() {
 		setLoading(false)
 	}
 	useEffect(() => {
-		if (!user) return;
+		if (!user) {
+			setCurrentComponentIndex(1)
+			return;
+		}
 		else if (!user.role) {
 			setCurrentComponentIndex(2)
 			return
@@ -104,10 +107,10 @@ export default function RegisterPage() {
 			return
 		}
 		router.replace("/")
-	}, [currentUser])
+	}, [user])
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-white'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}
-		{components[currentComponentIndex - 1]}
+		{currentComponentIndex !== 0 && components[currentComponentIndex - 1]}
 	</main>;
 }
