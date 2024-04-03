@@ -84,30 +84,9 @@ export default function ProfileForm({ onNext, onBack }: Props) {
     }
   }
   const handleSubmit = async (data: any) => {
-    // const userDetails: any = validateFields(data);
-    // if (!userDetails) return;
-    // setFormError(null)
-    // setLoading(true);
-    // delete userDetails.confirmPassword;
-    // userDetails.username = userDetails?.username?.trim();
-    // userDetails.firstName = userDetails?.firstName?.trim();
-    // userDetails.lastName = userDetails?.lastName?.trim();
-    // try {
-    //   const response = await api.registerUser(userDetails as User);
-    //   if (response.done) {
-    //     setShowEmailToast(true)
-    //     localStorage.setItem("x-auth", response.token);
-    //   }
-    //   else {
-    //     setFormError(response.message)
-    //   }
-    // } catch (fetchingError: any) {
-    //   setFormError("An error occurred while registering Please try again Later : " + fetchingError.message)
-    // }
-    // setLoading(false);
     onNext(profile);
   };
-  return <section className="flex flex-col items-center w-full">
+  return <section className="flex flex-col items-center w-full bg-white">
     <h1 className="md:text-3xl mb-8">Dites-nous en plus à propos de vous</h1>
     <div className="h-screen w-full flex flex-col gap-4 items-center">
       {formError && <div className="text-red-600 text-center py-2 px-2 w-full rounded flex items-center justify-center gap-2 text-2xl">{formError}</div>}

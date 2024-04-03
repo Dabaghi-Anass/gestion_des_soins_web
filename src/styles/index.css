@@ -1,3 +1,21 @@
+html,body{
+    height: 100%;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+main.main-content{
+    width: 100%;
+    height: 100%;
+    @apply bg-slate-100;
+    overflow-y: scroll;
+}
 :root{
     --primary-clr : #216fe6;
     --primary-clr-dark : #0654c9;
@@ -15,30 +33,16 @@
     color : var(--primary-clr-dark);
     text-decoration: underline var(--primary-clr-dark);
 }
-
-/* custom scrollbar */
-
-/* width */
-
-::-webkit-scrollbar {
-    width: 10px;
+*::-webkit-scrollbar {
+    width: 5px;
 }
-
-/* Track */
-
-::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
     @apply bg-gray-100;
 }
-
-/* Handle */
-
-::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
     background: var(--primary-clr);
 }
-
-/* Handle on hover */
-
-::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
     background: var(--primary-clr-dark);
 }
 .user-type-container{
@@ -93,4 +97,8 @@
 }
 .only-lg-screen{
     @apply hidden lg:flex
+}
+
+.nav-user-name-displayer{
+    font-size: 12px;
 }

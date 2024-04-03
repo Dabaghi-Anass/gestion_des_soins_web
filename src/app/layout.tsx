@@ -1,5 +1,7 @@
 import NavBar from "@/components/navbar";
+import SideNav from "@/components/side-nav";
 import { Toaster } from "@/components/ui/sonner";
+import StoreProvider from "@/lib/storeProvider";
 import "@/styles/index.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -14,13 +16,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NavBar />
-        <Toaster />
-        {children}
+        <StoreProvider>
+          <NavBar />
+          <Toaster />
+          <div className="flex w-full h-full">
+            <SideNav />
+            <main className="main-content">
+              {children}
+            </main>
+          </div>
+        </StoreProvider>
       </body>
     </html>
   );

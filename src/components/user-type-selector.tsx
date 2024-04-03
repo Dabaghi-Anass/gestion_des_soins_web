@@ -15,9 +15,9 @@ type Props = {
 export default function UserTypeSelector({ onBack, onNext }: Props) {
   const [selectedRole, setSelectedRole] = useState<Role>();
   return (
-    <div className="w-full h-full flex flex-col items-center p-4">
+    <div className="w-full h-full flex flex-col items-center p-4 bg-white">
       <h1 className="text-4xl text-slate-800 font-semibold">t'est un ?</h1>
-      <div className="roleImagesContainer grid grid-cols-1 place-items-center gap-4 md:grid-cols-2 md:w-1/2 aspect-square rounded-lg my-8 w-full">
+      <div className="roleImagesContainer grid grid-cols-1 place-items-center gap-4 md:grid-cols-2 md:w-1/2 rounded-lg my-8 w-full">
         <div
           className={`user-type-container relative w-full flex items-center justify-center p-4 border border-primary rounded ${selectedRole === Role.Nurse ? "aria-selected" : ""
             }`}

@@ -6,17 +6,18 @@ import RegisterForm from "@/components/register-form";
 import Loading from "@/components/ui/loading";
 import { StepProgress } from "@/components/ui/progress-steps";
 import UserTypeSelector from "@/components/user-type-selector";
+import { useAppSelector } from "@/hooks/redux-hooks";
 import { RegisterUserFormData, Role, User, UserProfile } from "@/types/types";
-import { Eraser } from "lucide-react";
-import { useState } from "react";
+import { OctagonAlert } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 export default function RegisterPage() {
+	const router = useRouter()
 	const [currentComponentIndex, setCurrentComponentIndex] = useState<number>(1); //starts from 1
 	const [loading, setLoading] = useState<boolean>(false);
-	const [user, setUser] = useState<User | null>({
-		username: "",
-		password: "",
-	});
+	const currentUser = useAppSelector((state: any) => state.UserReducer);
+	const [user, setUser] = useState<User | null>(null);
 	function handleNext(summary: string, message: string) {
 		setCurrentComponentIndex((prev) => prev + 1);
 		toast(summary, {
@@ -25,8 +26,8 @@ export default function RegisterPage() {
 	}
 	const components = [
 		<RegisterForm onNext={(userData: RegisterUserFormData) => {
-			if (!userData || !user) return;
-			setUser({ ...user, ...userData });
+			if (!userData) return;
+			setUser(userData as User);
 			handleNext("Account Created", "Account has been created and verified successfully");
 		}} />,
 		<UserTypeSelector
@@ -37,9 +38,10 @@ export default function RegisterPage() {
 			}}
 			onBack={() => setCurrentComponentIndex(p => p - 1)}
 		/>,
-		<ProfileForm onNext={(profile: UserProfile) => {
+		<ProfileForm onNext={async (profile: UserProfile) => {
 			if (!user) return;
 			setUser({ ...user, profile })
+			await handleUpdateProfile();
 			handleNext("Profile Update", "Profile updated successfully")
 		}} onBack={() => {
 			setCurrentComponentIndex(p => p - 1)
@@ -56,19 +58,54 @@ export default function RegisterPage() {
 	async function handleSubmitUser() {
 		setLoading(true)
 		if (!user) return;
-		const userFromDb: any = await api.saveUserWithProfile(user);
+		//pick the profile and uid and role from user and then submit them
+		const { profile, uid, role } = user;
+		const userFromDb: any = await api.saveUserWithProfile({ profile, uid, role });
 		if (userFromDb != null) {
 			setUser({ ...userFromDb });
 			window.location.replace("/")
 		} else {
 			toast("Profile Update Failed", {
 				description: "Profile update failed please try again later",
-				icon: <Eraser />
+				icon: <OctagonAlert />
+			});
+		}
+
+		setLoading(false)
+	}
+	async function handleUpdateProfile() {
+		setLoading(true)
+		if (!user) return;
+		//pick the profile and uid and role from user and then submit them
+		const { profile, uid, role } = user;
+		const userFromDb: any = await api.saveUserWithProfile({ profile, uid, role });
+		if (userFromDb != null) {
+			setUser({ ...userFromDb });
+		} else {
+			toast("Profile Update Failed", {
+				description: "Profile update failed please try again later",
+				icon: <OctagonAlert />
 			});
 		}
 		setLoading(false)
 	}
-	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50'>
+	useEffect(() => {
+		if (!user) return;
+		else if (!user.role) {
+			setCurrentComponentIndex(2)
+			return
+		}
+		else if (!user.profile) {
+			setCurrentComponentIndex(3)
+			return
+		}
+		else if (!user.profile.imageUrl) {
+			setCurrentComponentIndex(4)
+			return
+		}
+		router.replace("/")
+	}, [currentUser])
+	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-white'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}
 		{components[currentComponentIndex - 1]}

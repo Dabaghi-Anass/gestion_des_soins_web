@@ -19,7 +19,7 @@ export default function ProfileImageSelect({ onNext, onBack, gender }: Props) {
   const handleSubmit = async () => {
     setFormError(null)
     setLoading(true);
-    onNext(image);
+    await onNext(image);
     setLoading(false);
   };
   const handlePickImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +37,7 @@ export default function ProfileImageSelect({ onNext, onBack, gender }: Props) {
       setImage(defaultUserImageFemale.src)
     }
   }, [gender])
-  return <section className="flex flex-col items-center w-full">
+  return <section className="flex flex-col items-center w-full bg-white">
     <h1 className="md:text-3xl">selectioner une image</h1>
     <div className="h-screen w-full flex flex-col gap-4 items-center">
       {formError && <div className="text-red-600 text-center py-2 px-2 w-full rounded flex items-center justify-center gap-2 text-2xl">{formError}</div>}

@@ -18,20 +18,34 @@ const queries = {
             return null;
         }
     },
+    logout: async () => {
+        try {
+            return await http.get(`${AUTH_URL}/logout`);
+        } catch (e : any) {
+            return null;
+        }
+    },
     loginUser: async (user: User) => {
-        const response = await http.post(`${AUTH_URL}/login`, user);
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            // throw new Error(response.text());
+        try {
+            const response = await http.post(`${AUTH_URL}/login`, user);
+            if (response.status === 200){
+                const json : any = await response.json();
+                return { ...json, token: response.headers.get("x-auth") , done : true};
+            }
+            else if(response.status === 400)
+                return {message : "Invalid Username / Password" , done : false};
+        } catch (e: any) {
+            console.log(e.message)
+            return null;
         }
     },
     currentUser: async () => {
         try {
             const response = await http.get(`${AUTH_URL}/current-user`);
-            if (response.status === 400) {
+            if (response.status === 200) {
+                return response.json();
             }
-            return response.json();
+            return null;
         } catch (e : any) {
             return null;
         }
@@ -66,7 +80,11 @@ const queries = {
             return null;
         }
     },
-    saveUserWithProfile: async (user: User) => {
+    saveUserWithProfile: async (user: {
+        profile: UserProfile | undefined,
+        uid: number | undefined;
+        role: string | undefined;
+    }) => {
         try {
             const response = await http.put(`${AUTH_URL}/user/createWithProfile`, user);
             // console.log(response)
