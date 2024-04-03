@@ -42,7 +42,7 @@ export default function NavBar() {
           {darkMode ? <Sun color='#fff' /> : <Moon color='#aaa' />}
         </Button>
         <Bell color="#aaa" />
-        <div className={`${darkMode ? "bg-slate-700" : "bg-slate-200"} w-[1px] self-stretch`}></div>
+        <div className="dark:bg-slate-700 bg-slate-200 w-[1px] self-stretch"></div>
         <div className="flex items-center py-3 gap-4 text-secondary-foreground">
           <UserProfileBadge lastLogin={lastLogin || 0} onLogout={logout} user={user} className="only-md-screen" />
           <div className="nav-user-name-displayer flex flex-col items-start">
