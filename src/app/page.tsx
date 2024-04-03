@@ -1,7 +1,7 @@
 export default function Home() {
 
 	return (
-		<div className='p-4' >
+		<div className='p-4 text-pretty' >
 			Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deleniti, vitae doloremque rerum voluptatem cum officiis vero dicta ducimus rem praesentium eos iusto exercitationem saepe veniam totam ad. Facere, sit eos!
 			Tenetur, cupiditate. Architecto eaque quisquam tempora vero quos a obcaecati? Ea quis illo enim, nostrum possimus temporibus iusto labore dignissimos molestiae saepe fuga ducimus, soluta quas, culpa facere voluptatibus id.
 			Consequatur vitae pariatur, perspiciatis cum quibusdam dignissimos esse maxime quae ducimus excepturi cumque amet libero ex omnis, tenetur odio! Maxime illum excepturi officiis corporis. Exercitationem aliquid atque ducimus vitae ea!

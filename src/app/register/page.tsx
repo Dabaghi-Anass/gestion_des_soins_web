@@ -94,21 +94,9 @@ export default function RegisterPage() {
 			setCurrentComponentIndex(1)
 			return;
 		}
-		else if (!user.role) {
-			setCurrentComponentIndex(2)
-			return
-		}
-		else if (!user.profile) {
-			setCurrentComponentIndex(3)
-			return
-		}
-		else if (!user.profile.imageUrl) {
-			setCurrentComponentIndex(4)
-			return
-		}
 		router.replace("/")
 	}, [user])
-	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-white'>
+	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-foreground'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}
 		{currentComponentIndex !== 0 && components[currentComponentIndex - 1]}

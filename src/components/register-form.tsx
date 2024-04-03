@@ -161,14 +161,14 @@ export default function RegisterForm({ onNext }: Props) {
 		if (!currentUser.isVerified) setShowEmailToast(true);
 		else onNext(currentUser);
 	}, [currentUser])
-	return <section className="flex justify-between w-full bg-white">
+	return <section className="flex justify-between w-full ">
 		<div className="w-full h-full hidden lg:flex  flex-col items-center gap-2 justify-center filter">
 			<h1 className='text-slate-800 text-2xl font-semibold'>Créer Un Compte</h1>
 			<p className='text-slate-600'>toutes vos donées sont bien securisé</p>
 			<Image src={bgImage.src} alt="register image" className="" width={500} height={500} />
 		</div>
 		<div className="h-screen w-full flex flex-col gap-4 items-center">
-			{formError && <div className="text-red-600 text-center py-2 px-2 w-full rounded flex items-center justify-center gap-2 text-2xl">{formError}</div>}
+			{formError && <div className="form-error">{formError}</div>}
 			<Form
 				onSubmit={handleSubmit}
 				className='flex flex-col gap-4 p-4 w-full max-w-xl md:min-w-[500px] relative'>

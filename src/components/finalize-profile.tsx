@@ -86,10 +86,10 @@ export default function ProfileForm({ onNext, onBack }: Props) {
   const handleSubmit = async (data: any) => {
     onNext(profile);
   };
-  return <section className="flex flex-col items-center w-full bg-white">
+  return <section className="flex flex-col items-center w-full ">
     <h1 className="md:text-3xl mb-8">Dites-nous en plus à propos de vous</h1>
     <div className="h-screen w-full flex flex-col gap-4 items-center">
-      {formError && <div className="text-red-600 text-center py-2 px-2 w-full rounded flex items-center justify-center gap-2 text-2xl">{formError}</div>}
+      {formError && <div className="form-error">{formError}</div>}
       <Form
         onSubmit={handleSubmit}
         className='flex flex-col gap-4 px-4 w-full max-w-xl md:min-w-[500px] relative'>

@@ -12,10 +12,12 @@ body{
     overflow: hidden;
 }
 main.main-content{
+    --nav-height: 4rem;
     width: 100%;
-    height: calc(100vh - 4rem);
-    overflow-y: scroll;
+    height: calc(100vh - var(--nav-height));
     padding-bottom: 1rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 :root{
     --primary-clr : #216fe6;
@@ -91,4 +93,8 @@ main.main-content{
     right: 0;
     top: 4rem;
     transform: translate(50%, -50%);
+}
+
+.form-error{
+    @apply bg-red-100 border border-red-500 w-fit text-red-600 text-center p-4 rounded flex items-center justify-center gap-2 text-2xl
 }

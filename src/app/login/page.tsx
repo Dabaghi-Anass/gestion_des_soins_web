@@ -1,12 +1,10 @@
 "use client";
 import api from '@/api/api';
-import bgImage from "@/assets/svgs/security.svg";
 import Form from "@/components/form";
 import Loading from "@/components/ui/loading";
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
 import { setCurrentUser } from "@/lib/features/user-reducer";
 import { RegisterUserFormData, User } from "@/types/types";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -108,50 +106,57 @@ export default function LoginPage() {
 		setLoading(false);
 	};
 	useEffect(() => {
+		const container = document.querySelector(".main-content") as HTMLElement;
+		if (!container?.style) return;
+		container.style.height = "100vh";
+		container.style.paddingBottom = "0";
+	})
+	useEffect(() => {
+		const container = document.querySelector(".main-content") as HTMLElement;
+		if (!container?.style) return;
+		container.style.setProperty("--nav-height", "0");
+		container.style.paddingBottom = "0";
 		if (!currentUser) return;
 		if (!currentUser.role || !currentUser.profile) router.push("/register")
 		router.replace("/")
 	}, [currentUser])
-	return <section className="flex justify-center items-center w-full h-full bg-white">
-		<div className="w-full h-full hidden lg:flex  flex-col items-center gap-2 justify-center filter">
+	return <section className="flex flex-col justify-center items-center  w-full h-full bg-primary-foreground gap-6">
+		<div className="w-full flex  flex-col items-center gap-2 justify-center">
 			<h1 className='text-slate-800 text-2xl font-semibold'>Accéder a votre Compte</h1>
 			<p className='text-slate-600'>toutes vos donées sont bien securisé</p>
-			<Image src={bgImage.src} alt="register image" className="" width={500} height={500} />
 		</div>
-		<div className="h-screen w-full flex flex-col gap-4 items-center justify-center">
-			{formError && <div className="text-red-600 text-center py-2 px-2 w-full rounded flex items-center justify-center gap-2 text-2xl">{formError}</div>}
-			<Form
-				onSubmit={handleSubmit}
-				className='flex flex-col gap-4 p-4 w-full max-w-xl md:min-w-[500px] relative'>
-				{loading && <Loading />}
-				<Form.Input
-					onChange={validateField}
-					error={errors.username}
-					type='email'
-					name='username'
-					label="Email"
-					placeholder='enter your email'
-				/>
-				<Form.Input
-					onChange={validateField}
-					error={errors.password}
-					name='password'
-					type='password'
-					label="Password"
-					placeholder='enter your password'
-					onKeyDown={(e) => {
-						if (e.key === "Enter") {
-							e.preventDefault();
-							handleSubmit(user)
-						}
-					}}
-				/>
-				<Form.Button disabled={Object.keys(errors).length > 0}>Submit</Form.Button>
-				<div className="mt-4 text-center">
-					<div>tu n'as pas un compte ?</div>
-					<Link className="link text-sm" href="/register">créer un compte</Link>
-				</div>
-			</Form>
-		</div>
+		{formError && <div className="form-error">{formError}</div>}
+		<Form
+			onSubmit={handleSubmit}
+			className='flex flex-col gap-4 p-4 w-full max-w-xl md:min-w-[500px] relative'>
+			{loading && <Loading />}
+			<Form.Input
+				onChange={validateField}
+				error={errors.username}
+				type='email'
+				name='username'
+				label="Email"
+				placeholder='enter your email'
+			/>
+			<Form.Input
+				onChange={validateField}
+				error={errors.password}
+				name='password'
+				type='password'
+				label="Password"
+				placeholder='enter your password'
+				onKeyDown={(e) => {
+					if (e.key === "Enter") {
+						e.preventDefault();
+						handleSubmit(user)
+					}
+				}}
+			/>
+			<Form.Button disabled={Object.keys(errors).length > 0}>Submit</Form.Button>
+			<div className="mt-4 text-center">
+				<div>tu n'as pas un compte ?</div>
+				<Link className="link text-sm" href="/register">créer un compte</Link>
+			</div>
+		</Form>
 	</section>
 }
