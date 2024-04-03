@@ -25,7 +25,7 @@ export default function RootLayout({
           <Toaster />
           <div className="flex flex-col w-full h-full">
             <NavBar />
-            <main className="main-content">
+            <main className="main-content bg-primary-foreground">
               {children}
             </main>
           </div>

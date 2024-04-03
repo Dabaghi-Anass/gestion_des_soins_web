@@ -16,7 +16,6 @@ main.main-content{
     height: calc(100vh - 4rem);
     overflow-y: scroll;
     padding-bottom: 1rem;
-    @apply bg-slate-100;
 }
 :root{
     --primary-clr : #216fe6;
@@ -39,10 +38,10 @@ main.main-content{
     width: 5px;
 }
 *::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+    @apply bg-primary-foreground;
 }
 *::-webkit-scrollbar-thumb {
-    background: var(--primary-clr);
+    @apply bg-slate-300;
 }
 *::-webkit-scrollbar-thumb:hover {
     background: var(--primary-clr-dark);
