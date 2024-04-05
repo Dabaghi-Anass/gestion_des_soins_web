@@ -42,7 +42,8 @@ export default function RegisterPage() {
 			if (!user) return;
 			setUser({ ...user, profile })
 			await handleUpdateProfile();
-			handleNext("Profile Update", "Profile updated successfully")
+			// handleNext("Profile Update", "Profile updated successfully")
+			setCurrentComponentIndex(4)
 		}} onBack={() => {
 			setCurrentComponentIndex(p => p - 1)
 		}} />,
@@ -95,7 +96,7 @@ export default function RegisterPage() {
 			return;
 		}
 		router.replace("/")
-	}, [user])
+	}, [])
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-foreground'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}
