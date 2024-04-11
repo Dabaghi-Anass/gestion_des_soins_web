@@ -97,7 +97,7 @@ export default function RegisterPage() {
 		}
 		router.replace("/")
 	}, [])
-	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-foreground'>
+	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-background'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}
 		{currentComponentIndex !== 0 && components[currentComponentIndex - 1]}

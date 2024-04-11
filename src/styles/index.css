@@ -15,7 +15,6 @@ main.main-content{
     --nav-height: 4rem;
     width: 100%;
     height: calc(100vh - var(--nav-height));
-    padding-bottom: 1rem;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -40,13 +39,13 @@ main.main-content{
     width: 5px;
 }
 *::-webkit-scrollbar-track {
-    @apply bg-primary-foreground;
+    @apply bg-primary-background;
 }
 *::-webkit-scrollbar-thumb {
-    @apply bg-slate-300;
+    @apply bg-slate-300 dark:bg-slate-800;
 }
 *::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-clr-dark);
+    @apply bg-slate-400 dark:bg-slate-700;
 }
 .user-type-container{
     overflow: hidden;
@@ -97,4 +96,43 @@ main.main-content{
 
 .form-error{
     @apply bg-red-100 border border-red-500 w-fit text-red-600 text-center p-4 rounded flex items-center justify-center gap-2 text-2xl
+}
+.with-border{
+    @apply border border-slate-200 dark:border-slate-700
+}
+.text-light{
+    @apply text-slate-400;
+}
+.text-md{
+    @apply text-slate-800 dark:text-slate-300;
+}
+
+.status-badge{
+    @apply text-xs rounded-full px-2 py-1;
+}
+.timeline-ring::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%,102%);
+    width: 2px;
+    background: repeating-linear-gradient(#60a5fa 5px,transparent 10px);
+    height: 105px;
+}
+
+.hide-footer{
+    position: relative;
+}
+.hide-footer::before{
+    content: '';
+    position: absolute;
+    z-index: 100;
+    inset: 0;
+    background: linear-gradient(180deg,transparent 70%, white 95%);
+    pointer-events: none;
+
+}
+.dark .hide-footer::before{
+    background: linear-gradient(180deg,transparent 70%, #0f172a 95%);
 }

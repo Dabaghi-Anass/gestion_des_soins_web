@@ -11,7 +11,7 @@ export default function SideNav() {
   const path = usePathname();
   const authPage = path === "/login" || path === "/register";
   if (authPage) return null;
-  return <aside className={`side-nav bg-primary-foreground border-r border-primary-200 ${open ? "w-[200px]" : "w-[68px]"} transition-all duration-300 h-full relative`}>
+  return <aside className={`side-nav bg-primary-background border-r border-primary-200 ${open ? "w-[200px]" : "w-[68px]"} transition-all duration-300 h-full relative`}>
     <Button className="open-aside-btn w-8 p-2 rounded-full" variant="outline" onClick={() => setOpen(!open)}>
       {open ? <ArrowLeft color="#888" /> : <ArrowRight color="#888" />}
     </Button>

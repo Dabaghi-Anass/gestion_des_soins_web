@@ -6,6 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
+import React from "react";
 type BreadCrumbLink = {
   path: string;
   label: string;
@@ -20,19 +21,19 @@ export default function AppBreadCrump({ links }: Props) {
       <BreadcrumbList>
         {links.map((link, i) => {
           if (link.active) {
-            return <>
+            return <React.Fragment key={link.label}>
               <BreadcrumbItem key={link.label} >
                 <BreadcrumbPage>{link.label}</BreadcrumbPage>
               </BreadcrumbItem>
               {i < links.length - 1 && <BreadcrumbSeparator />}
-            </>
+            </React.Fragment>
           }
-          return <>
+          return <React.Fragment key={link.label}>
             <BreadcrumbItem key={link.label} >
               <BreadcrumbLink href={link.path}>{link.label}</BreadcrumbLink>
             </BreadcrumbItem>
             {i < links.length - 1 && <BreadcrumbSeparator />}
-          </>
+          </React.Fragment>
         })}
       </BreadcrumbList>
     </Breadcrumb>

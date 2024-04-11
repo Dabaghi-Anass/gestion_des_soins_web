@@ -14,7 +14,7 @@ const WithToolTip = ({ children, description }: React.PropsWithChildren<Props>) 
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger>{children}</TooltipTrigger>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent className='bg-secondary-foreground'>
           <p>{description}</p>
         </TooltipContent>

@@ -30,5 +30,9 @@ export enum Role {
   CareGiver = "CAREGIVER",
   Companion = "COMPANION",
 }
-
+export enum FileType {
+  pdf = "pdf",
+  doc = "doc",
+  zip = "zip"
+}
 export type RegisterProfileFormData = UserProfile;

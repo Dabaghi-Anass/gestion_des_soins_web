@@ -173,7 +173,7 @@ export default function RegisterForm({ onNext }: Props) {
 				onSubmit={handleSubmit}
 				className='flex flex-col gap-4 p-4 w-full max-w-xl md:min-w-[500px] relative'>
 				{loading && <Loading />}
-				{showEmailToast && <div className="absolute text-green-600 bg-primary-foreground text-center py-2 px-2 w-full rounded text-sm flex flex-col items-center justify-center gap-4 inset-0 border border-green-600 font-bold z-0">{emailVerificationMessage}
+				{showEmailToast && <div className="absolute text-green-600 bg-primary-background text-center py-2 px-2 w-full rounded text-sm flex flex-col items-center justify-center gap-4 inset-0 border border-green-600 font-bold z-0">{emailVerificationMessage}
 					<Button onClick={handleConfirmEmail} type='button' className="text-sm" variant="outline">I confirmed My Email</Button>
 				</div>}
 				<Form.Input

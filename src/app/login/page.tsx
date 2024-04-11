@@ -1,7 +1,7 @@
 "use client";
 import api from '@/api/api';
 import Form from "@/components/form";
-import Loading from "@/components/ui/loading";
+import AsyncButton from "@/components/ui/AsyncButton";
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
 import { setCurrentUser } from "@/lib/features/user-reducer";
 import { RegisterUserFormData, User } from "@/types/types";
@@ -120,7 +120,7 @@ export default function LoginPage() {
 		if (!currentUser.role || !currentUser.profile) router.push("/register")
 		router.replace("/")
 	}, [currentUser])
-	return <section className="flex flex-col justify-center items-center  w-full h-full bg-primary-foreground gap-6">
+	return <section className="flex flex-col justify-center items-center  w-full h-full bg-primary-background gap-6">
 		<div className="w-full flex  flex-col items-center gap-2 justify-center">
 			<h1 className='text-slate-800 text-2xl font-semibold'>Accéder a votre Compte</h1>
 			<p className='text-slate-600'>toutes vos donées sont bien securisé</p>
@@ -129,7 +129,6 @@ export default function LoginPage() {
 		<Form
 			onSubmit={handleSubmit}
 			className='flex flex-col gap-4 p-4 w-full max-w-xl md:min-w-[500px] relative'>
-			{loading && <Loading />}
 			<Form.Input
 				onChange={validateField}
 				error={errors.username}
@@ -152,11 +151,23 @@ export default function LoginPage() {
 					}
 				}}
 			/>
-			<Form.Button disabled={Object.keys(errors).length > 0}>Submit</Form.Button>
+			<AsyncButton disabled={Object.keys(errors).length > 0} onClick={async () => {
+				await handleSubmit(user)
+			}} loadingText='waiting' loading={loading}>
+				Submit
+			</AsyncButton>
 			<div className="mt-4 text-center">
 				<div>tu n'as pas un compte ?</div>
 				<Link className="link text-sm" href="/register">créer un compte</Link>
 			</div>
 		</Form>
 	</section>
+}
+
+function wait(s: number) {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(true)
+		}, s * 1000)
+	})
 }
