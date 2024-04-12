@@ -24,7 +24,7 @@ export default function RootLayout({
           <Toaster />
           <div className="flex flex-col w-full h-full">
             <NavBar />
-            <main className="main-content p-2 bg-secondary">
+            <main className="main-content bg-secondary">
               {children}
             </main>
           </div>

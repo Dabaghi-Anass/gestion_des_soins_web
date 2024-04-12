@@ -6,22 +6,27 @@ export type RegisterUserFormData = {
 	confirmPassword?: string;
 	[key: string]: string | undefined;
 };
-export type UserProfile = {
+export type BaseEntity = {
+	creationDate?: Date;
+	lastModifiedDate?: Date;
+}
+export type UserProfile =BaseEntity & {
 	birthDate?: Date;
 	phoneNumber?: string;
 	address?: string;
 	imageUrl?: string;
 	gender?: string;
+	id: number;
 	[key : string]: any;
 };
-export type User = {
+export type User =BaseEntity & {
 	firstName?: string;
 	lastName?: string;
 	username: string;
 	password: string | null;
 	role?: string;
 	profile?: UserProfile;
-	uid?: number;
+	id?: number;
 	isVerified?: boolean;
 };
 export enum Role {

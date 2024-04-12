@@ -70,9 +70,11 @@ const queries = {
     updateProfile: async (profile: UserProfile | undefined) => {
         try {
             if (!profile) return null;
-            const response = await http.post(`${PROFILE_URL}/create`, profile);
-            if (response.status === 200) {
-                return response.json();
+            delete profile.lastModifiedDate;
+            delete profile.creationDate;
+            const response = await http.put(`${AUTH_URL}/user/saveProfile`, profile);
+            if (response.ok) {
+                return response;
             } else {
                 return null;
             }
@@ -82,22 +84,30 @@ const queries = {
     },
     saveUserWithProfile: async (user: {
         profile: UserProfile | undefined,
-        uid: number | undefined;
+        id: number | undefined;
         role: string | undefined;
     }) => {
         try {
             const response = await http.put(`${AUTH_URL}/user/createWithProfile`, user);
-            // console.log(response)
-            // if (response.status === 200) {
-            //     return response.json();
-            // } else {
-            //     return null;
-            // }
-            return response;
+            if (response.ok) {
+                return response.json();
+            }
+            return null;
         } catch (e : any) {
             console.log(e)
             return null;
         }
     },
+    updateUser: async (user: User) => {
+        try {
+            const response = await http.put(`${AUTH_URL}/user/update`, user);
+            if (response.ok) {
+                return response.json();
+            }
+            return null;
+        } catch (e : any) {
+            return null;
+        }
+    }
 }
 export default queries;

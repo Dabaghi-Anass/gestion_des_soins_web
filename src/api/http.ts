@@ -20,7 +20,7 @@ const http = {
             "x-auth": localStorage.getItem("x-auth") || ""
         },
         body: JSON.stringify(body)
-    }).then(res => res.json()),
+    }),
     delete: (url: string) => fetch(url, {
         method: 'DELETE',
         headers: {

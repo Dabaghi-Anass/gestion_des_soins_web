@@ -17,7 +17,7 @@ export default function RegisterPage() {
 	const [currentComponentIndex, setCurrentComponentIndex] = useState<number>(0); //starts from 1
 	const [loading, setLoading] = useState<boolean>(false);
 	const currentUser = useAppSelector((state: any) => state.UserReducer);
-	const [user, setUser] = useState<User | null>(null);
+	const [user, setUser] = useState<any>(null);
 	function handleNext(summary: string, message: string) {
 		setCurrentComponentIndex((prev) => prev + 1);
 		toast(summary, {
@@ -33,62 +33,46 @@ export default function RegisterPage() {
 		<UserTypeSelector
 			onNext={(role: Role | undefined) => {
 				if (!user || !role) return;
-				setUser({ ...user, role: role.toString() })
-				setCurrentComponentIndex(p => p + 1)
+				const userFromDb = api.updateUser({ id: user.id, role: role.toString() } as User)
+				setUser((prev: any) => ({ ...userFromDb }))
+				handleNext("Role Selected", "Role selected successfully")
 			}}
 			onBack={() => setCurrentComponentIndex(p => p - 1)}
 		/>,
-		<ProfileForm onNext={async (profile: UserProfile) => {
+		< ProfileForm onNext={(profile: UserProfile) => {
 			if (!user) return;
+			profile = { ...profile, id: user?.profile?.id }
 			setUser({ ...user, profile })
-			await handleUpdateProfile();
-			// handleNext("Profile Update", "Profile updated successfully")
+			handleUpdateProfile(profile);
 			setCurrentComponentIndex(4)
 		}} onBack={() => {
 			setCurrentComponentIndex(p => p - 1)
 		}} />,
-		<ProfileImageSelect gender={true} onNext={(imageUrl) => {
+		< ProfileImageSelect gender={true} onNext={(imageUrl) => {
 			if (!user) return;
-			const profile = { ...user.profile, imageUrl }
-			setUser({ ...user, profile })
-			handleSubmitUser();
+			setUser((prev: any) => ({ ...prev, profile: { ...prev.profile, imageUrl } }))
+			console.log({ user })
+			handleUpdateProfile(user.profile);
+			//router.replace("/")
 		}} onBack={() => {
 			setCurrentComponentIndex(p => p - 1)
 		}} />,
 	]
-	async function handleSubmitUser() {
-		setLoading(true)
-		if (!user) return;
-		//pick the profile and uid and role from user and then submit them
-		const { profile, uid, role } = user;
-		const userFromDb: any = await api.saveUserWithProfile({ profile, uid, role });
-		if (userFromDb != null) {
-			setUser({ ...userFromDb });
-			window.location.replace("/")
-		} else {
-			toast("Profile Update Failed", {
-				description: "Profile update failed please try again later",
-				icon: <OctagonAlert />
-			});
-		}
+	async function handleUpdateProfile(profile: UserProfile) {
+		if (profile.id) {
 
-		setLoading(false)
-	}
-	async function handleUpdateProfile() {
-		setLoading(true)
-		if (!user) return;
-		//pick the profile and uid and role from user and then submit them
-		const { profile, uid, role } = user;
-		const userFromDb: any = await api.saveUserWithProfile({ profile, uid, role });
-		if (userFromDb != null) {
-			setUser({ ...userFromDb });
-		} else {
-			toast("Profile Update Failed", {
-				description: "Profile update failed please try again later",
-				icon: <OctagonAlert />
-			});
+			setLoading(true)
+			const profileFromDB: any = await api.updateProfile(profile);
+			if (profileFromDB != null) {
+				setUser((prev: any) => ({ ...prev, profile: { ...profileFromDB } }));
+			} else {
+				toast("Profile Update Failed", {
+					description: "Profile update failed please try again later",
+					icon: <OctagonAlert />
+				});
+			}
+			setLoading(false)
 		}
-		setLoading(false)
 	}
 	useEffect(() => {
 		if (!user) {

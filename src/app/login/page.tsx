@@ -122,8 +122,8 @@ export default function LoginPage() {
 	}, [currentUser])
 	return <section className="flex flex-col justify-center items-center  w-full h-full bg-primary-background gap-6">
 		<div className="w-full flex  flex-col items-center gap-2 justify-center">
-			<h1 className='text-slate-800 text-2xl font-semibold'>Accéder a votre Compte</h1>
-			<p className='text-slate-600'>toutes vos donées sont bien securisé</p>
+			<h1 className='text-slate-800 dark:text-slate-300 text-2xl font-semibold'>Accéder a votre Compte</h1>
+			<p className='text-slate-600 dark:text-slate-400'>toutes vos donées sont bien securisé</p>
 		</div>
 		{formError && <div className="form-error">{formError}</div>}
 		<Form

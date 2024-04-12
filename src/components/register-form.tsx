@@ -163,9 +163,9 @@ export default function RegisterForm({ onNext }: Props) {
 	}, [currentUser])
 	return <section className="flex justify-between w-full ">
 		<div className="w-full h-full hidden lg:flex  flex-col items-center gap-2 justify-center filter">
-			<h1 className='text-slate-800 text-2xl font-semibold'>Créer Un Compte</h1>
-			<p className='text-slate-600'>toutes vos donées sont bien securisé</p>
-			<Image src={bgImage.src} alt="register image" className="" width={500} height={500} />
+			<h1 className='text-slate-800 dark:text-slate-300 text-2xl font-semibold'>Créer Un Compte</h1>
+			<p className='text-slate-600 dark:text-slate-400'>toutes vos donées sont bien securisé</p>
+			<Image src={bgImage.src} alt="register image" width={500} height={500} />
 		</div>
 		<div className="h-screen w-full flex flex-col gap-4 items-center">
 			{formError && <div className="form-error">{formError}</div>}

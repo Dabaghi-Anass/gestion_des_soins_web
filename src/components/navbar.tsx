@@ -16,10 +16,15 @@ export default function NavBar() {
     { path: "/home", label: "home" },
   ]);
   useEffect(() => {
+    const dark = localStorage.getItem("dark") === "true";
+    setDarkMode(dark);
+    document.documentElement.classList.toggle("dark", dark);
+  }, [])
+  useEffect(() => {
     let path = pathname;
     let pages = path.split("/");
     if (path === "/") pages = [""];
-    const links = pages.map((page, index) => {
+    const links = pages.map((page: string, index: number) => {
       return { path: pages.slice(0, index + 1).join("/") || "/", label: page || "home" }
     })
     setLinks(prev => links)
@@ -36,9 +41,10 @@ export default function NavBar() {
   const toggleDarkMode = () => {
     setDarkMode(p => !p);
     document.documentElement.classList.toggle("dark");
+    localStorage.setItem("dark", darkMode ? "false" : "true");
   }
-  // if (!user) return null;
-  // if (isAuthPage) return null;
+  if (!user) return null;
+  if (isAuthPage) return null;
   return <>
     <nav className="flex justify-between items-center px-4 border-b border-secondary bg-primary-background">
       <div className="hidden md:flex gap-4 h-full items-center">
@@ -47,7 +53,7 @@ export default function NavBar() {
       <span className='flex md:hidden'></span>
       <div className="user-info flex gap-4 items-center">
         <Button onClick={toggleDarkMode} variant="ghost" className='p-0 aspect-square'>
-          {darkMode ? <Sun color='#fff' /> : <Moon color='#aaa' />}
+          {!darkMode ? <Moon color='#aaa' /> : <Sun color='#fff' />}
         </Button>
         <Bell color="#aaa" />
         <div className="dark:bg-slate-700 bg-slate-200 w-[1px] self-stretch"></div>
