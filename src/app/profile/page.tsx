@@ -10,7 +10,7 @@ import ProfileHeader from "@/components/profile-header";
 export default function ProfilePage() {
   return <section className="profile-container flex flex-col gap-8 w-full h-full bg-primary-foreground p-6">
     <ProfileHeader />
-    <div className="w-full h-full px-2 overflow-y-scroll gap-4 grid lg:grid-cols-3 grid-flow-row">
+    <div className="w-full h-full px-1 overflow-y-scroll gap-4 grid lg:grid-cols-3 grid-flow-row">
       <ProfileContent />
       <ProfileAnnouncement />
     </div>

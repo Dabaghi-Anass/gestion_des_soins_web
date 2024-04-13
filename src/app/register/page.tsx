@@ -60,7 +60,6 @@ export default function RegisterPage() {
 	]
 	async function handleUpdateProfile(profile: UserProfile) {
 		if (profile.id) {
-
 			setLoading(true)
 			const profileFromDB: any = await api.updateProfile(profile);
 			if (profileFromDB != null) {
@@ -81,6 +80,9 @@ export default function RegisterPage() {
 		}
 		router.replace("/")
 	}, [])
+	useEffect(() => {
+		console.log({ data: user })
+	}, [user])
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-background'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}

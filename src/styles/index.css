@@ -43,6 +43,7 @@ main.main-content{
 }
 *::-webkit-scrollbar-thumb {
     @apply bg-slate-300 dark:bg-slate-800;
+    border-radius: 9999px;
 }
 *::-webkit-scrollbar-thumb:hover {
     @apply bg-slate-400 dark:bg-slate-700;

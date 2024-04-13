@@ -82,22 +82,6 @@ const queries = {
             return null;
         }
     },
-    saveUserWithProfile: async (user: {
-        profile: UserProfile | undefined,
-        id: number | undefined;
-        role: string | undefined;
-    }) => {
-        try {
-            const response = await http.put(`${AUTH_URL}/user/createWithProfile`, user);
-            if (response.ok) {
-                return response.json();
-            }
-            return null;
-        } catch (e : any) {
-            console.log(e)
-            return null;
-        }
-    },
     updateUser: async (user: User) => {
         try {
             const response = await http.put(`${AUTH_URL}/user/update`, user);

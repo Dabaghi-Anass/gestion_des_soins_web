@@ -1,14 +1,17 @@
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import React, { useState } from 'react';
 import ReactLoading from 'react-loading';
-type Props = {
+type Props = ButtonProps & {
   onClick?: (e: React.MouseEvent) => void;
   loadingText?: string;
   loading?: boolean;
   disabled?: boolean;
 };
 
-const AsyncButton = ({ onClick, children, loading, disabled, loadingText, ...rest }: React.PropsWithChildren<Props>) => {
+const AsyncButton = ({
+  onClick = async () => await new Promise((resolve) => setTimeout(resolve, 4000)),
+  children, loading, disabled, loadingText, ...rest
+}: React.PropsWithChildren<Props>) => {
   const [isLoading, setIsLoading] = useState(loading);
 
   const handleClick = async (e: React.MouseEvent) => {
