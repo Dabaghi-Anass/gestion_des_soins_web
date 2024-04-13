@@ -38,11 +38,9 @@ main.main-content{
 *::-webkit-scrollbar {
     width: 5px;
 }
-*::-webkit-scrollbar-track {
-    @apply bg-primary-background;
-}
+
 *::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 dark:bg-slate-800;
+    @apply bg-slate-200 dark:bg-slate-700;
     border-radius: 9999px;
 }
 *::-webkit-scrollbar-thumb:hover {
@@ -118,8 +116,8 @@ main.main-content{
     left: 50%;
     transform: translate(-50%,102%);
     width: 2px;
-    background: repeating-linear-gradient(#60a5fa 5px,transparent 10px);
-    height: 105px;
+    background:  #60a5fa;
+    height: 150px;
 }
 
 .hide-footer{

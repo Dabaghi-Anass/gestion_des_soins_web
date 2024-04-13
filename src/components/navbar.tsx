@@ -25,7 +25,7 @@ export default function NavBar() {
     let pages = path.split("/");
     if (path === "/") pages = [""];
     const links = pages.map((page: string, index: number) => {
-      return { path: pages.slice(0, index + 1).join("/") || "/", label: page || "home" }
+      return { path: pages.slice(0, index + 1).join("/") || "/", label: page || "acceuil" }
     })
     setLinks(prev => links)
   }, [pathname])

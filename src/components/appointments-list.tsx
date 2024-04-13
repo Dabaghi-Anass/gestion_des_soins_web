@@ -15,10 +15,10 @@ const appointment = {
     "lastModifiedDate": "2024-04-07T22:54:07.171721",
     "username": "anassabaaabb@email.com",
     "firstName": "anass",
-    "lastName": null,
+    "lastName": "dabaghi",
     "password": "anassanaahss",
-    "role": null,
-    "isVerified": null,
+    "role": "Doctor",
+    "isVerified": true,
     "profile": null,
     "medicalInformation": null,
     "careGiver": null
