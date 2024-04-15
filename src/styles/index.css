@@ -135,3 +135,13 @@ main.main-content{
 .dark .hide-footer::before{
     background: linear-gradient(180deg,transparent 70%, #0f172a 95%);
 }
+
+
+:has(.treatment-request:hover) > .treatment-request:not(:hover){
+    transition: opacity 0.3s;
+    opacity: 0.4;
+}
+
+.active-request{
+    border: 1px solid var(--primary-clr) !important;
+}

@@ -1,6 +1,7 @@
 const BASE_URL = 'http://localhost:8070/api' as const;
 const AUTH_URL =  `${BASE_URL}/auth`;
 const PROFILE_URL =  `${BASE_URL}/profile`;
+const TREATMENTS_URL =  `${BASE_URL}/treatments`;
 import { User, UserProfile } from "@/types/types";
 import http from "./http";
 const registerUser = async (user: User) => {
@@ -96,6 +97,17 @@ const updateUser = async (user: User) => {
         return null;
     }
 };
+const getRequestTreatments = async (userId : number) => {
+    try {
+        const response = await http.get(`${TREATMENTS_URL}/requests/${userId}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+};
 
 const queries = {
     registerUser,
@@ -104,6 +116,7 @@ const queries = {
     currentUser,
     isUserRegistred,
     updateProfile,
+    getRequestTreatments,
     updateUser
 };
 
