@@ -31,15 +31,15 @@ export default function RegisterPage() {
 			handleNext("Account Created", "Account has been created and verified successfully");
 		}} />,
 		<UserTypeSelector
-			onNext={(role: Role | undefined) => {
+			onNext={async (role: Role | undefined) => {
 				if (!user || !role) return;
-				const userFromDb = api.updateUser({ id: user.id, role: role.toString() } as User)
+				const userFromDb = await api.updateUser({ id: user.id, role: role.toString() } as User)
 				setUser((prev: any) => ({ ...userFromDb }))
 				handleNext("Role Selected", "Role selected successfully")
 			}}
 			onBack={() => setCurrentComponentIndex(p => p - 1)}
 		/>,
-		< ProfileForm onNext={(profile: UserProfile) => {
+		<ProfileForm onNext={(profile: UserProfile) => {
 			if (!user) return;
 			profile = { ...profile, id: user?.profile?.id }
 			setUser({ ...user, profile })
@@ -48,12 +48,11 @@ export default function RegisterPage() {
 		}} onBack={() => {
 			setCurrentComponentIndex(p => p - 1)
 		}} />,
-		< ProfileImageSelect gender={true} onNext={(imageUrl) => {
+		<ProfileImageSelect gender={true} onNext={(imageUrl) => {
 			if (!user) return;
 			setUser((prev: any) => ({ ...prev, profile: { ...prev.profile, imageUrl } }))
-			console.log({ user })
 			handleUpdateProfile(user.profile);
-			//router.replace("/")
+			router.replace("/")
 		}} onBack={() => {
 			setCurrentComponentIndex(p => p - 1)
 		}} />,
@@ -63,7 +62,7 @@ export default function RegisterPage() {
 			setLoading(true)
 			const profileFromDB: any = await api.updateProfile(profile);
 			if (profileFromDB != null) {
-				setUser((prev: any) => ({ ...prev, profile: { ...profileFromDB } }));
+				setUser((prev: any) => ({ ...prev, profile: { ...prev.profile, ...profileFromDB } }));
 			} else {
 				toast("Profile Update Failed", {
 					description: "Profile update failed please try again later",
@@ -80,9 +79,6 @@ export default function RegisterPage() {
 		}
 		router.replace("/")
 	}, [])
-	useEffect(() => {
-		console.log({ data: user })
-	}, [user])
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-background'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}
