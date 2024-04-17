@@ -1,6 +1,5 @@
 "use client";
 import caregiverSvg from "@/assets/svgs/caregiver.svg";
-import companionSvg from "@/assets/svgs/companion.svg";
 import doctorSvg from "@/assets/svgs/doctor.svg";
 import nurseSvg from "@/assets/svgs/nurse.svg";
 import { useState } from "react";
@@ -17,7 +16,7 @@ export default function UserTypeSelector({ onBack, onNext }: Props) {
   return (
     <div className="w-full h-full flex flex-col items-center p-4 ">
       <h1 className="text-4xl text-slate-800 font-semibold">t'est un ?</h1>
-      <div className="roleImagesContainer grid grid-cols-1 place-items-center gap-4 md:grid-cols-2 md:w-1/2 rounded-lg my-8 w-full">
+      <div className="roleImagesContainer flex flex-wrap items-center gap-4 md:w-1/2 rounded-lg my-8 w-full">
         <div
           className={`user-type-container relative w-full flex items-center justify-center p-4 border border-primary rounded ${selectedRole === Role.Nurse ? "aria-selected" : ""
             }`}
@@ -42,7 +41,7 @@ export default function UserTypeSelector({ onBack, onNext }: Props) {
             <h1 className="text-white text-xl font-semibold">Medcine</h1>
           </div>
         </div>
-        <div
+        {/* <div
           className={`user-type-container relative w-full flex items-center justify-center p-4 border border-primary rounded ${selectedRole === Role.Companion ? "aria-selected" : ""
             }`}
           onClick={() => {
@@ -53,7 +52,7 @@ export default function UserTypeSelector({ onBack, onNext }: Props) {
           <div className="role-image-overlay">
             <h1 className="text-white text-xl font-semibold">Compagnion</h1>
           </div>
-        </div>
+        </div> */}
         <div
           className={`user-type-container relative w-full flex items-center justify-center p-4 border border-primary rounded ${selectedRole === Role.CareGiver ? "aria-selected" : ""
             }`}

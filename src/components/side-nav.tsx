@@ -1,7 +1,7 @@
 "use client"
 import { AppLogo } from "@/components/logo";
 import WithToolTip from "@/components/ui/with-tooltip";
-import { Activity, ArrowLeft, ArrowRight, Home, Sheet } from "lucide-react";
+import { Activity, ArrowLeft, ArrowRight, Home, MessageSquareDot, Sheet, User } from "lucide-react";
 import Link from 'next/link';
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -45,18 +45,26 @@ export default function SideNav() {
         </WithToolTip>
       </Link>
       <Link href="/">
-        <WithToolTip description="home">
+        <WithToolTip description="agendas">
           <div className="nav-link flex gap-4 items-center text-gray-400 hover:text-primary transition duration-300">
             <Sheet />
-            {open && <div>home</div>}
+            {open && <div>agendas</div>}
           </div>
         </WithToolTip>
       </Link>
-      <Link href="/">
-        <WithToolTip description="home">
+      <Link href="/profile">
+        <WithToolTip description="profile">
           <div className="nav-link flex gap-4 items-center text-gray-400 hover:text-primary transition duration-300">
-            <Home />
-            {open && <div>home</div>}
+            <User />
+            {open && <div>profile</div>}
+          </div>
+        </WithToolTip>
+      </Link>
+      <Link href="/requetes">
+        <WithToolTip description="requetes de traitement">
+          <div className="nav-link flex gap-4 items-center text-gray-400 hover:text-primary transition duration-300">
+            <MessageSquareDot />
+            {open && <div>requetes</div>}
           </div>
         </WithToolTip>
       </Link>

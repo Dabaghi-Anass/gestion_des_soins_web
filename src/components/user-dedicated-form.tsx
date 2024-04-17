@@ -1,13 +1,9 @@
 "use client";
 import Form from "@/components/form";
-import { DatePicker } from "@/components/ui/date-picker";
-import { Label } from "@/components/ui/label";
 import Loading from "@/components/ui/loading";
-import { UserProfile } from "@/types/types";
-// import { RegisterProfileFormData , UserProfile } from "@/types/types";
 import { useState } from "react";
 import { z } from "zod";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Combobox } from "./ui/combobox";
 
 const RegisterSchema = z
   .object({
@@ -27,18 +23,17 @@ const RegisterSchema = z
       .optional().nullish(),
   })
 
-{/* <img src="https://flagsapi.com/BE/flat/64.png"> */ }
 type Props = {
-  onNext: (profile: UserProfile) => void;
+  onNext: (data: any) => void;
   onBack: () => void;
 }
-export default function ProfileForm({ onNext, onBack }: Props) {
+export default function UserRoleDedicatedForm({ onNext, onBack }: Props) {
   const [formError, setFormError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [profile, setProfile] = useState<UserProfile | {}>({});
+  const [data, setData] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const validateFields = (data: any) => {
-    setProfile(data)
+    setData(data);
     const validationObj = RegisterSchema.safeParse(data);
     if (!validationObj.success) {
       const errors: {
@@ -58,9 +53,9 @@ export default function ProfileForm({ onNext, onBack }: Props) {
   const validateField = (e: React.ChangeEvent) => {
     setFormError(null)
     const { name, value } = e.target as HTMLInputElement;
-    const profileClone = { ...profile };
-    profileClone[name] = value;
-    setProfile(profileClone);
+    const dataClone = { ...data };
+    dataClone[name] = value;
+    setData(dataClone);
     const schema = RegisterSchema.pick({ [name]: true });
     const validationObj = schema.safeParse({ [name]: value });
     if (!validationObj.success) {
@@ -79,7 +74,7 @@ export default function ProfileForm({ onNext, onBack }: Props) {
     }
   }
   const handleSubmit = async (data: any) => {
-    onNext(profile as UserProfile);
+    onNext(data);
   };
   return <section className="flex flex-col items-center w-full ">
     <h1 className="md:text-3xl mb-8">Dites-nous en plus à propos de vous</h1>
@@ -96,28 +91,6 @@ export default function ProfileForm({ onNext, onBack }: Props) {
           placeholder='entrer votre numero de telephone'
           label="Phone Number"
         />
-        <Form.Input
-          onChange={validateField}
-          error={errors.address}
-          name='address'
-          label="Address"
-          placeholder='entrer votre address'
-        />
-        <Label className="text-slate-400">Sexe</Label>
-        <Select onValueChange={(value) => {
-          const profileClone = { ...profile, gender: value };
-          setProfile(profileClone);
-        }}>
-          <SelectTrigger>
-            <SelectValue placeholder="choisie votre sexe" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="MALE">👨‍⚕️ Homme</SelectItem>
-            <SelectItem value="FEMALE">👩‍⚕️ Femme</SelectItem>
-          </SelectContent>
-        </Select>
-        <Label className="text-slate-400">Birth Date</Label>
-        <DatePicker onPickDate={console.log} />
         <Form.Button onClick={handleSubmit} disabled={Object.keys(errors).length > 0}>Save Profile</Form.Button>
         <Form.Button onClick={onBack} variant="outline">retourne</Form.Button>
       </Form>

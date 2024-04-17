@@ -10,7 +10,10 @@ import { useAppSelector } from "@/hooks/redux-hooks";
 import { RegisterUserFormData, Role, User, UserProfile } from "@/types/types";
 import { OctagonAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import {
+	useEffect,
+	useState
+} from "react";
 import { toast } from "sonner";
 export default function RegisterPage() {
 	const router = useRouter()
@@ -56,6 +59,11 @@ export default function RegisterPage() {
 		}} onBack={() => {
 			setCurrentComponentIndex(p => p - 1)
 		}} />,
+		// <UserRoleDedicatedForm onNext={(userInfo: any) => {
+
+		// }} onBack={() => {
+		// 	setCurrentComponentIndex(p => p - 1)
+		// }} />
 	]
 	async function handleUpdateProfile(profile: UserProfile) {
 		if (profile.id) {
