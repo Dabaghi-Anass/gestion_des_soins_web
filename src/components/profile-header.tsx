@@ -3,10 +3,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import WithToolTip from "@/components/ui/with-tooltip"
 import { useAppSelector } from "@/hooks/redux-hooks"
-import { CalendarDays, Mail, Send } from "lucide-react"
+import { CalendarDays, UserCog } from "lucide-react"
 // import { User } from "@/types/types"
 import Link from "next/link"
-import AsyncButton from "./ui/AsyncButton"
 type Props = {
   user?: any
 }
@@ -29,15 +28,10 @@ export default function ProfileHeader({ user }: Props) {
         </span>
       </div>
       <div className="user-profile-actions flex gap-2">
-        <Button className="p-2 w-[150px] bg-green-500 hover:bg-green-600">reply</Button>
-        <AsyncButton variant="destructive" className="p-2 w-[150px]">deny request</AsyncButton>
         <WithToolTip description="send email to patient">
           <Button variant="outline" className="aspect-square p-2" asChild>
-            <Link href={`mailto:${currentUser?.username}`}><Mail color="#888" /></Link>
+            <Link href="#"><UserCog color="#888" /></Link>
           </Button>
-        </WithToolTip>
-        <WithToolTip description="message privatly">
-          <Button variant="outline" className=" aspect-square p-2"><Send color="#888" /></Button>
         </WithToolTip>
       </div>
     </div>
