@@ -1,6 +1,7 @@
 const BASE_URL = 'http://localhost:8070/api' as const;
 const AUTH_URL =  `${BASE_URL}/auth`;
 const PROFILE_URL =  `${BASE_URL}/profile`;
+const USER_URL =  `${BASE_URL}/users`;
 const TREATMENTS_URL =  `${BASE_URL}/treatments`;
 import { User, UserProfile } from "@/types/types";
 import http from "./http";
@@ -97,6 +98,17 @@ const updateUser = async (user: User) => {
         return null;
     }
 };
+const getUserById = async (id: number) => {
+    try {
+        const response = await http.get(`${USER_URL}/${id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
 const getRequestTreatments = async (userId : number) => {
     try {
         const response = await http.get(`${TREATMENTS_URL}/requests/${userId}`);
@@ -130,6 +142,28 @@ const acceptTreatmentRequest = async (requestId: number) => {
         return null;
     }
 }
+const getTreatmentsByUserId = async (id: number, offset = 0, limit = 6) => {
+    try {
+        const response = await http.get(`${TREATMENTS_URL}/${id}?offset=${offset}&limit=${limit}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
+const getAllTreatmentsByUserId = async (id: number) => {
+    try {
+        const response = await http.get(`${TREATMENTS_URL}/all/${id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
 
 const queries = {
     registerUser,
@@ -141,7 +175,10 @@ const queries = {
     getRequestTreatments,
     updateUser,
     denyTreatmentRequest,
-    acceptTreatmentRequest
+    acceptTreatmentRequest,
+    getTreatmentsByUserId,
+    getAllTreatmentsByUserId,
+    getUserById
 };
 
 export default queries;

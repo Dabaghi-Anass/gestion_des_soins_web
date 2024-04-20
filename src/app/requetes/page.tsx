@@ -16,6 +16,13 @@ export default function TreatmentsRequestsPage() {
     if (!text) getRequests()
     else setRequests(requests.filter((request: any) => request.title.toLowerCase().includes(text.toLowerCase())))
   }
+  function handleEditSelectedRequest(request: any) {
+    const target: any = requests.find((r: any) => r.id === request.id)
+    if (target) {
+      target.status = request.status
+    }
+    setSelectedRequest(request)
+  }
   useEffect(() => {
     getRequests()
   }, [])
@@ -25,6 +32,6 @@ export default function TreatmentsRequestsPage() {
       onSelect={setSelectedRequest}
       onSearch={handleSearch}
       selected={selectedRequest?.id} requests={requests} />
-    <TreatmentRequestDetails data={selectedRequest} />
+    <TreatmentRequestDetails data={selectedRequest} onEdit={handleEditSelectedRequest} />
   </main>
 }

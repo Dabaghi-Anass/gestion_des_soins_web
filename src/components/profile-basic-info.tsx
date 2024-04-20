@@ -6,7 +6,6 @@ import InfoWithIcon from "./ui/info-with-icon";
 
 export default function ProfileBasicinformations() {
   const currentUser: User | any = useAppSelector(state => state.UserReducer.user);
-  console.log({ currentUser })
   const age = currentUser?.profile?.birthDate ? new Date().getFullYear() - new Date(currentUser.profile.birthDate).getFullYear() : null;
   return <div className="p-4 with-border flex flex-col gap-4 rounded-lg w-full sm:row-span-1 lg:row-span-full">
     <h1 className="font-semibold capitalize mb-4">basic informations</h1>

@@ -42,7 +42,6 @@ export function Combobox() {
       label: "Astro",
     },
   ])
-  console.log(frameworks)
   return <Popover open={open} onOpenChange={setOpen}>
     <PopoverTrigger asChild>
       <Button
@@ -64,7 +63,6 @@ export function Combobox() {
         <CommandGroup>
           {
             frameworks && frameworks.map((framework) => {
-              console.log(frameworks);
               return <CommandItem
                 key={framework.value}
                 value={framework.value}

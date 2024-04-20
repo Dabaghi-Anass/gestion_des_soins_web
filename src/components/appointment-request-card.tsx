@@ -8,7 +8,6 @@ type Props = {
   selected: boolean;
 }
 export function TreatmentRequest({ request, selected, onClick }: Props) {
-  console.log(request.sentBy)
   return <div onClick={onClick} className={`with-border p-4 flex flex-col gap-2 bg-primary-foreground rounded-lg treatment-request cursor-pointer ${selected && "active-request"}`}>
     <div className="header flex justify-between">
       <Avatar>

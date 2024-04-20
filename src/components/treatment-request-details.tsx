@@ -10,17 +10,24 @@ import MedicalInformation from "./medical-information";
 // import { User } from "@/types/types"
 import api from "@/api/api";
 import Link from "next/link";
+import TreatmentHistory from "./treatement-history";
 import AsyncButton from "./ui/AsyncButton";
 type Props = {
   data: any | null;
+  onEdit: (request: any) => void
 }
-export default function TreatmentRequestDetails({ data }: Props) {
+export default function TreatmentRequestDetails({ data, onEdit }: Props) {
   let currentUser: any = useAppSelector(state => state.UserReducer.user);
   const [request, setRequest] = useState<any>();
+  const [treatmentHistory, setTreatmentHistory] = useState<any>([])
   if (request?.sentBy) currentUser = request.sentBy
   useEffect(() => {
     setRequest(data)
   }, [data])
+  useEffect(() => {
+    getTreatments(request?.sentBy?.id)
+  }, [request])
+
   if (!request)
     return <section className="profile bg-primary-foreground rounded-lg with-border flex flex-col gap-8 w-full p-6 items-center justify-center">
       <h1 className="text-3xl font-bold text-gray-400">no request selected</h1>
@@ -29,6 +36,7 @@ export default function TreatmentRequestDetails({ data }: Props) {
     const treatmentRequest = await api.denyTreatmentRequest(request.id);
     if (treatmentRequest?.status === "DENIED") {
       setRequest({ ...request, status: "DENIED" })
+      onEdit(treatmentRequest)
       toast("request denied", {
         action: {
           label: "cancel",
@@ -42,6 +50,7 @@ export default function TreatmentRequestDetails({ data }: Props) {
     const treatmentRequest = await api.acceptTreatmentRequest(request.id);
     if (treatmentRequest?.status) {
       setRequest({ ...request, status: treatmentRequest.status })
+      onEdit(treatmentRequest)
       toast("request re-accepted", {
         action: {
           label: "cancel",
@@ -51,7 +60,27 @@ export default function TreatmentRequestDetails({ data }: Props) {
       return
     }
   }
-  return <section className="profile bg-primary-foreground rounded-lg with-border flex flex-col gap-8 w-full p-6">
+  function getStatusBadgeStyle(status: string) {
+    let style = {
+      backgroundColor: "#3498db"
+    }
+    enum Status {
+      PENDING = "#f7a50c",
+      CONFIRMED = "#2ecc71",
+      DENIED = "#e74c3c"
+    }
+    if (status === "PENDING") style.backgroundColor = Status.PENDING;
+    if (status === "CONFIRMED") style.backgroundColor = Status.CONFIRMED;
+    if (status === "DENIED") style.backgroundColor = Status.DENIED;
+
+    return style;
+  }
+  async function getTreatments(user_id: number) {
+    const treatments = await api.getTreatmentsByUserId(user_id)
+    setTreatmentHistory(treatments)
+  }
+
+  return <section className="profile bg-primary-foreground rounded-lg with-border flex flex-col gap-8 w-full p-6 overflow-y-scroll">
     <div className="profile-header flex justify-between gap-4 md:items-center w-full">
       <Avatar className="with-border w-16 h-16">
         <AvatarImage src={currentUser?.profile?.imageUrl} />
@@ -67,14 +96,20 @@ export default function TreatmentRequestDetails({ data }: Props) {
           </span>
         </div>
         <div className="user-profile-actions flex gap-2">
-          {request.status !== "DENIED" &&
-            <Button className="p-2 bg-green-500 hover:bg-green-600  lg:w-[150px]">repondre</Button>
-          }
-          {request.status !== "DENIED" &&
-            <AsyncButton variant="destructive" className="p-2 lg:w-[150px]" onClick={handleDenyRequest}>refuser</AsyncButton>
-          }
-          {request.status === "DENIED" &&
-            <AsyncButton className="p-2 lg:w-[150px] bg-indigo-600" onClick={handleAcceptRequest}>re-accept</AsyncButton>
+          {request.responded ?
+            <Button variant="link" asChild>
+              <Link href={`/treatment/${request.id}`}>voir la reponse</Link>
+            </Button> : <>
+              {request.status !== "DENIED" &&
+                <Button className="p-2 bg-green-500 hover:bg-green-600  lg:w-[150px]">repondre</Button>
+              }
+              {request.status !== "DENIED" &&
+                <AsyncButton variant="destructive" className="p-2 lg:w-[150px]" onClick={handleDenyRequest}>refuser</AsyncButton>
+              }
+              {request.status === "DENIED" &&
+                <AsyncButton className="p-2 lg:w-[150px] bg-indigo-600" onClick={handleAcceptRequest}>re-accept</AsyncButton>
+              }
+            </>
           }
           <WithToolTip description="send email to patient">
             <Button variant="outline" className="aspect-square p-2" asChild>
@@ -90,14 +125,12 @@ export default function TreatmentRequestDetails({ data }: Props) {
     <div className="w-full">
       <div className="flex gap-2 mb-4 items-center">
         <h1 className="text-xl font-semibold">{request.title}</h1>
-        <span className="status-badge lowercase" style={{
-          border: `1px solid ${request.status === "DONE" ? "#34eb86" : request.status === "PENDING" ? "orange" : "transparent"}`,
-          color: request.status === "DONE" ? "#34eb86" : request.status === "PENDING" ? "orange" : "white",
-          backgroundColor: `${request.status === "DENIED" ? "red" : "transparent"}`
-        }}>{request.status}</span>
+        <span className="status-badge lowercase" style={getStatusBadgeStyle(request.status)}>{request.status}</span>
       </div>
       <p className="max-w-prose">{request.description}</p>
     </div>
     <MedicalInformation className='medical-info' patient={request.sentBy} />
+    {treatmentHistory?.length > 0 && <TreatmentHistory data={treatmentHistory} />}
+
   </section>
 }
