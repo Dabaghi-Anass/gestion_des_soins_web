@@ -16,7 +16,7 @@ export default function ProfilePage() {
     getUser()
   }, [])
   return <section className="profile-container flex flex-col gap-8 w-full h-full bg-primary-foreground p-6">
-    <ProfileHeader />
+    <ProfileHeader user={user} hideEditLink />
     <div className="w-full h-full px-1 overflow-y-scroll gap-4 grid lg:grid-cols-3 grid-flow-row">
       <ProfileContent user={user} />
       <ProfileAnnouncement />

@@ -3,13 +3,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import WithToolTip from "@/components/ui/with-tooltip"
 import { useAppSelector } from "@/hooks/redux-hooks"
-import { CalendarDays, UserCog } from "lucide-react"
+import { CalendarDays, Mail, Send, UserCog } from "lucide-react"
 // import { User } from "@/types/types"
 import Link from "next/link"
 type Props = {
-  user?: any
+  user?: any,
+  hideEditLink?: boolean
 }
-export default function ProfileHeader({ user }: Props) {
+export default function ProfileHeader({ user, hideEditLink }: Props) {
   let currentUser = null;
   if (user) currentUser = user;
   else currentUser = useAppSelector(state => state.UserReducer.user);
@@ -28,11 +29,22 @@ export default function ProfileHeader({ user }: Props) {
         </span>
       </div>
       <div className="user-profile-actions flex gap-2">
-        <WithToolTip description="send email to patient">
-          <Button variant="outline" className="aspect-square p-2" asChild>
-            <Link href="#"><UserCog color="#888" /></Link>
-          </Button>
-        </WithToolTip>
+        {!hideEditLink ?
+          <WithToolTip description="send email to patient">
+            <Button variant="outline" className="aspect-square p-2" asChild>
+              <Link href="#"><UserCog color="#888" /></Link>
+            </Button>
+          </WithToolTip> :
+          <>
+            <WithToolTip description="send email to patient">
+              <Button variant="outline" className="aspect-square p-2" asChild>
+                <Link href={`mailto:${user?.username}`}><Mail color="#888" /></Link>
+              </Button>
+            </WithToolTip>
+            <WithToolTip description="message privatly">
+              <Button variant="outline" className=" aspect-square p-2"><Send color="#888" /></Button>
+            </WithToolTip></>
+        }
       </div>
     </div>
   </div>

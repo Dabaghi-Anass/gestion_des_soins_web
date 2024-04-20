@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import Link from "next/link";
 import { Button } from "./ui/button";
 import Dots from "./ui/dots";
 type Props = {
@@ -22,7 +23,9 @@ export function TreatmentRequest({ request, selected, onClick }: Props) {
         </PopoverTrigger>
         <PopoverContent>
           <div className="flex flex-col gap-4">
-            <Button className="w-full" variant="secondary">View Patient</Button>
+            <Button className="w-full" variant="secondary" asChild>
+              <Link href={`/profile/${request?.sentBy?.id}`}>View Profile</Link>
+            </Button>
             <div className="flex w-full gap-4">
               <Button className="w-full" variant="destructive">Delete</Button>
               <Button className="w-full">Reply</Button>
