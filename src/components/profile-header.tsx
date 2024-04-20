@@ -16,12 +16,12 @@ export default function ProfileHeader({ user }: Props) {
   return <div className="profile-header flex justify-between gap-4 md:items-center w-full">
     <Avatar className="with-border w-16 h-16">
       <AvatarImage src={currentUser?.profile?.imageUrl} />
-      <AvatarFallback>AN</AvatarFallback>
+      <AvatarFallback className="uppercase font-semibold">{currentUser?.firstName?.charAt(0)}{currentUser?.lastName?.charAt(0)}</AvatarFallback>
     </Avatar>
     <div className="flex md:items-center gap-4 flex-col md:flex-row justify-between w-full">
       <div className="flex flex-col">
         <span className="text-md text-xl">
-          {currentUser?.profile?.gender?.toLowerCase() === "male" ? "(Mr)" : "(Mlle)"} {currentUser?.firstName} {currentUser?.firstName}</span>
+          {currentUser?.profile?.gender?.toLowerCase() === "male" ? "(Mr)" : "(Mlle)"} {currentUser?.firstName} {currentUser?.lastName}</span>
         <span className='text-sm flex gap-2 text-light'>
           <CalendarDays size={20} />
           Joined Since : {new Date(currentUser?.creationDate).toLocaleString("en-GB")}

@@ -108,6 +108,28 @@ const getRequestTreatments = async (userId : number) => {
         return null;
     }
 };
+const denyTreatmentRequest = async (requestId: number) => {
+    try {
+        const response = await http.put(`${TREATMENTS_URL}/deny/${requestId}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
+const acceptTreatmentRequest = async (requestId: number) => {
+    try {
+        const response = await http.put(`${TREATMENTS_URL}/accept/${requestId}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
 
 const queries = {
     registerUser,
@@ -117,7 +139,9 @@ const queries = {
     isUserRegistred,
     updateProfile,
     getRequestTreatments,
-    updateUser
+    updateUser,
+    denyTreatmentRequest,
+    acceptTreatmentRequest
 };
 
 export default queries;

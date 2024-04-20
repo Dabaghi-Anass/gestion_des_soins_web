@@ -25,6 +25,6 @@ export default function TreatmentsRequestsPage() {
       onSelect={setSelectedRequest}
       onSearch={handleSearch}
       selected={selectedRequest?.id} requests={requests} />
-    <TreatmentRequestDetails request={selectedRequest} />
+    <TreatmentRequestDetails data={selectedRequest} />
   </main>
 }
