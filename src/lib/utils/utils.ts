@@ -12,3 +12,9 @@ export const generateNumberArray = (start: number, count: number, max: number) =
     }
     return array.filter(e => e > -1);
 }
+export const calculateAgeFromBirtDate = (date: string) => {
+    const birthDate = new Date(date);
+    const diff = Date.now() - birthDate.getTime();
+    const age = new Date(diff);
+    return Math.abs(age.getUTCFullYear() - 1970);
+}

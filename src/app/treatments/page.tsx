@@ -1,6 +1,7 @@
 "use client"
 import api from "@/api/api"
 import TreatmentHistory from "@/components/treatement-history"
+import DataNotFound from "@/components/ui/data-not-found"
 import Loading from "@/components/ui/loading"
 import {
   Pagination,
@@ -33,7 +34,7 @@ export default function TreatmentsPage() {
   return <section className="p-4 w-full h-full bg-primary-foreground">
     {loading && <Loading />}
     {treatments?.length === 0 ?
-      <div className="w-full h-full flex items-center justify-center text-2xl">no treatments found</div> :
+      <DataNotFound /> :
       <div>
         <TreatmentHistory data={paginate(treatments, pageSize, currentPage + 1)} hideLink />
         <div className="flex gap-4 p-4 justify-center">

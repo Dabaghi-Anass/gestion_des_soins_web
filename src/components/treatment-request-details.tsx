@@ -61,17 +61,44 @@ export default function TreatmentRequestDetails({ data, onEdit }: Props) {
     }
   }
   function getStatusBadgeStyle(status: string) {
+    let getBgOfHue = (hue: number) => {
+      return `hsl(${hue},84%, 93%)`
+    };
+    let getColorOfHue = (hue: number) => {
+      return `hsl(${hue},64%, 24%)`
+    };
+
     let style = {
-      backgroundColor: "#3498db"
+      backgroundColor: getBgOfHue(270),
+      color: getColorOfHue(270),
+      border: `1px solid ${270}`
     }
     enum Status {
-      PENDING = "#f7a50c",
-      CONFIRMED = "#2ecc71",
-      DENIED = "#e74c3c"
+      PENDING = 42,
+      CONFIRMED = 141,
+      DENIED = 8
     }
-    if (status === "PENDING") style.backgroundColor = Status.PENDING;
-    if (status === "CONFIRMED") style.backgroundColor = Status.CONFIRMED;
-    if (status === "DENIED") style.backgroundColor = Status.DENIED;
+    if (status === "PENDING") {
+      style = {
+        backgroundColor: getBgOfHue(Status.PENDING),
+        color: getColorOfHue(Status.PENDING),
+        border: `1px solid ${getColorOfHue(Status.PENDING)}`
+      }
+    }
+    if (status === "CONFIRMED") {
+      style = {
+        backgroundColor: getBgOfHue(Status.CONFIRMED),
+        color: getColorOfHue(Status.CONFIRMED),
+        border: `1px solid ${getColorOfHue(Status.CONFIRMED)}`
+      }
+    }
+    if (status === "DENIED") {
+      style = {
+        backgroundColor: getBgOfHue(Status.DENIED),
+        color: getColorOfHue(Status.DENIED),
+        border: `1px solid ${getColorOfHue(Status.DENIED)}`
+      }
+    }
 
     return style;
   }
@@ -98,7 +125,7 @@ export default function TreatmentRequestDetails({ data, onEdit }: Props) {
         <div className="user-profile-actions flex gap-2">
           {request.responded ?
             <Button variant="link" asChild>
-              <Link href={`/treatment/${request.id}`}>voir la reponse</Link>
+              <Link href={`/treatments/treatment/${request.id}`}>voir la reponse</Link>
             </Button> : <>
               {request.status !== "DENIED" &&
                 <Button className="p-2 bg-green-500 hover:bg-green-600  lg:w-[150px]">repondre</Button>

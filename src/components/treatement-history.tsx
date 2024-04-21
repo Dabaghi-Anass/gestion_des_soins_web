@@ -15,18 +15,45 @@ type Props = {
 }
 export default function TreatmentHistory({ data, hideLink }: Props) {
   function getBadgeStyle(status: string) {
-    switch (status) {
-      case "DONE":
-        return { backgroundColor: "#0f0" }
-      case "PENDING":
-        return { backgroundColor: "#e69d17" }
-      case "DENIED":
-        return { backgroundColor: "#f00" }
-      case "IN_PROGRESS":
-        return { backgroundColor: "#00f" }
-      default:
-        return { backgroundColor: "#fff" }
+    let getBgOfHue = (hue: number) => {
+      return `hsl(${hue},84%, 93%)`
+    };
+    let getColorOfHue = (hue: number) => {
+      return `hsl(${hue},64%, 24%)`
+    };
+
+    let style = {
+      backgroundColor: getBgOfHue(270),
+      color: getColorOfHue(270),
+      border: `1px solid ${270}`
     }
+    enum Status {
+      PENDING = 42,
+      CONFIRMED = 141,
+      DENIED = 8
+    }
+    if (status === "PENDING") {
+      style = {
+        backgroundColor: getBgOfHue(Status.PENDING),
+        color: getColorOfHue(Status.PENDING),
+        border: `1px solid ${getColorOfHue(Status.PENDING)}`
+      }
+    }
+    if (status === "CONFIRMED") {
+      style = {
+        backgroundColor: getBgOfHue(Status.CONFIRMED),
+        color: getColorOfHue(Status.CONFIRMED),
+        border: `1px solid ${getColorOfHue(Status.CONFIRMED)}`
+      }
+    }
+    if (status === "DENIED") {
+      style = {
+        backgroundColor: getBgOfHue(Status.DENIED),
+        color: getColorOfHue(Status.DENIED),
+        border: `1px solid ${getColorOfHue(Status.DENIED)}`
+      }
+    }
+    return style;
   }
   return <div className="p-4 with-border flex flex-col gap-4 rounded-lg w-full h-fit sm:row-span-1 lg:col-span-2">
     <h1 className="font-semibold capitalize mb-4">history de traitements</h1>

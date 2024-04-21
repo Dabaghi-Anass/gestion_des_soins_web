@@ -164,6 +164,17 @@ const getAllTreatmentsByUserId = async (id: number) => {
         return null;
     }
 }
+const getTreatmentById = async (id: number) => {
+    try {
+        const response = await http.get(`${TREATMENTS_URL}/treatment/${id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
 
 const queries = {
     registerUser,
@@ -178,7 +189,8 @@ const queries = {
     acceptTreatmentRequest,
     getTreatmentsByUserId,
     getAllTreatmentsByUserId,
-    getUserById
+    getUserById,
+    getTreatmentById
 };
 
 export default queries;
