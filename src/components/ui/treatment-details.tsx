@@ -1,7 +1,10 @@
 "use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { calculateAgeFromBirtDate } from "@/lib/utils/utils";
+import {
+  calculateAgeFromBirtDate
+} from "@/lib/utils/utils";
 import html2pdf from "html2pdf.js";
+import { useState } from "react";
 import { Button } from "./button";
 import DataNotFound from "./data-not-found";
 type Props = {
@@ -51,20 +54,31 @@ function getStatusBadgeStyle(status: string) {
   return style;
 }
 export default function TreatmentDetails({ treatment }: Props) {
-  if (!treatment) return <DataNotFound />
+  const [test, setTest] = useState(false)
   function printDocument() {
     const element = document.getElementById('printable') as HTMLElement;
-    element.style.borderWidth = "0";
-    const worker = html2pdf()
+    let dark = false;
+    if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.toggle("dark", false);
+      dark = true;
+    }
     let fileName = `treatment-${treatment.sentTo.firstName}-${Date.now()}.pdf`;
-    worker.from(element).save(fileName).then(() => {
-      element.style.borderWidth = "1px";
+    const worker = html2pdf()
+    let options = {
+      margin: 1,
+      filename: fileName,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { dpi: 192, letterRendering: true },
+      jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
+    }
+    worker.set(options).from(element).save(fileName).then(() => {
+      if (dark) document.documentElement.classList.toggle("dark", true);
     });
   }
+  if (!treatment) return <DataNotFound />
   return (
-    <main className="w-full min-h-full py-4 px-4 md:px-4" >
-      <Button onClick={printDocument} className="w-full rounded-b-none">download</Button>
-      <Card className="w-full rounded-t-none" id="printable">
+    <main className="w-full min-h-full py-4 px-4 md:px-4">
+      <Card className="w-full rounded-b-none" id="printable">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>{treatment.title}</CardTitle>
@@ -150,6 +164,7 @@ export default function TreatmentDetails({ treatment }: Props) {
           </div>
         </CardContent>
       </Card>
+      <Button onClick={printDocument} className="w-full rounded-t-none">download</Button>
     </main>
   )
 }

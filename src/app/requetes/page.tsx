@@ -25,7 +25,7 @@ export default function TreatmentsRequestsPage() {
   }
   useEffect(() => {
     getRequests()
-  }, [])
+  }, [currentUser])
 
   return <main className="appointments-container flex w-full h-full p-4 gap-2">
     <TreatmentRequestPatients
