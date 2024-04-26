@@ -2,7 +2,7 @@
 import api from "@/api/api";
 import { TreatmentRequestPatients } from "@/components/appointment-request-patients";
 import TreatmentRequestDetails from "@/components/treatment-request-details";
-import TreatmentResponseEditor from "@/components/ui/modal";
+import TreatmentResponseEditor from "@/components/ui/treatment-response-editor";
 import { useAppSelector } from "@/hooks/redux-hooks";
 import { useEffect, useState } from "react";
 export default function TreatmentsRequestsPage() {
