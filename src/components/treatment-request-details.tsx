@@ -14,9 +14,10 @@ import TreatmentHistory from "./treatement-history";
 import AsyncButton from "./ui/AsyncButton";
 type Props = {
   data: any | null;
-  onEdit: (request: any) => void
+  onEdit: (request: any) => void;
+  onOpenModal: (requestId: number) => void;
 }
-export default function TreatmentRequestDetails({ data, onEdit }: Props) {
+export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: Props) {
   let currentUser: any = useAppSelector(state => state.UserReducer.user);
   const [request, setRequest] = useState<any>();
   const [treatmentHistory, setTreatmentHistory] = useState<any>([])
@@ -124,11 +125,15 @@ export default function TreatmentRequestDetails({ data, onEdit }: Props) {
         </div>
         <div className="user-profile-actions flex gap-2">
           {request.responded ?
-            <Button variant="link" asChild>
-              <Link href={`/treatments/treatment/${request.id}`}>voir la reponse</Link>
-            </Button> : <>
+            <>
+              <Button className="p-4 lg:w-[170px]" variant="secondary" onClick={() => onOpenModal(request.id)}>modifier la reponse</Button>
+              <Button variant="link" asChild>
+                <Link href={`/treatments/treatment/${request.id}`}>voir la reponse</Link>
+              </Button>
+            </>
+            : <>
               {request.status !== "DENIED" &&
-                <Button className="p-2 bg-green-500 hover:bg-green-600  lg:w-[150px]">repondre</Button>
+                <Button className="p-2 bg-green-500 hover:bg-green-600  lg:w-[150px]" onClick={() => onOpenModal(request.id)}>repondre</Button>
               }
               {request.status !== "DENIED" &&
                 <AsyncButton variant="destructive" className="p-2 lg:w-[150px]" onClick={handleDenyRequest}>refuser</AsyncButton>

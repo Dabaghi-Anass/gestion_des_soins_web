@@ -2,11 +2,13 @@
 import api from "@/api/api";
 import { TreatmentRequestPatients } from "@/components/appointment-request-patients";
 import TreatmentRequestDetails from "@/components/treatment-request-details";
+import TreatmentResponseEditor from "@/components/ui/modal";
 import { useAppSelector } from "@/hooks/redux-hooks";
 import { useEffect, useState } from "react";
 export default function TreatmentsRequestsPage() {
   const [requests, setRequests] = useState([])
   const [selectedRequest, setSelectedRequest] = useState<any>(null)
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
   const currentUser: any = useAppSelector(state => state.UserReducer.user)
   async function getRequests() {
     const requests = await api.getRequestTreatments(currentUser?.id)
@@ -23,15 +25,20 @@ export default function TreatmentsRequestsPage() {
     }
     setSelectedRequest(request)
   }
+  function openResponseModal(requestId: number) {
+    setModalOpen(true)
+  }
   useEffect(() => {
     getRequests()
   }, [currentUser])
 
   return <main className="appointments-container flex w-full h-full p-4 gap-2">
+
     <TreatmentRequestPatients
       onSelect={setSelectedRequest}
       onSearch={handleSearch}
       selected={selectedRequest?.id} requests={requests} />
-    <TreatmentRequestDetails data={selectedRequest} onEdit={handleEditSelectedRequest} />
+    <TreatmentResponseEditor onCloseModal={(state) => setModalOpen(state)} open={modalOpen} />
+    <TreatmentRequestDetails data={selectedRequest} onEdit={handleEditSelectedRequest} onOpenModal={openResponseModal} />
   </main>
 }
