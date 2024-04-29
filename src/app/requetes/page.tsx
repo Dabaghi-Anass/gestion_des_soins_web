@@ -39,6 +39,14 @@ export default function TreatmentsRequestsPage() {
   return <main className="appointments-container flex w-full h-full p-4 gap-2">
 
     <TreatmentRequestPatients
+      onDeleteRequest={(id) => {
+        setRequests(requests.filter((request: any) => request.id !== id))
+        setSelectedRequest(null)
+      }}
+      onReply={(req) => {
+        setSelectedRequest(req)
+        openResponseModal(req.id)
+      }}
       onSelect={setSelectedRequest}
       onSearch={handleSearch}
       selected={selectedRequest?.id} requests={requests} />

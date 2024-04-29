@@ -6,9 +6,11 @@ import Dots from "./ui/dots";
 type Props = {
   request: any;
   onClick?: () => void;
+  onDelete: (request: any) => void;
+  onReply: (request: any) => void;
   selected: boolean;
 }
-export function TreatmentRequest({ request, selected, onClick }: Props) {
+export function TreatmentRequest({ request, selected, onClick, onDelete, onReply }: Props) {
   return <div onClick={onClick} className={`with-border p-4 flex flex-col gap-2 bg-primary-foreground rounded-lg treatment-request cursor-pointer ${selected && "active-request"}`}>
     <div className="header flex justify-between">
       <Avatar>
@@ -25,8 +27,8 @@ export function TreatmentRequest({ request, selected, onClick }: Props) {
               <Link href={`/profile/${request?.sentBy?.id}`}>View Profile</Link>
             </Button>
             <div className="flex w-full gap-4">
-              <Button className="w-full" variant="destructive">Delete</Button>
-              <Button className="w-full">Reply</Button>
+              <Button className="w-full" variant="destructive" onClick={() => onDelete(request)}>Delete</Button>
+              <Button className="w-full" onClick={onReply}>Reply</Button>
             </div>
           </div>
         </PopoverContent>

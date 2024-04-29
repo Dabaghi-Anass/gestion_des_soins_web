@@ -219,6 +219,13 @@ const updateTreatment = async (treatment: any) => {
         return null;
     }
 }
+const deleteTreatmentRequestById = async (id: number) => {
+    try {
+        await http.delete(`${TREATMENTS_URL}/request/${id}`);
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 
 const queries = {
     registerUser,
@@ -238,7 +245,8 @@ const queries = {
     addTreatment,
     updateRequestStatus,
     getTreatmentByRequestId,
-    updateTreatment
+    updateTreatment,
+    deleteTreatmentRequestById
 };
 
 export default queries;
