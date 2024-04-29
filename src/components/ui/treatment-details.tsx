@@ -4,7 +4,8 @@ import {
   calculateAgeFromBirtDate
 } from "@/lib/utils/utils";
 import html2pdf from "html2pdf.js";
-import { useState } from "react";
+import NextImage from "next/image";
+import FroalaEditorView from "react-froala-wysiwyg/FroalaEditorView";
 import { Button } from "./button";
 import DataNotFound from "./data-not-found";
 type Props = {
@@ -54,7 +55,6 @@ function getStatusBadgeStyle(status: string) {
   return style;
 }
 export default function TreatmentDetails({ treatment }: Props) {
-  const [test, setTest] = useState(false)
   function printDocument() {
     const element = document.getElementById('printable') as HTMLElement;
     let dark = false;
@@ -67,7 +67,9 @@ export default function TreatmentDetails({ treatment }: Props) {
     let options = {
       margin: 1,
       filename: fileName,
-      image: { type: "jpeg", quality: 0.98 },
+      image: {
+        type: "jpeg", quality: 0.98
+      },
       html2canvas: { dpi: 192, letterRendering: true },
       jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
     }
@@ -92,7 +94,8 @@ export default function TreatmentDetails({ treatment }: Props) {
             <h2 className="text-2xl font-bold mb-4">Patient Details</h2>
             <div className="flex items-center space-x-4">
               <div className="rounded-full overflow-hidden w-16 h-16">
-                <img
+                <NextImage
+                  loading="lazy"
                   alt="Patient Avatar"
                   height={64}
                   className="w-full h-full rounded-full"
@@ -112,7 +115,7 @@ export default function TreatmentDetails({ treatment }: Props) {
           </div>
           <div>
             <h2 className="text-2xl font-bold mb-4">Treatment Response</h2>
-            <p className="text-gray-500 dark:text-gray-400">{treatment.response}</p>
+            <FroalaEditorView model={treatment.response} />
             <div className="flex items-center space-x-4 mt-4">
               <div className="flex items-center space-x-2">
                 <CalendarIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -140,9 +143,10 @@ export default function TreatmentDetails({ treatment }: Props) {
             <h2 className="text-2xl font-bold mb-4">Doctor Details</h2>
             <div className="flex items-center space-x-4">
               <div className="rounded-full overflow-hidden w-16 h-16">
-                <img
+                <NextImage
                   alt="Doctor Avatar"
                   height={64}
+                  loading="lazy"
                   className="w-full h-full rounded-full"
                   src={treatment.sentBy?.profile?.imageUrl || "/user-placeholder.svg"}
                   style={{

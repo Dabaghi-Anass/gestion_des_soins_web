@@ -22,6 +22,10 @@ export default function TreatmentsRequestsPage() {
     const target: any = requests.find((r: any) => r.id === request.id)
     if (target) {
       target.status = request.status
+      target.lastModifiedDate = request.lastModifiedDate;
+      target.description = request.description;
+      target.title = request.title;
+      target.responded = request.responded;
     }
     setSelectedRequest(request)
   }
@@ -38,7 +42,11 @@ export default function TreatmentsRequestsPage() {
       onSelect={setSelectedRequest}
       onSearch={handleSearch}
       selected={selectedRequest?.id} requests={requests} />
-    <TreatmentResponseEditor onCloseModal={(state) => setModalOpen(state)} open={modalOpen} />
+    <TreatmentResponseEditor
+      request={selectedRequest}
+      onCloseModal={(state) => setModalOpen(state)}
+      onUpdateRequest={handleEditSelectedRequest}
+      open={modalOpen} />
     <TreatmentRequestDetails data={selectedRequest} onEdit={handleEditSelectedRequest} onOpenModal={openResponseModal} />
   </main>
 }

@@ -9,7 +9,7 @@ export default function ProfilePage() {
   return <section className="profile-container flex flex-col gap-8 w-full h-full bg-primary-foreground p-6">
     <ProfileHeader user={currentUser} />
     <div className="w-full h-full px-1 overflow-y-scroll gap-4 grid lg:grid-cols-3 grid-flow-row">
-      <ProfileContent user={currentUser} />
+      <ProfileContent user={currentUser} currentUser />
       <ProfileAnnouncement />
     </div>
   </section>

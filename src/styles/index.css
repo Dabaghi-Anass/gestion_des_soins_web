@@ -145,3 +145,11 @@ main.main-content{
 .active-request{
     border: 1px solid var(--primary-clr) !important;
 }
+.fr-element{
+    max-height: 50vh;
+    max-width : 100% !important;
+}
+.fr-box,.fr-wrapper{
+    /* max-width : 60vw !important; */
+    max-width: 100% !important;
+}

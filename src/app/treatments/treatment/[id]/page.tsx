@@ -1,18 +1,15 @@
 "use client"
 import api from "@/api/api";
+import Loading from "@/components/ui/loading";
 import TreatmentDetails from "@/components/ui/treatment-details";
 import { useParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-export default async function UserTreatmentsPage() {
+import { useEffect, useState } from "react";
+export default function UserTreatmentsPage() {
   const { id } = useParams();
-  const [treatment, setTreatment] = useState([]);
+  const [treatment, setTreatment] = useState(null);
   useEffect(() => {
-    api.getTreatmentById(+id).then(setTreatment)
+    api.getTreatmentByRequestId(+id).then(setTreatment)
   }, [])
-  useEffect(() => {
-    console.log(treatment)
-  }, [treatment])
-  return <Suspense fallback={<div>Loading...</div>}>
-    <TreatmentDetails treatment={treatment} />
-  </Suspense>;
+  if (!treatment) return <Loading />;
+  return <TreatmentDetails treatment={treatment} />
 }

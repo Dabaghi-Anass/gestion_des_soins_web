@@ -7,7 +7,7 @@ import { User, UserProfile } from "@/types/types";
 import http from "./http";
 const registerUser = async (user: User) => {
     try {
-        const response = await http.post(`${AUTH_URL}/register`, user);
+        const response: any = await http.post(`${AUTH_URL}/register`, user);
         if (response.status === 200) {
             const json: any = await response.json();
             return { ...json, token: response.headers.get("x-auth"), done: true };
@@ -29,7 +29,7 @@ const logout = async () => {
 
 const loginUser = async (user: User) => {
     try {
-        const response = await http.post(`${AUTH_URL}/login`, user);
+        const response: any = await http.post(`${AUTH_URL}/login`, user);
         if (response.status === 200) {
             const json: any = await response.json();
             return { ...json, token: response.headers.get("x-auth"), done: true };
@@ -43,7 +43,7 @@ const loginUser = async (user: User) => {
 
 const currentUser = async () => {
     try {
-        const response = await http.get(`${AUTH_URL}/current-user`);
+        const response: any = await http.get(`${AUTH_URL}/current-user`);
         if (response.status === 200) {
             return response.json();
         }
@@ -76,7 +76,7 @@ const updateProfile = async (profile: UserProfile | undefined) => {
         if (!profile) return null;
         delete profile.lastModifiedDate;
         delete profile.creationDate;
-        const response = await http.put(`${AUTH_URL}/user/saveProfile`, profile);
+        const response: any = await http.put(`${AUTH_URL}/user/saveProfile`, profile);
         if (response.ok) {
             return response;
         } else {
@@ -89,7 +89,7 @@ const updateProfile = async (profile: UserProfile | undefined) => {
 
 const updateUser = async (user: User) => {
     try {
-        const response = await http.put(`${AUTH_URL}/user/update`, user);
+        const response: any = await http.put(`${AUTH_URL}/user/update`, user);
         if (response.ok) {
             return response.json();
         }
@@ -100,7 +100,7 @@ const updateUser = async (user: User) => {
 };
 const getUserById = async (id: number) => {
     try {
-        const response = await http.get(`${USER_URL}/${id}`);
+        const response: any = await http.get(`${USER_URL}/${id}`);
         if (response.ok) {
             return response.json();
         }
@@ -111,7 +111,7 @@ const getUserById = async (id: number) => {
 }
 const getRequestTreatments = async (userId : number) => {
     try {
-        const response = await http.get(`${TREATMENTS_URL}/requests/${userId}`);
+        const response: any = await http.get(`${TREATMENTS_URL}/requests/${userId}`);
         if (response.ok) {
             return response.json();
         }
@@ -122,7 +122,7 @@ const getRequestTreatments = async (userId : number) => {
 };
 const denyTreatmentRequest = async (requestId: number) => {
     try {
-        const response = await http.put(`${TREATMENTS_URL}/deny/${requestId}`, {});
+        const response: any = await http.put(`${TREATMENTS_URL}/deny/${requestId}`, {});
         if (response.ok) {
             return response.json();
         }
@@ -133,7 +133,18 @@ const denyTreatmentRequest = async (requestId: number) => {
 }
 const acceptTreatmentRequest = async (requestId: number) => {
     try {
-        const response = await http.put(`${TREATMENTS_URL}/accept/${requestId}`, {});
+        const response: any = await http.put(`${TREATMENTS_URL}/accept/${requestId}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
+const updateRequestStatus = async (requestId: number,status:string) => {
+    try {
+        const response: any = await http.put(`${TREATMENTS_URL}/status/${requestId}`, { status });
         if (response.ok) {
             return response.json();
         }
@@ -144,7 +155,7 @@ const acceptTreatmentRequest = async (requestId: number) => {
 }
 const getTreatmentsByUserId = async (id: number, offset = 0, limit = 6) => {
     try {
-        const response = await http.get(`${TREATMENTS_URL}/${id}?offset=${offset}&limit=${limit}`);
+        const response: any = await http.get(`${TREATMENTS_URL}/${id}?offset=${offset}&limit=${limit}`);
         if (response.ok) {
             return response.json();
         }
@@ -155,7 +166,7 @@ const getTreatmentsByUserId = async (id: number, offset = 0, limit = 6) => {
 }
 const getAllTreatmentsByUserId = async (id: number) => {
     try {
-        const response = await http.get(`${TREATMENTS_URL}/all/${id}`);
+        const response: any = await http.get(`${TREATMENTS_URL}/all/${id}`);
         if (response.ok) {
             return response.json();
         }
@@ -166,7 +177,40 @@ const getAllTreatmentsByUserId = async (id: number) => {
 }
 const getTreatmentById = async (id: number) => {
     try {
-        const response = await http.get(`${TREATMENTS_URL}/treatment/${id}`);
+        const response: any = await http.get(`${TREATMENTS_URL}/treatment/${id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
+const getTreatmentByRequestId = async (id: number) => {
+    try {
+        const response: any = await http.get(`${TREATMENTS_URL}/treatment-by-request/${id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
+const addTreatment = async (treatment: any) => {
+    try {
+        const response: any = await http.post(`${TREATMENTS_URL}/add-treatment`, treatment);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+}
+const updateTreatment = async (treatment: any) => {
+    try {
+        const response: any = await http.put(`${TREATMENTS_URL}/update-treatment`, treatment);
         if (response.ok) {
             return response.json();
         }
@@ -190,7 +234,11 @@ const queries = {
     getTreatmentsByUserId,
     getAllTreatmentsByUserId,
     getUserById,
-    getTreatmentById
+    getTreatmentById,
+    addTreatment,
+    updateRequestStatus,
+    getTreatmentByRequestId,
+    updateTreatment
 };
 
 export default queries;

@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import MedicalInformation from "./medical-information";
 // import { User } from "@/types/types"
 import api from "@/api/api";
+import { getBadgeStyle } from "@/lib/utils/utils";
 import Link from "next/link";
 import TreatmentHistory from "./treatement-history";
 import AsyncButton from "./ui/AsyncButton";
@@ -60,48 +61,6 @@ export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: P
       })
       return
     }
-  }
-  function getStatusBadgeStyle(status: string) {
-    let getBgOfHue = (hue: number) => {
-      return `hsl(${hue},84%, 93%)`
-    };
-    let getColorOfHue = (hue: number) => {
-      return `hsl(${hue},64%, 24%)`
-    };
-
-    let style = {
-      backgroundColor: getBgOfHue(270),
-      color: getColorOfHue(270),
-      border: `1px solid ${270}`
-    }
-    enum Status {
-      PENDING = 42,
-      CONFIRMED = 141,
-      DENIED = 8
-    }
-    if (status === "PENDING") {
-      style = {
-        backgroundColor: getBgOfHue(Status.PENDING),
-        color: getColorOfHue(Status.PENDING),
-        border: `1px solid ${getColorOfHue(Status.PENDING)}`
-      }
-    }
-    if (status === "CONFIRMED") {
-      style = {
-        backgroundColor: getBgOfHue(Status.CONFIRMED),
-        color: getColorOfHue(Status.CONFIRMED),
-        border: `1px solid ${getColorOfHue(Status.CONFIRMED)}`
-      }
-    }
-    if (status === "DENIED") {
-      style = {
-        backgroundColor: getBgOfHue(Status.DENIED),
-        color: getColorOfHue(Status.DENIED),
-        border: `1px solid ${getColorOfHue(Status.DENIED)}`
-      }
-    }
-
-    return style;
   }
   async function getTreatments(user_id: number) {
     const treatments = await api.getTreatmentsByUserId(user_id)
@@ -157,7 +116,7 @@ export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: P
     <div className="w-full">
       <div className="flex gap-2 mb-4 items-center">
         <h1 className="text-xl font-semibold">{request.title}</h1>
-        <span className="status-badge lowercase" style={getStatusBadgeStyle(request.status)}>{request.status}</span>
+        <span className="status-badge lowercase " style={getBadgeStyle(request.status)}>{request.status}</span>
       </div>
       <p className="max-w-prose">{request.description}</p>
     </div>

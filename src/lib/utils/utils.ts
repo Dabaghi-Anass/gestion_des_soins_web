@@ -39,3 +39,34 @@ export async function toDataUrl(url: string) {
         throw new Error(`Failed to fetch or convert URL to data URL: ${error.message}`);
     }
 }
+
+export function getBadgeStyle(status: string) {
+    let getBgOfHue = (hue: number) => {
+        return `hsl(${hue},100%, 50%, 0.5)`
+    };
+
+    let style = {
+        backgroundColor: getBgOfHue(270),
+    }
+    enum Status {
+        PENDING = 42,
+        CONFIRMED = 141,
+        DENIED = 8
+    }
+    if (status === "PENDING") {
+        style = {
+        backgroundColor: getBgOfHue(Status.PENDING),
+        }
+    }
+    if (status === "CONFIRMED") {
+        style = {
+        backgroundColor: getBgOfHue(Status.CONFIRMED),
+        }
+    }
+    if (status === "DENIED") {
+        style = {
+        backgroundColor: getBgOfHue(Status.DENIED),
+        }
+    }
+    return style;
+}

@@ -17,9 +17,7 @@ export function TreatmentRequest({ request, selected, onClick }: Props) {
       </Avatar>
       <Popover>
         <PopoverTrigger>
-          <Button variant="ghost" className="aspect-square h-[30px] p-0">
-            <Dots count={3} />
-          </Button>
+          <Dots count={3} />
         </PopoverTrigger>
         <PopoverContent>
           <div className="flex flex-col gap-4">
