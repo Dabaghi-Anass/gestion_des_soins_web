@@ -4,6 +4,7 @@ import defaultUserImageFemale from "@/assets/svgs/user-f.svg";
 import defaultUserImageMale from "@/assets/svgs/user-m.svg";
 import Form from "@/components/form";
 import Loading from "@/components/ui/loading";
+import { useAppSelector } from "@/hooks/redux-hooks";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -13,6 +14,7 @@ type Props = {
   gender: boolean;
 }
 export default function ProfileImageSelect({ onNext, onBack, gender }: Props) {
+  const currentUser = useAppSelector((state: any) => state.UserReducer.user);
   const [formError, setFormError] = useState<string | null>(null)
   const [image, setImage] = useState<string>(defaultUserImageMale.src);
   const [loading, setLoading] = useState<boolean>(false);
@@ -37,6 +39,11 @@ export default function ProfileImageSelect({ onNext, onBack, gender }: Props) {
       setImage(defaultUserImageFemale.src)
     }
   }, [gender])
+  useEffect(() => {
+    if (currentUser?.profile?.imageUrl) {
+      onNext(currentUser.profile.imageUrl)
+    }
+  }, [currentUser])
   return <section className="flex flex-col items-center w-full ">
     <h1 className="md:text-3xl">selectioner une image</h1>
     <div className="h-screen w-full flex flex-col gap-4 items-center">

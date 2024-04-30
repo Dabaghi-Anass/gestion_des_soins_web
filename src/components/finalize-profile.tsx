@@ -1,14 +1,13 @@
 "use client";
 import Form from "@/components/form";
-import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import Loading from "@/components/ui/loading";
 import { UserProfile } from "@/types/types";
 // import { RegisterProfileFormData , UserProfile } from "@/types/types";
-import { useState } from "react";
+import { useAppSelector } from "@/hooks/redux-hooks";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-
 const RegisterSchema = z
   .object({
     birthDate: z.string().datetime({
@@ -35,7 +34,8 @@ type Props = {
 export default function ProfileForm({ onNext, onBack }: Props) {
   const [formError, setFormError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [profile, setProfile] = useState<UserProfile | {}>({});
+  const [profile, setProfile] = useState<UserProfile>({});
+  const currentUser = useAppSelector((state: any) => state.UserReducer.user);
   const [loading, setLoading] = useState<boolean>(false);
   const validateFields = (data: any) => {
     setProfile(data)
@@ -61,6 +61,7 @@ export default function ProfileForm({ onNext, onBack }: Props) {
     const profileClone = { ...profile };
     profileClone[name] = value;
     setProfile(profileClone);
+    console.log(profileClone)
     const schema = RegisterSchema.pick({ [name]: true });
     const validationObj = schema.safeParse({ [name]: value });
     if (!validationObj.success) {
@@ -81,6 +82,12 @@ export default function ProfileForm({ onNext, onBack }: Props) {
   const handleSubmit = async (data: any) => {
     onNext(profile as UserProfile);
   };
+  useEffect(() => {
+    if (!currentUser?.profile) return
+    setProfile(currentUser.profile)
+    onNext(currentUser.profile)
+  }, [currentUser])
+  if (loading) return <Loading />
   return <section className="flex flex-col items-center w-full ">
     <h1 className="md:text-3xl mb-8">Dites-nous en plus à propos de vous</h1>
     <div className="h-screen w-full flex flex-col gap-4 items-center">
@@ -88,10 +95,10 @@ export default function ProfileForm({ onNext, onBack }: Props) {
       <Form
         onSubmit={handleSubmit}
         className='flex flex-col gap-4 px-4 w-full max-w-xl md:min-w-[500px] relative'>
-        {loading && <Loading />}
         <Form.Input
           onChange={validateField}
           error={errors.phoneNumber}
+          value={profile?.phoneNumber}
           name='phoneNumber'
           placeholder='entrer votre numero de telephone'
           label="Phone Number"
@@ -100,14 +107,17 @@ export default function ProfileForm({ onNext, onBack }: Props) {
           onChange={validateField}
           error={errors.address}
           name='address'
+          value={profile?.address}
           label="Address"
           placeholder='entrer votre address'
         />
         <Label className="text-slate-400">Sexe</Label>
-        <Select onValueChange={(value) => {
-          const profileClone = { ...profile, gender: value };
-          setProfile(profileClone);
-        }}>
+        <Select
+          value={profile?.gender}
+          onValueChange={(value) => {
+            const profileClone = { ...profile, gender: value };
+            setProfile(profileClone);
+          }}>
           <SelectTrigger>
             <SelectValue placeholder="choisie votre sexe" />
           </SelectTrigger>
@@ -117,7 +127,16 @@ export default function ProfileForm({ onNext, onBack }: Props) {
           </SelectContent>
         </Select>
         <Label className="text-slate-400">Birth Date</Label>
-        <DatePicker onPickDate={console.log} />
+        <Form.Input
+          type="date"
+          name="birthDate"
+          onInput={(e: any) => {
+            const profileClone = {
+              ...profile,
+              birthDate: e.target.value,
+            };
+            setProfile(profileClone);
+          }} />
         <Form.Button onClick={handleSubmit} disabled={Object.keys(errors).length > 0}>Save Profile</Form.Button>
         <Form.Button onClick={onBack} variant="outline">retourne</Form.Button>
       </Form>

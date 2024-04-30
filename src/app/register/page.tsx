@@ -18,10 +18,10 @@ import {
 import { toast } from "sonner";
 export default function RegisterPage() {
 	const router = useRouter()
-	const [currentComponentIndex, setCurrentComponentIndex] = useState<number>(0); //starts from 1
+	const [currentComponentIndex, setCurrentComponentIndex] = useState<number>(1); //starts from 1
 	const [loading, setLoading] = useState<boolean>(false);
-	const currentUser = useAppSelector((state: any) => state.UserReducer);
-	const [user, setUser] = useState<any>(null);
+	const currentUser = useAppSelector((state: any) => state.UserReducer.user);
+	const [user, setUser] = useState<any>(currentUser);
 	function handleNext(summary: string, message: string) {
 		setCurrentComponentIndex((prev) => prev + 1);
 		toast(summary, {
@@ -56,15 +56,19 @@ export default function RegisterPage() {
 			if (!user) return;
 			setUser((prev: any) => ({ ...prev, profile: { ...prev.profile, imageUrl } }))
 			handleUpdateProfile(user.profile);
-			router.replace("/")
+			setCurrentComponentIndex(5)
 		}} onBack={() => {
 			setCurrentComponentIndex(p => p - 1)
 		}} />,
-		<UserRoleDedicatedForm user={user?.role} onNext={(userInfo: any) => {
-
-		}} onBack={() => {
-			setCurrentComponentIndex(p => p - 1)
-		}} />
+		<UserRoleDedicatedForm user={user}
+			onNext={(userInfo: any) => {
+				if (!user) return;
+				setUser((prev: any) => ({ ...prev, ...userInfo }))
+				//todo: update user with user info
+				// router.replace("/")
+			}} onBack={() => {
+				setCurrentComponentIndex(p => p - 1)
+			}} />
 	]
 	async function handleUpdateProfile(profile: UserProfile) {
 		if (profile.id) {
@@ -82,12 +86,8 @@ export default function RegisterPage() {
 		}
 	}
 	useEffect(() => {
-		if (!user) {
-			setCurrentComponentIndex(1)
-			return;
-		}
-		router.replace("/")
-	}, [])
+		console.log(currentComponentIndex)
+	}, [currentComponentIndex])
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-background'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}

@@ -16,7 +16,7 @@ export type UserProfile =BaseEntity & {
 	address?: string;
 	imageUrl?: string;
 	gender?: string;
-	id: number;
+	id?: number;
 	[key : string]: any;
 };
 export type User =BaseEntity & {

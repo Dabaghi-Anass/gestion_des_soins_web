@@ -29,6 +29,8 @@
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "date-format": "^4.0.14",
+    "dateformat": "^5.0.3",
     "font-awesome": "^4.7.0",
     "froala-editor": "^4.2.0",
     "html2canvas": "^1.4.1",
@@ -54,6 +56,7 @@
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.32.1",
+    "@types/dateformat": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
