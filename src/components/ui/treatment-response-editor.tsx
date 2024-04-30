@@ -12,6 +12,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/js/plugins/char_counter.min.js';
 import 'froala-editor/js/plugins/colors.min.js';
+import 'froala-editor/js/plugins/font_size.min.js';
 import 'froala-editor/js/plugins/line_height.min.js';
 import 'froala-editor/js/plugins/lists.min.js';
 import 'froala-editor/js/plugins/quote.min.js';
@@ -91,6 +92,7 @@ export default function TreatmentResponseEditor({ onCloseModal, onUpdateRequest,
               placeholderText: 'Ecrire une response detaillée ici...',
               charCounterCount: true,
               charCounterMax: 3000,
+              attribution: false,
             }}
             onModelChange={handleModelChange}
             model={model}

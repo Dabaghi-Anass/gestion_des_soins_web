@@ -7,6 +7,7 @@ import { User, UserProfile } from "@/types/types";
 import http from "./http";
 const registerUser = async (user: User) => {
     try {
+        if(user === null || user === undefined) return null;
         const response: any = await http.post(`${AUTH_URL}/register`, user);
         if (response.status === 200) {
             const json: any = await response.json();
@@ -29,6 +30,7 @@ const logout = async () => {
 
 const loginUser = async (user: User) => {
     try {
+        if(user === null || user === undefined) return null;
         const response: any = await http.post(`${AUTH_URL}/login`, user);
         if (response.status === 200) {
             const json: any = await response.json();
@@ -73,7 +75,7 @@ const isUserRegistred = async () => {
 
 const updateProfile = async (profile: UserProfile | undefined) => {
     try {
-        if (!profile) return null;
+        if (!profile?.id) return null;
         delete profile.lastModifiedDate;
         delete profile.creationDate;
         const response: any = await http.put(`${AUTH_URL}/user/saveProfile`, profile);
@@ -89,6 +91,7 @@ const updateProfile = async (profile: UserProfile | undefined) => {
 
 const updateUser = async (user: User) => {
     try {
+        if (user === null || user === undefined) return null;
         const response: any = await http.put(`${AUTH_URL}/user/update`, user);
         if (response.ok) {
             return response.json();
@@ -100,6 +103,7 @@ const updateUser = async (user: User) => {
 };
 const getUserById = async (id: number) => {
     try {
+        if (id === null || id ===undefined) return null;
         const response: any = await http.get(`${USER_URL}/${id}`);
         if (response.ok) {
             return response.json();
@@ -111,6 +115,7 @@ const getUserById = async (id: number) => {
 }
 const getRequestTreatments = async (userId : number) => {
     try {
+        if (userId === null || userId === undefined) return null;
         const response: any = await http.get(`${TREATMENTS_URL}/requests/${userId}`);
         if (response.ok) {
             return response.json();
@@ -120,9 +125,10 @@ const getRequestTreatments = async (userId : number) => {
         return null;
     }
 };
-const denyTreatmentRequest = async (requestId: number) => {
+const denyTreatmentRequest = async (id: number) => {
     try {
-        const response: any = await http.put(`${TREATMENTS_URL}/deny/${requestId}`, {});
+        if (id === null || id ===undefined) return null;
+        const response: any = await http.put(`${TREATMENTS_URL}/deny/${id}`, {});
         if (response.ok) {
             return response.json();
         }
@@ -131,9 +137,10 @@ const denyTreatmentRequest = async (requestId: number) => {
         return null;
     }
 }
-const acceptTreatmentRequest = async (requestId: number) => {
+const acceptTreatmentRequest = async (id: number) => {
     try {
-        const response: any = await http.put(`${TREATMENTS_URL}/accept/${requestId}`, {});
+        if (id === null || id ===undefined) return null;
+        const response: any = await http.put(`${TREATMENTS_URL}/accept/${id}`, {});
         if (response.ok) {
             return response.json();
         }
@@ -142,9 +149,10 @@ const acceptTreatmentRequest = async (requestId: number) => {
         return null;
     }
 }
-const updateRequestStatus = async (requestId: number,status:string) => {
+const updateRequestStatus = async (id: number,status:string) => {
     try {
-        const response: any = await http.put(`${TREATMENTS_URL}/status/${requestId}`, { status });
+        if (id === null || id ===undefined) return null;
+        const response: any = await http.put(`${TREATMENTS_URL}/status/${id}`, { status });
         if (response.ok) {
             return response.json();
         }
@@ -155,6 +163,7 @@ const updateRequestStatus = async (requestId: number,status:string) => {
 }
 const getTreatmentsByUserId = async (id: number, offset = 0, limit = 6) => {
     try {
+        if (id === null || id ===undefined) return null;
         const response: any = await http.get(`${TREATMENTS_URL}/${id}?offset=${offset}&limit=${limit}`);
         if (response.ok) {
             return response.json();
@@ -166,6 +175,7 @@ const getTreatmentsByUserId = async (id: number, offset = 0, limit = 6) => {
 }
 const getAllTreatmentsByUserId = async (id: number) => {
     try {
+        if (id === null || id ===undefined) return null;
         const response: any = await http.get(`${TREATMENTS_URL}/all/${id}`);
         if (response.ok) {
             return response.json();
@@ -177,6 +187,7 @@ const getAllTreatmentsByUserId = async (id: number) => {
 }
 const getTreatmentById = async (id: number) => {
     try {
+        if (id === null || id ===undefined) return null;
         const response: any = await http.get(`${TREATMENTS_URL}/treatment/${id}`);
         if (response.ok) {
             return response.json();
@@ -188,6 +199,7 @@ const getTreatmentById = async (id: number) => {
 }
 const getTreatmentByRequestId = async (id: number) => {
     try {
+        if (id === null || id ===undefined) return null;
         const response: any = await http.get(`${TREATMENTS_URL}/treatment-by-request/${id}`);
         if (response.ok) {
             return response.json();
@@ -221,6 +233,7 @@ const updateTreatment = async (treatment: any) => {
 }
 const deleteTreatmentRequestById = async (id: number) => {
     try {
+        if (id === null || id ===undefined) return null;
         await http.delete(`${TREATMENTS_URL}/request/${id}`);
     } catch (e: any) {
         console.log(e.message)

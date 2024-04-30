@@ -5,6 +5,7 @@ import {
 } from "@/lib/utils/utils";
 import html2pdf from "html2pdf.js";
 import NextImage from "next/image";
+import { useEffect } from "react";
 import FroalaEditorView from "react-froala-wysiwyg/FroalaEditorView";
 import { Button } from "./button";
 import DataNotFound from "./data-not-found";
@@ -70,13 +71,21 @@ export default function TreatmentDetails({ treatment }: Props) {
       image: {
         type: "jpeg", quality: 0.98
       },
-      html2canvas: { dpi: 192, letterRendering: true },
-      jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
+      html2canvas: {
+        dpi: 192, letterRendering: true
+      },
+      jsPDF: { unit: "in", format: "a3", orientaion: "landscape" },
     }
     worker.set(options).from(element).save(fileName).then(() => {
       if (dark) document.documentElement.classList.toggle("dark", true);
     });
   }
+  useEffect(() => {
+    const froalaView = document.querySelector(".fr-view") as HTMLElement;
+    if (froalaView) {
+      froalaView.style.maxWidth = "100ch";
+    }
+  }, [])
   if (!treatment) return <DataNotFound />
   return (
     <main className="w-full min-h-full py-4 px-4 md:px-4">
@@ -109,7 +118,7 @@ export default function TreatmentDetails({ treatment }: Props) {
               </div>
               <div>
                 <p className="text-lg font-medium capitalize">{treatment.sentTo?.firstName + " " + treatment.sentTo?.lastName}</p>
-                <p className="text-gray-500 dark:text-gray-400">Age: {treatment.sentTo?.profile?.birthDate ? calculateAgeFromBirtDate(treatment.sentTo?.profile?.birthDate) : "N/A"} | Gender: <span className="lowercase">{treatment.sentTo?.profile?.gender ?? "N/A"}</span></p>
+                <p className="text-gray-500 dark:text-gray-400">Age: {treatment.sentTo?.profile?.birthDate ? calculateAgeFromBirtDate(treatment.sentTo?.profile?.birthDate) : "N/A"} | Sexe: <span className="lowercase">{treatment.sentTo?.profile?.gender ?? "N/A"}</span></p>
               </div>
             </div>
           </div>
@@ -158,7 +167,7 @@ export default function TreatmentDetails({ treatment }: Props) {
               </div>
               <div>
                 <p className="text-lg font-medium capitalize">{treatment.sentBy?.firstName + " " + treatment.sentBy?.lastName}</p>
-                <p className="text-gray-500 dark:text-gray-400">Age: {treatment.sentBy?.profile?.birthDate ? calculateAgeFromBirtDate(treatment.sentBy?.profile?.birthDate) : "N/A"} | Gender: <span className="lowercase">{treatment.sentBy?.profile?.gender ?? "N/A"}</span></p>
+                <p className="text-gray-500 dark:text-gray-400">Age: {treatment.sentBy?.profile?.birthDate ? calculateAgeFromBirtDate(treatment.sentBy?.profile?.birthDate) : "N/A"} | Sexe: <span className="lowercase">{treatment.sentBy?.profile?.gender ?? "N/A"}</span></p>
               </div>
             </div>
           </div>

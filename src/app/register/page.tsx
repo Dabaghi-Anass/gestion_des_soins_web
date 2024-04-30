@@ -5,6 +5,7 @@ import ProfileImageSelect from "@/components/image-select-form";
 import RegisterForm from "@/components/register-form";
 import Loading from "@/components/ui/loading";
 import { StepProgress } from "@/components/ui/progress-steps";
+import UserRoleDedicatedForm from "@/components/user-dedicated-form";
 import UserTypeSelector from "@/components/user-type-selector";
 import { useAppSelector } from "@/hooks/redux-hooks";
 import { RegisterUserFormData, Role, User, UserProfile } from "@/types/types";
@@ -59,11 +60,11 @@ export default function RegisterPage() {
 		}} onBack={() => {
 			setCurrentComponentIndex(p => p - 1)
 		}} />,
-		// <UserRoleDedicatedForm onNext={(userInfo: any) => {
+		<UserRoleDedicatedForm user={user?.role} onNext={(userInfo: any) => {
 
-		// }} onBack={() => {
-		// 	setCurrentComponentIndex(p => p - 1)
-		// }} />
+		}} onBack={() => {
+			setCurrentComponentIndex(p => p - 1)
+		}} />
 	]
 	async function handleUpdateProfile(profile: UserProfile) {
 		if (profile.id) {

@@ -1,7 +1,6 @@
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator
@@ -30,7 +29,7 @@ export default function AppBreadCrump({ links }: Props) {
           }
           return <React.Fragment key={link.label}>
             <BreadcrumbItem key={link.label} >
-              <BreadcrumbLink href={link.path}>{link.label}</BreadcrumbLink>
+              <BreadcrumbPage>{link.label}</BreadcrumbPage>
             </BreadcrumbItem>
             {i < links.length - 1 && <BreadcrumbSeparator />}
           </React.Fragment>

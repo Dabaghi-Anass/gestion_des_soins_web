@@ -1,6 +1,6 @@
 "use client"
 import api from "@/api/api";
-import { TreatmentRequest } from "@/components/appointment-request-card";
+import { TreatmentRequest } from "@/components/treatment-request-card";
 import { Input } from "@/components/ui/input";
 import {
   Tabs,

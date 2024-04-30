@@ -40,7 +40,7 @@ export function AppLogo({ className, navOpen = false }: { className?: string, na
 				<rect id="_Transparent_Rectangle" style={{ fill: "none" }} width="8" height="8" />
 			</svg>
 			{/* <img src="/logo.svg" alt="logo" className="" /> */}
-			{navOpen && <span className="font-bold uppercase text-xl text-secondary-foreground">Fasma</span>}
+			{/* {navOpen && <span className="font-bold uppercase text-xl text-secondary-foreground">Fasma</span>} */}
 		</div>
 	);
 }

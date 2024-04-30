@@ -10,9 +10,11 @@ import MedicalInformation from "./medical-information";
 // import { User } from "@/types/types"
 import api from "@/api/api";
 import { getBadgeStyle } from "@/lib/utils/utils";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import TreatmentHistory from "./treatement-history";
 import AsyncButton from "./ui/AsyncButton";
+import Loading from "./ui/loading";
 type Props = {
   data: any | null;
   onEdit: (request: any) => void;
@@ -21,19 +23,14 @@ type Props = {
 export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: Props) {
   let currentUser: any = useAppSelector(state => state.UserReducer.user);
   const [request, setRequest] = useState<any>();
-  const [treatmentHistory, setTreatmentHistory] = useState<any>([])
+  const { data: treatmentHistory, error, isLoading } = useQuery({
+    queryKey: ["treatments-history", request?.sentBy?.id],
+    queryFn: async ({ queryKey }) => await api.getTreatmentsByUserId(queryKey[1])
+  })
   if (request?.sentBy) currentUser = request.sentBy
   useEffect(() => {
     setRequest(data)
   }, [data])
-  useEffect(() => {
-    getTreatments(request?.sentBy?.id)
-  }, [request])
-
-  if (!request)
-    return <section className="profile bg-primary-foreground rounded-lg with-border flex flex-col gap-8 w-full p-6 items-center justify-center">
-      <h1 className="text-3xl font-bold text-gray-400">no request selected</h1>
-    </section>
   async function handleDenyRequest() {
     const treatmentRequest = await api.denyTreatmentRequest(request.id);
     if (treatmentRequest?.status === "DENIED") {
@@ -62,11 +59,11 @@ export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: P
       return
     }
   }
-  async function getTreatments(user_id: number) {
-    const treatments = await api.getTreatmentsByUserId(user_id)
-    setTreatmentHistory(treatments)
-  }
-
+  if (!request)
+    return <section className="profile bg-primary-foreground rounded-lg with-border flex flex-col gap-8 w-full p-6 items-center justify-center">
+      <h1 className="text-3xl font-bold text-gray-400">no request selected</h1>
+    </section>
+  if (isLoading) return <Loading />
   return <section className="profile bg-primary-foreground rounded-lg with-border flex flex-col gap-8 w-full p-6 overflow-y-scroll">
     <div className="profile-header flex justify-between gap-4 md:items-center w-full">
       <Avatar className="with-border w-16 h-16">

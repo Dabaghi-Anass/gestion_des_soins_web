@@ -1,9 +1,7 @@
 "use client";
 import Form from "@/components/form";
-import Loading from "@/components/ui/loading";
 import { useState } from "react";
 import { z } from "zod";
-import { Combobox } from "./ui/combobox";
 
 const RegisterSchema = z
   .object({
@@ -26,12 +24,12 @@ const RegisterSchema = z
 type Props = {
   onNext: (data: any) => void;
   onBack: () => void;
+  user: any;
 }
-export default function UserRoleDedicatedForm({ onNext, onBack }: Props) {
+export default function UserRoleDedicatedForm({ user, onNext, onBack }: Props) {
   const [formError, setFormError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [data, setData] = useState<any>();
-  const [loading, setLoading] = useState<boolean>(false);
   const validateFields = (data: any) => {
     setData(data);
     const validationObj = RegisterSchema.safeParse(data);
@@ -83,7 +81,6 @@ export default function UserRoleDedicatedForm({ onNext, onBack }: Props) {
       <Form
         onSubmit={handleSubmit}
         className='flex flex-col gap-4 px-4 w-full max-w-xl md:min-w-[500px] relative'>
-        {loading && <Loading />}
         <Form.Input
           onChange={validateField}
           error={errors.phoneNumber}
