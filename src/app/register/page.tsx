@@ -36,8 +36,12 @@ export default function RegisterPage() {
 		}} />,
 		<UserTypeSelector
 			onNext={async (role: Role | undefined) => {
-				if (!user || !role) return;
-				const userFromDb = await api.updateUser({ id: user.id, role: role.toString() } as User)
+				console.log(currentUser?.id, role)
+				if (!currentUser?.id || !role) return;
+				const userFromDb = await api.initUserRole({
+					id: currentUser.id,
+					role: role.toString()
+				} as User)
 				setUser((prev: any) => ({ ...userFromDb }))
 				handleNext("Role Selected", "Role selected successfully")
 			}}
@@ -62,10 +66,9 @@ export default function RegisterPage() {
 		}} />,
 		<UserRoleDedicatedForm user={user}
 			onNext={(userInfo: any) => {
-				if (!user) return;
-				setUser((prev: any) => ({ ...prev, ...userInfo }))
-				//todo: update user with user info
-				// router.replace("/")
+				if (!userInfo) return;
+				console.log({ userInfo })
+				router.replace("/")
 			}} onBack={() => {
 				setCurrentComponentIndex(p => p - 1)
 			}} />

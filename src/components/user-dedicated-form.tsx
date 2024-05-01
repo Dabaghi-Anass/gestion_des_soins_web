@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { z } from "zod";
 import DoctorForm from "./doctor-info-form";
-import { Button } from "./ui/button";
 
 const RegisterSchema = z
   .object({
@@ -30,10 +29,6 @@ type Props = {
 export default function UserRoleDedicatedForm({ user, onNext, onBack }: Props) {
   const [formError, setFormError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [data, setData] = useState<any>();
-  const handleSubmit = async (data: any) => {
-    onNext(data);
-  };
   const userAbbr = `${user.profile.gender === "MALE" ? "mr" : "mlle"} ${user.firstName} ${user.lastName}`
   return <section className="flex flex-col items-center w-full ">
     {user.role === "DOCTOR" ?
@@ -49,11 +44,13 @@ export default function UserRoleDedicatedForm({ user, onNext, onBack }: Props) {
         user={user}
         formError={formError}
         errors={errors}
-        onData={setData}
+        onData={(data) => {
+          onNext(data);
+        }}
         onErrors={setErrors}
         onFormError={setFormError} />
-      <Button onClick={handleSubmit} disabled={Object.keys(errors).length > 0}>Save Info</Button>
-      <Button onClick={onBack} variant="outline">retourne</Button>
+      {/* <Button onClick={handleSubmit} disabled={Object.keys(errors).length > 0}>Save Info</Button>
+      <Button onClick={onBack} variant="outline">retourne</Button> */}
     </div>
   </section >
 }

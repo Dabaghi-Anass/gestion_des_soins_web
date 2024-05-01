@@ -39,7 +39,13 @@ export async function toDataUrl(url: string) {
         throw new Error(`Failed to fetch or convert URL to data URL: ${error.message}`);
     }
 }
-
+export function randomHslaCombination(alpha: number = 0.5) {
+    let hue = Math.floor(Math.random() * 360);
+    return {
+        backgroundColor: `hsla(${hue}, 80%, 50%, ${alpha})`,
+        color: `hsla(${hue}, 100%, 20%)`
+    };
+}
 export function getBadgeStyle(status: string) {
     let getBgOfHue = (hue: number) => {
         return `hsl(${hue},100%, 50%, 0.5)`

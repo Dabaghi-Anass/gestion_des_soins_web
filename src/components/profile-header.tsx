@@ -27,6 +27,10 @@ export default function ProfileHeader({ user, hideEditLink }: Props) {
           <CalendarDays size={20} />
           Joined Since : {new Date(currentUser?.creationDate).toLocaleString("en-GB")}
         </span>
+        <div className="flex gap-2 mt-1 flex-wrap">
+          {user?.specialities &&
+            user.specialities.map((spec: any) => <span key={spec} className="text-xs text-light">{spec.category}</span>)}
+        </div>
       </div>
       <div className="user-profile-actions flex gap-2">
         {!hideEditLink ?

@@ -101,6 +101,19 @@ const updateUser = async (user: User) => {
         return null;
     }
 };
+
+const initUserRole = async (user: User) => {
+    try {
+        if (user === null || user === undefined) return null;
+        const response: any = await http.put(`${AUTH_URL}/user/update-role`, user);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        return null;
+    }
+};
 const getUserById = async (id: number) => {
     try {
         if (id === null || id ===undefined) return null;
@@ -239,6 +252,18 @@ const deleteTreatmentRequestById = async (id: number) => {
         console.log(e.message)
     }
 }
+const updateDoctor = async (doctor: any) => {
+    try {
+        if (doctor?.id === null || doctor?.id === undefined) return null;
+        const response = await http.post(`${USER_URL}/updateDoctor`, doctor);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 
 const queries = {
     registerUser,
@@ -249,6 +274,7 @@ const queries = {
     updateProfile,
     getRequestTreatments,
     updateUser,
+    initUserRole,
     denyTreatmentRequest,
     acceptTreatmentRequest,
     getTreatmentsByUserId,
@@ -259,7 +285,8 @@ const queries = {
     updateRequestStatus,
     getTreatmentByRequestId,
     updateTreatment,
-    deleteTreatmentRequestById
+    deleteTreatmentRequestById,
+    updateDoctor
 };
 
 export default queries;

@@ -1,10 +1,12 @@
 "use client";
+import api from "@/api/api";
 import Form from "@/components/form";
+import { randomHslaCombination } from "@/lib/utils/utils";
+import { Trash } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 import { Button } from "./ui/button";
 import { ComboBox } from "./ui/combo-box";
-
 const Schema = z
   .object({
     birthDate: z.string().datetime({
@@ -27,14 +29,26 @@ type DoctorFormProps = {
   user: any;
   formError: string | null;
   errors: Record<string, string>;
-  onData?: (data: any) => void;
+  onData: (data: any) => void;
   onErrors: (errors: Record<string, string>) => void;
   onFormError: (error: any) => void;
 }
-const DoctorForm = ({ user, formError, onFormError }: DoctorFormProps) => {
+const DoctorForm = ({ user, formError, onData, onFormError }: DoctorFormProps) => {
   const [data, setData] = useState<string[]>([]);
   const [specValue, setSpecValue] = useState<string>("");
-  function handleSubmit() { }
+  async function handleSubmit() {
+    onFormError("");
+    if (data.length > 0) {
+      const response = await api.updateDoctor({
+        id: user.id,
+        username: user.username,
+        specialities: data
+      })
+      onData(response);
+    } else {
+      onFormError("Please select at least one speciality");
+    }
+  }
   function addSpec() {
     onFormError("");
     if (specValue?.length > 0) {
@@ -56,9 +70,26 @@ const DoctorForm = ({ user, formError, onFormError }: DoctorFormProps) => {
           placeholder="Select Specialitée"
           data={['cardiologue', 'dentiste', 'généraliste', 'pédiatre', 'psychiatre', 'urologue', 'gynécologue']}
         />
-        <Button onClick={addSpec}>ajouter</Button>
+        <Button type="reset" onClick={addSpec}>ajouter</Button>
+        <Button type="reset" onClick={() => setData([])} variant="outline">supprimer tous</Button>
       </div>
+      <div className="flex gap-4 items-center w-full flex-wrap">
+        {data.map((spec, i) => {
+          const { color, backgroundColor } = randomHslaCombination(0.1);
+          return <div key={i}
+            className="flex items-center gap-2 px-2 rounded-lg"
+            style={{ backgroundColor, color, border: `1px solid ${color}` }}
+          >
+            <div className=" flex-grow">{spec}</div>
+            <button type="reset"
+              onClick={() => setData((prev) => prev.filter((s) => s !== spec))}>
+              <Trash size={14} />
+            </button>
+          </div>
+        })}
+      </div>
+      <Form.Button onClick={handleSubmit} className="min-w-[200px] my-10 mx-auto">completer</Form.Button>
     </Form>
-  </div>
+  </div >
 }
 export default DoctorForm;

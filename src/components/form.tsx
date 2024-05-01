@@ -1,13 +1,13 @@
 "use client";
 import { Label } from "@/components/ui/label";
 import { SelectProps } from "@radix-ui/react-select";
-import React, { HTMLAttributes } from "react";
+import React, { HTMLAttributes, useTransition } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import ReactLoading from "react-loading";
 import { Button, ButtonProps } from "./ui/button";
 import { Input, InputProps } from "./ui/input";
 import { Select } from "./ui/select";
 import { Textarea, TextareaProps } from "./ui/textarea";
-
 type FormProps = HTMLAttributes<HTMLFormElement> & {
 	onSubmit: (data: any) => void;
 };
@@ -57,10 +57,18 @@ function FormTextArea({ name, ...props }: FormTextAreaProps) {
 	return <Textarea {...register(name)} {...props} />;
 }
 
-function FormButton({ children, ...props }: React.PropsWithChildren<ButtonProps>) {
+function FormButton({ children, onClick, ...props }: React.PropsWithChildren<ButtonProps>) {
+	const [pending, startTransition] = useTransition();
+	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
+		startTransition(async () => {
+			await onClick?.(e);
+		})
+	}
 	return (
-		<Button type='submit' {...props}>
-			{children}
+		<Button type='submit' disabled={pending} {...props} onClick={handleClick}>
+			{pending ? <ReactLoading type="spin" color="#fff" height={20} width={20} /> :
+				children
+			}
 		</Button>
 	);
 }
