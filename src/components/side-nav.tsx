@@ -68,7 +68,7 @@ export default function SideNav() {
           </div>
         </WithToolTip>
       </Link>
-      <Link href="/appointment-requestes">
+      <Link href="/appointment-requests">
         <WithToolTip description="les demandes de rendez-vous">
           <div className="nav-link flex gap-4 items-center text-gray-400 hover:text-primary transition duration-300">
             <CalendarClock />
