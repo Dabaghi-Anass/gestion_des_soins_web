@@ -264,6 +264,29 @@ const updateDoctor = async (doctor: any) => {
         console.log(e.message)
     }
 }
+const updateNurse = async (nurse: any) => {
+    try {
+        if (nurse?.id === null || nurse?.id === undefined) return null;
+        const response = await http.post(`${USER_URL}/updateNurse`, nurse);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+const getSpecialities = async () => {
+    try {
+        const response = await http.get(`${USER_URL}/specialities`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 
 const queries = {
     registerUser,
@@ -286,7 +309,9 @@ const queries = {
     getTreatmentByRequestId,
     updateTreatment,
     deleteTreatmentRequestById,
-    updateDoctor
+    updateNurse,
+    updateDoctor,
+    getSpecialities
 };
 
 export default queries;

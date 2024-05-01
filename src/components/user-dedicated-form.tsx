@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import DoctorForm from "./doctor-info-form";
+import NurseForm from "./nurse-info-form";
 
 const RegisterSchema = z
   .object({
@@ -29,6 +30,8 @@ type Props = {
 export default function UserRoleDedicatedForm({ user, onNext, onBack }: Props) {
   const [formError, setFormError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({});
+  if (user.role === "CAREGIVER") onNext({ role: user.role })
+  if (user.specialities || user.qualities) onNext({ role: user.role })
   const userAbbr = `${user.profile.gender === "MALE" ? "mr" : "mlle"} ${user.firstName} ${user.lastName}`
   return <section className="flex flex-col items-center w-full ">
     {user.role === "DOCTOR" ?
@@ -40,17 +43,27 @@ export default function UserRoleDedicatedForm({ user, onNext, onBack }: Props) {
         </h1> : null
     }
     <div className="h-screen w-full flex flex-col gap-4 items-center">
-      <DoctorForm
-        user={user}
-        formError={formError}
-        errors={errors}
-        onData={(data) => {
-          onNext(data);
-        }}
-        onErrors={setErrors}
-        onFormError={setFormError} />
-      {/* <Button onClick={handleSubmit} disabled={Object.keys(errors).length > 0}>Save Info</Button>
-      <Button onClick={onBack} variant="outline">retourne</Button> */}
+      {user.role === "DOCTOR" ?
+        <DoctorForm
+          user={user}
+          formError={formError}
+          errors={errors}
+          onData={(data) => {
+            onNext(data);
+          }}
+          onErrors={setErrors}
+          onFormError={setFormError} />
+        : user.role === "NURSE" ?
+          <NurseForm
+            user={user}
+            formError={formError}
+            errors={errors}
+            onData={(data) => {
+              onNext(data);
+            }}
+            onErrors={setErrors}
+            onFormError={setFormError} /> : null
+      }
     </div>
   </section >
 }

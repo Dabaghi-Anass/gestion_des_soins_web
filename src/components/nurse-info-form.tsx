@@ -2,38 +2,25 @@
 import api from "@/api/api";
 import Form from "@/components/form";
 import { randomHslaCombination } from "@/lib/utils/utils";
-import { useQuery } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { ComboBox } from "./ui/combo-box";
-import Loading from "./ui/loading";
 
-const defaultSpecs = [
-  "Anesthésiologie",
-  "Cardiologie",
-  "Dermatologie",
-  "Endocrinologie",
-  "Gastro-entérologie",
-  "Gynécologie",
-  "Hématologie",
-  "Infectiologie",
-  "Médecine interne",
-  "Néphrologie",
-  "Neurologie",
-  "Oncologie",
-  "Ophtalmologie",
-  "Orthopédie",
-  "Oto-rhino-laryngologie",
-  "Pédiatrie",
-  "Pneumologie",
-  "Psychiatrie",
-  "Radiologie",
-  "Rhumatologie",
-  "Urologie",
-  "Dentiste"
+const qualities = [
+  "Aimable",
+  "Attentionné",
+  "Autonome",
+  "Calme",
+  "Compétent",
+  "Consciencieux",
+  "Courageux",
+  "Créatif",
+  "Sérieux",
+  "Sociable",
+  "Sûr de soi",
 ]
-type DoctorFormProps = {
+type NurseFormProps = {
   user: any;
   formError: string | null;
   errors: Record<string, string>;
@@ -41,27 +28,23 @@ type DoctorFormProps = {
   onErrors: (errors: Record<string, string>) => void;
   onFormError: (error: any) => void;
 }
-const DoctorForm = ({ user, formError, onData, onFormError }: DoctorFormProps) => {
+const NurseForm = ({ user, formError, onData, onFormError }: NurseFormProps) => {
   const [data, setData] = useState<string[]>([]);
   const [specValue, setSpecValue] = useState<string>("");
-  const { data: specialities, isLoading } = useQuery({
-    queryKey: ["specialities"],
-    queryFn: async () => await api.getSpecialities(),
-  })
   function uniqueArray(arr: string[]) {
     return arr.filter((v, i, a) => a.indexOf(v) === i);
   }
   async function handleSubmit() {
     onFormError("");
     if (data.length > 0) {
-      const response = await api.updateDoctor({
+      const response = await api.updateNurse({
         id: user.id,
         username: user.username,
-        specialities: data
+        qualities: data
       })
       onData(response);
     } else {
-      onFormError("Please select at least one speciality");
+      onFormError("Please select at least one Quality");
     }
   }
   function addSpec() {
@@ -70,10 +53,9 @@ const DoctorForm = ({ user, formError, onData, onFormError }: DoctorFormProps) =
       setData((prev) => [...prev, specValue]);
       setSpecValue("");
     } else {
-      onFormError("Please select a speciality");
+      onFormError("Please add a valid Quality");
     }
   }
-  if (isLoading) return <Loading />
   return <div className="h-screen w-full flex flex-col gap-4 items-center">
     {formError && <div className="form-error">{formError}</div>}
     <Form
@@ -83,8 +65,8 @@ const DoctorForm = ({ user, formError, onData, onFormError }: DoctorFormProps) =
         <ComboBox
           value={specValue}
           onChange={setSpecValue}
-          placeholder="Select Specialitée"
-          data={uniqueArray([...defaultSpecs, ...specialities])}
+          placeholder="Select Qualité"
+          data={uniqueArray(qualities)}
         />
         <Button type="reset" onClick={addSpec}>ajouter</Button>
         <Button type="reset" onClick={() => setData([])} variant="outline">supprimer tous</Button>
@@ -108,4 +90,4 @@ const DoctorForm = ({ user, formError, onData, onFormError }: DoctorFormProps) =
     </Form>
   </div >
 }
-export default DoctorForm;
+export default NurseForm;

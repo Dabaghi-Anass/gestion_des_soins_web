@@ -118,7 +118,7 @@ export default function LoginPage() {
 		container.style.paddingBottom = "0";
 		if (!currentUser) return;
 		if (!currentUser.role || !currentUser.profile) router.push("/register")
-		router.replace("/")
+		window.location.href = "/"
 	}, [currentUser])
 	return <section className="flex flex-col justify-center items-center  w-full h-full bg-primary-background gap-6">
 		<div className="w-full flex  flex-col items-center gap-2 justify-center">

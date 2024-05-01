@@ -76,3 +76,18 @@ export function getBadgeStyle(status: string) {
     }
     return style;
 }
+
+export function randomTileWindColor() {
+    let tailwindColors = [
+        "red",
+        "yellow",
+        "green",
+        "blue",
+        "indigo",
+        "purple",
+        "pink",
+        "rose",
+        "cyan"
+    ]
+    return tailwindColors[Math.floor(Math.random() * tailwindColors.length)];
+}
