@@ -36,7 +36,7 @@ export default function TreatmentHistory({ data, hideLink, profilePage, inModal 
         {data?.map((treatment: any) =>
           <TableRow key={treatment.id} className="hover:filter hover:brightness-90">
             <TableCell>{treatment.title}</TableCell>
-            <TableCell>{new Date(treatment.creationDate).toLocaleDateString("en-GB")}</TableCell>
+            <TableCell>{new Date(treatment.creationDate).toLocaleDateString("fr-FR")}</TableCell>
             <TableCell>
               <span className="status-badge lowercase" style={getBadgeStyle(treatment.status)}>{treatment.status}</span>
             </TableCell>

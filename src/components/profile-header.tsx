@@ -27,7 +27,7 @@ export default function ProfileHeader({ user, hideEditLink }: Props) {
           {currentUser?.profile?.gender?.toLowerCase() === "male" ? "(Mr)" : "(Mlle)"} {currentUser?.firstName} {currentUser?.lastName}</span>
         <span className='text-sm flex gap-2 text-light'>
           <CalendarDays size={20} />
-          Joined Since : {new Date(currentUser?.creationDate).toLocaleString("en-GB")}
+          Joined Since : {new Date(currentUser?.creationDate).toLocaleString("fr-FR")}
         </span>
         <div className="flex gap-2 mt-1 flex-wrap">
           {user?.specialities && user.specialities.map((spec: any) => <Badge variant="secondary">{spec.category}</Badge>)}

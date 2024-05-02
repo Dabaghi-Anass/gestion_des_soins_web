@@ -76,7 +76,7 @@ export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: P
             {currentUser?.profile?.gender?.toLowerCase() === "male" ? "(Mr)" : "(Mlle)"} {currentUser?.firstName} {currentUser?.lastName}</span>
           <span className='text-sm flex gap-2 text-light'>
             <CalendarDays size={20} />
-            Joined Since : {new Date(currentUser?.creationDate).toLocaleString("en-GB")}
+            Joined Since : {new Date(currentUser?.creationDate).toLocaleString("fr-FR")}
           </span>
         </div>
         <div className="user-profile-actions flex gap-2">

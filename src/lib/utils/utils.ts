@@ -46,33 +46,17 @@ export function randomHslaCombination(alpha: number = 0.5) {
         color: `hsla(${hue}, 100%, 20%)`
     };
 }
-export function getBadgeStyle(status: string) {
+export function getBadgeStyle(status: string, withBorder: boolean = false) {
     let getBgOfHue = (hue: number) => {
-        return `hsl(${hue},100%, 50%, 0.5)`
+    return `hsl(${hue},84%, 93%)`
     };
-
+    let getColorOfHue = (hue: number) => {
+        return `hsl(${hue},64%, 24%)`
+    };
     let style = {
-        backgroundColor: getBgOfHue(270),
-    }
-    enum Status {
-        PENDING = 42,
-        CONFIRMED = 141,
-        DENIED = 8
-    }
-    if (status === "PENDING") {
-        style = {
-        backgroundColor: getBgOfHue(Status.PENDING),
-        }
-    }
-    if (status === "CONFIRMED") {
-        style = {
-        backgroundColor: getBgOfHue(Status.CONFIRMED),
-        }
-    }
-    if (status === "DENIED") {
-        style = {
-        backgroundColor: getBgOfHue(Status.DENIED),
-        }
+        backgroundColor: getBgOfHue(getStatusHue(status)),
+        color: getColorOfHue(getStatusHue(status)),
+        border: withBorder ? `1px solid ${getColorOfHue(getStatusHue(status))}` : "none",
     }
     return style;
 }
@@ -90,4 +74,31 @@ export function randomTileWindColor() {
         "cyan"
     ]
     return tailwindColors[Math.floor(Math.random() * tailwindColors.length)];
+}
+
+export function getStatusHue(status: string) {
+    const Status :any = {
+        DONE: 0,
+        SCHEDULED: 42,
+        CANCELED: 8,
+        CONFIRMED: 141,
+        IN_PROGRESS: 180,
+        PENDING: 270,
+        DENIED: 300,
+        COMPLETED_TREATMENT: 330
+    }
+    return Status[status] || 270;
+}
+export function getTypeHue(status: string) {
+    const Status :any = {
+        Procedure: 180,
+        Consultation: 153,
+        Surgery: 14,
+        Therapy: 141,
+        Diagnostic: 180,
+        FollowUp: 270,
+        Emergency: 0,
+        Other: 270
+    }
+    return Status[status];
 }

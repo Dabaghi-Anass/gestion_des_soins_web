@@ -38,7 +38,7 @@ export function TreatmentRequest({ request, selected, onClick, onDelete, onReply
       {request?.title || "no description"}
     </div>
     <div className="text-gray-400">
-      <p>{new Date(request?.creationDate).toLocaleString("en-GB")}</p>
+      <p>{new Date(request?.creationDate).toLocaleString("fr-FR")}</p>
     </div>
   </div>
 }

@@ -2,11 +2,11 @@
 import api from "@/api/api";
 import ProfileForm from "@/components/forms/finalize-profile";
 import ProfileImageSelect from "@/components/forms/image-select-form";
-import RegisterForm from "@/components/register-form";
+import RegisterForm from "@/components/forms/register-form";
+import UserRoleDedicatedForm from "@/components/forms/user-dedicated-form";
+import UserTypeSelector from "@/components/forms/user-type-selector";
 import Loading from "@/components/ui/loading";
 import { StepProgress } from "@/components/ui/progress-steps";
-import UserRoleDedicatedForm from "@/components/user-dedicated-form";
-import UserTypeSelector from "@/components/user-type-selector";
 import { useAppSelector } from "@/hooks/redux-hooks";
 import { RegisterUserFormData, Role, User, UserProfile } from "@/types/types";
 import { OctagonAlert } from "lucide-react";

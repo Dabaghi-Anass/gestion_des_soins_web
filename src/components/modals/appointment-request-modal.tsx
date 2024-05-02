@@ -1,5 +1,5 @@
 "use client"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import Loading from "@/components/ui/loading";
 import html2pdf from "html2pdf.js";
+import Image from "next/image";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import WithToolTip from "../ui/with-tooltip";
@@ -31,15 +32,18 @@ export default function AppointmentModal({ appointment }: Props) {
     </DialogTrigger>
     <DialogContent className="w-full max-w-[90vw] h-full overflow-y-scroll max-h-[90vh]">
       <DialogHeader>
-        <DialogTitle>Anass Dabaghi</DialogTitle>
-        <DialogDescription>Patient</DialogDescription>
+        <DialogTitle>{appointment.patient.firstName} {appointment.patient.lastName}</DialogTitle>
+        <DialogDescription>prévu dans {new Date(appointment.date).toLocaleString("fr-FR", {
+          timeStyle: "short",
+          dateStyle: "short"
+        })}</DialogDescription>
       </DialogHeader>
-      <AppointmentComponent />
+      <AppointmentComponent appointment={appointment} />
     </DialogContent>
   </Dialog>
 }
 
-function AppointmentComponent() {
+function AppointmentComponent({ appointment }: { appointment: any }) {
   function printDocument() {
     const element = document.getElementById('printable') as HTMLElement;
     let dark = false;
@@ -47,7 +51,7 @@ function AppointmentComponent() {
       document.documentElement.classList.toggle("dark", false);
       dark = true;
     }
-    let fileName = `appointment-${Date.now()}.pdf`;
+    let fileName = `rendez_vouz-${Date.now()}.pdf`;
     const worker = html2pdf()
     let options = {
       margin: 1,
@@ -66,41 +70,47 @@ function AppointmentComponent() {
   }
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row gap-8 justify-between">
-      <div className="w-full lg:w-fit" id="printable">
-        <div className="my-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Appointment Details</h1>
-          <Badge variant="secondary">Patient</Badge>
+      <div className="w-1/2" id="printable">
+        <div className="my-4 w-full flex items-center justify-between gap-4">
+          <h1 className="text-2xl font-bold w-full">Detailes De Rendez Vous</h1>
+          <Badge variant="secondary">{appointment.type}</Badge>
         </div>
         <div className="flex items-center space-x-4 mb-4">
           <Avatar>
-            <AvatarImage alt="Patient Avatar" src="/avatars/01.png" />
-            <AvatarFallback>JD</AvatarFallback>
+            <Image src={appointment.patient.profile.imageUrl} alt={appointment.patient.firstName} width={50} height={50} />
+            <AvatarFallback>{appointment.patient.firstName.charAt(0) + appointment.patient.lastName.charAt(0)}
+            </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-gray-900 dark:text-gray-50 font-medium">John Doe</p>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">Patient ID: 12345</p>
+            <p className="text-gray-900 dark:text-gray-50 font-medium">
+              {appointment.patient.firstName + " " + appointment.patient.lastName}
+            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">Patient ID: {appointment.patient.id}</p>
           </div>
         </div>
         <div className="flex items-center space-x-4 mb-4">
           <CalendarIcon className="h-6 w-6 text-gray-500 dark:text-gray-400" />
           <div>
-            <p className="text-gray-900 dark:text-gray-50 font-medium">April 15, 2023</p>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">10:00 AM</p>
+            <p className="text-gray-900 dark:text-gray-50 font-medium">{new Date(appointment.date).toLocaleDateString("fr-FR", {
+              dateStyle: "long",
+            })}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">{new Date(appointment.date).toLocaleTimeString("fr-FR", {
+              timeStyle: "short"
+            })}</p>
           </div>
         </div>
         <div className="flex items-center space-x-4">
           <UserIcon className="h-6 w-6 text-gray-500 dark:text-gray-400" />
           <div>
-            <p className="text-gray-900 dark:text-gray-50 font-medium">Dr. Jane Smith</p>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">Family Medicine</p>
+            <p className="text-gray-900 dark:text-gray-50 font-medium">Dr.{appointment.assignedTo.firstName + " " + appointment.assignedTo.lastName}
+            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm capitalize">{appointment.assignedTo.role.toLowerCase()}</p>
           </div>
         </div>
         <h1 className="text-xl my-4">
           Reason Pour Le Rendez Vous
         </h1>
-        <div className="py-4 max-w-[50ch] w-full">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto a numquam quasi velit quo nisi qui quos nulla, fuga soluta, facilis nostrum, omnis expedita deserunt maxime eaque quam? Vel, cum.
-          Reprehenderit, perferendis sequi. Vitae ex recusandae error quo quidem sunt harum quis pariatur voluptates odio aliquid laboriosam, quia sit doloremque minima delectus, deserunt sequi velit modi porro, asperiores explicabo totam?
+        <div className="py-4 max-w-[50ch] w-full">{appointment.reason}
         </div>
       </div>
       <div className="w-full lg:w-fit">

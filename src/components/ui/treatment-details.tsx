@@ -1,8 +1,6 @@
 "use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  calculateAgeFromBirtDate
-} from "@/lib/utils/utils";
+import { calculateAgeFromBirtDate, getBadgeStyle } from "@/lib/utils/utils";
 import html2pdf from "html2pdf.js";
 import NextImage from "next/image";
 import { useEffect } from "react";
@@ -11,49 +9,6 @@ import { Button } from "./button";
 import DataNotFound from "./data-not-found";
 type Props = {
   treatment: any,
-}
-
-function getStatusBadgeStyle(status: string) {
-  let getBgOfHue = (hue: number) => {
-    return `hsl(${hue},84%, 93%)`
-  };
-  let getColorOfHue = (hue: number) => {
-    return `hsl(${hue},64%, 24%)`
-  };
-
-  let style = {
-    backgroundColor: getBgOfHue(270),
-    color: getColorOfHue(270),
-    border: `1px solid ${270}`
-  }
-  enum Status {
-    PENDING = 42,
-    CONFIRMED = 141,
-    DENIED = 8
-  }
-  if (status === "PENDING") {
-    style = {
-      backgroundColor: getBgOfHue(Status.PENDING),
-      color: getColorOfHue(Status.PENDING),
-      border: `1px solid ${getColorOfHue(Status.PENDING)}`
-    }
-  }
-  if (status === "CONFIRMED") {
-    style = {
-      backgroundColor: getBgOfHue(Status.CONFIRMED),
-      color: getColorOfHue(Status.CONFIRMED),
-      border: `1px solid ${getColorOfHue(Status.CONFIRMED)}`
-    }
-  }
-  if (status === "DENIED") {
-    style = {
-      backgroundColor: getBgOfHue(Status.DENIED),
-      color: getColorOfHue(Status.DENIED),
-      border: `1px solid ${getColorOfHue(Status.DENIED)}`
-    }
-  }
-
-  return style;
 }
 export default function TreatmentDetails({ treatment }: Props) {
   function printDocument() {
@@ -93,7 +48,7 @@ export default function TreatmentDetails({ treatment }: Props) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>{treatment.title}</CardTitle>
-            <div className="rounded-full px-3 py-1 text-xs font-medium" style={getStatusBadgeStyle(treatment.status)}>
+            <div className="rounded-full px-3 py-1 text-xs font-medium" style={getBadgeStyle(treatment.status)}>
               {treatment.status?.replace("_", " ")}
             </div>
           </div>
@@ -128,7 +83,7 @@ export default function TreatmentDetails({ treatment }: Props) {
             <div className="flex items-center space-x-4 mt-4">
               <div className="flex items-center space-x-2">
                 <CalendarIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <p className="text-sm font-medium">Treated on: {new Date(treatment.creationDate).toLocaleString("en-GB", {
+                <p className="text-sm font-medium">Treated on: {new Date(treatment.creationDate).toLocaleString("fr-FR", {
                   day: "2-digit",
                   month: "long",
                   year: "numeric",
@@ -138,7 +93,7 @@ export default function TreatmentDetails({ treatment }: Props) {
               </div>
               <div className="flex items-center space-x-2">
                 <ClockIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <p className="text-sm font-medium">Last Update: {new Date(treatment.lastModifiedDate).toLocaleString("en-GB", {
+                <p className="text-sm font-medium">Last Update: {new Date(treatment.lastModifiedDate).toLocaleString("fr-FR", {
                   day: "2-digit",
                   month: "long",
                   year: "numeric",

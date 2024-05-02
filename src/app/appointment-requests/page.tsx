@@ -1,15 +1,36 @@
+"use client"
+import api from "@/api/api"
 import AppointmentRequestCard from "@/components/appointment-request-card"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import Loading from "@/components/ui/loading"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from "@/components/ui/pagination"
+import { useAppSelector } from "@/hooks/redux-hooks"
+import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
-
+import { useState } from "react"
 export default function AppointmentRequestsPage() {
+  const currentUser: any = useAppSelector((state) => state.UserReducer.user);
+  const limit = 6;
+  const [page, setPage] = useState<number>(0);
+  const { data, isLoading } = useQuery({
+    queryKey: ["appointment-requests", currentUser?.id, page, limit],
+    queryFn: async ({ queryKey }) => await api.getAppointmentRequests(queryKey[1], queryKey[2], queryKey[3])
+  })
+  if (isLoading) return <Loading />
   return (
     <div className="flex h-full w-full">
-      <div className="hidden w-64 border-r h-full bg-gray-50 dark:border-gray-800 dark:bg-gray-900 md:block">
+      <div className="hidden w-64 border-r h-full bg-gray-50 dark:border-gray-800 dark:bg-gray-900 lg:block">
         <div className="p-6">
           <h3 className="text-lg font-semibold">Rendez Vous</h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -126,10 +147,6 @@ export default function AppointmentRequestsPage() {
                 </DropdownMenuCheckboxItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            {/* <Button className="w-full" size="sm" variant="outline">
-              <FilterIcon className="mr-2 h-4 w-4" />
-              Apply Filters
-            </Button> */}
           </div>
         </div>
         <div className="border-t px-4 py-6 dark:border-gray-800">
@@ -200,23 +217,31 @@ export default function AppointmentRequestsPage() {
           </div>
         </header>
         <div className="p-4">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
-            <AppointmentRequestCard />
+          {data?.appointments?.length === 0 ?
+            <div className="flex items-center justify-center h-64">
+              <p className="text-lg text-gray-500 dark:text-gray-400">No appointments found</p>
+            </div> :
+            <div className="grid grid-cols-auto gap-4">
+              {data?.appointments?.map((appointment: any) => (<AppointmentRequestCard appointment={appointment} />))}
+            </div>
+          }
+          <div className="flex w-full mx-auto align-center p-4">
+            <Pagination className="cursor-pointer">
+              <PaginationContent>
+                {page > 0 &&
+                  <PaginationItem onClick={() => setPage((prev: number) => prev - 1)}>
+                    <PaginationPrevious />
+                  </PaginationItem>}
+                <PaginationItem>
+                  <PaginationLink>{page + 1}</PaginationLink>
+                </PaginationItem>
+                {data?.hasNext &&
+                  <PaginationItem onClick={() => setPage((prev: number) => prev + 1)}>
+                    <PaginationNext />
+                  </PaginationItem>
+                }
+              </PaginationContent>
+            </Pagination>
           </div>
         </div>
       </div>

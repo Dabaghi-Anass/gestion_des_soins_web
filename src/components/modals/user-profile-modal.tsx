@@ -17,16 +17,17 @@ import WithToolTip from "../ui/with-tooltip";
 type Props = {
   user: any;
 }
-export default function ProfileModal({ user }: Props) {
+export default function ProfileModal({ user, children }: React.PropsWithChildren<Props>) {
   const [open, setOpen] = useState<boolean>(false);
   if (!user) return <Loading />
   return <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
     <DialogTrigger>
-      <WithToolTip description="send email to patient">
+      {children || <WithToolTip description="send email to patient">
         <Button variant="outline" className="aspect-square p-2">
           <User color="#888" size={18} />
         </Button>
       </WithToolTip>
+      }
     </DialogTrigger>
     <DialogContent className="w-full max-w-[90vw] h-full overflow-y-scroll max-h-[90vh]">
       <DialogHeader>
