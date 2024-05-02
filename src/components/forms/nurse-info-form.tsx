@@ -1,11 +1,11 @@
 "use client";
 import api from "@/api/api";
-import Form from "@/components/form";
+import Form from "@/components/forms/form";
+import { Button } from "@/components/ui/button";
+import { ComboBox } from "@/components/ui/combo-box";
 import { randomHslaCombination } from "@/lib/utils/utils";
 import { Trash } from "lucide-react";
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { ComboBox } from "./ui/combo-box";
 
 const qualities = [
   "Aimable",

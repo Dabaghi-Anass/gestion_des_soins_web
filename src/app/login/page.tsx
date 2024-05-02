@@ -1,6 +1,6 @@
 "use client";
 import api from '@/api/api';
-import Form from "@/components/form";
+import Form from "@/components/forms/form";
 import AsyncButton from "@/components/ui/AsyncButton";
 import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
 import { setCurrentUser } from "@/lib/features/user-reducer";

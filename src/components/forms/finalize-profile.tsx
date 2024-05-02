@@ -1,5 +1,5 @@
 "use client";
-import Form from "@/components/form";
+import Form from "@/components/forms/form";
 import { Label } from "@/components/ui/label";
 import Loading from "@/components/ui/loading";
 import { UserProfile } from "@/types/types";
@@ -7,7 +7,7 @@ import { UserProfile } from "@/types/types";
 import { useAppSelector } from "@/hooks/redux-hooks";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 const RegisterSchema = z
   .object({
     birthDate: z.string().datetime({

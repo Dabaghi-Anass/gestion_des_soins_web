@@ -14,11 +14,12 @@ type Props = {
   data?: any;
   hideLink?: boolean;
   profilePage?: boolean;
+  inModal?: boolean;
 }
-export default function TreatmentHistory({ data, hideLink, profilePage }: Props) {
-  return <div className="p-4 with-border flex flex-col gap-4 rounded-lg w-full h-fit sm:row-span-1 lg:col-span-2">
+export default function TreatmentHistory({ data, hideLink, profilePage, inModal }: Props) {
+  return <div className={`p-4 with-border flex flex-col gap-4 rounded-lg w-full h-fit sm:row-span-1 ${inModal ? "lg:col-span-3" : "lg:col-span-2"}`}>
     <h1 className="font-semibold capitalize mb-4">history de traitements</h1>
-    <Table>
+    <Table className="w-full">
       {!hideLink &&
         <TableCaption>la listes des traitements de tous les medcines</TableCaption>
       }

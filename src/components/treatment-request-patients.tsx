@@ -11,7 +11,7 @@ import {
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import ConfirmActionModal from "./confirm-action-modal";
+import ConfirmActionModal from "./modals/confirm-action-modal";
 type Props = {
   selected: any;
   requests: any,

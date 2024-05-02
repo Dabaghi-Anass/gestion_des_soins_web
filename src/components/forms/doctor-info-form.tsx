@@ -1,13 +1,13 @@
 "use client";
 import api from "@/api/api";
-import Form from "@/components/form";
+import Form from "@/components/forms/form";
 import { randomHslaCombination } from "@/lib/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { ComboBox } from "./ui/combo-box";
-import Loading from "./ui/loading";
+import { Button } from "../ui/button";
+import { ComboBox } from "../ui/combo-box";
+import Loading from "../ui/loading";
 
 const defaultSpecs = [
   "Anesthésiologie",

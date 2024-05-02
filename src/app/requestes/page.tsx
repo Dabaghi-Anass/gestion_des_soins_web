@@ -1,9 +1,9 @@
 "use client"
 import api from "@/api/api";
+import TreatmentResponseEditor from "@/components/modals/treatment-response-editor";
 import TreatmentRequestDetails from "@/components/treatment-request-details";
 import { TreatmentRequestPatients } from "@/components/treatment-request-patients";
 import Loading from "@/components/ui/loading";
-import TreatmentResponseEditor from "@/components/ui/treatment-response-editor";
 import { useAppSelector } from "@/hooks/redux-hooks";
 import { useSearch } from "@/hooks/use-search";
 import { useQuery } from "@tanstack/react-query";

@@ -4,10 +4,10 @@ import { SelectProps } from "@radix-ui/react-select";
 import React, { HTMLAttributes, useTransition } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import ReactLoading from "react-loading";
-import { Button, ButtonProps } from "./ui/button";
-import { Input, InputProps } from "./ui/input";
-import { Select } from "./ui/select";
-import { Textarea, TextareaProps } from "./ui/textarea";
+import { Button, ButtonProps } from "../ui/button";
+import { Input, InputProps } from "../ui/input";
+import { Select } from "../ui/select";
+import { Textarea, TextareaProps } from "../ui/textarea";
 type FormProps = HTMLAttributes<HTMLFormElement> & {
 	onSubmit: (data: any) => void;
 };

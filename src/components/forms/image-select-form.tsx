@@ -2,7 +2,7 @@
 import imageIcon from "@/assets/svgs/edit-image.svg";
 import defaultUserImageFemale from "@/assets/svgs/user-f.svg";
 import defaultUserImageMale from "@/assets/svgs/user-m.svg";
-import Form from "@/components/form";
+import Form from "@/components/forms/form";
 import Loading from "@/components/ui/loading";
 import { useAppSelector } from "@/hooks/redux-hooks";
 import Image from "next/image";

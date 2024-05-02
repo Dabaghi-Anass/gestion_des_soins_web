@@ -6,8 +6,8 @@ import { useAppSelector } from "@/hooks/redux-hooks"
 import { CalendarDays, Mail, Send } from "lucide-react"
 // import { User } from "@/types/types"
 import Link from "next/link"
+import ProfileEditModal from "./modals/profile-edit-modal"
 import { Badge } from "./ui/badge"
-import ProfileEditModal from "./ui/profile-edit-modal"
 type Props = {
   user?: any,
   hideEditLink?: boolean

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select"
 import { UserCog } from "lucide-react"
 import { useState } from "react"
-import WithToolTip from "./with-tooltip"
+import WithToolTip from "../ui/with-tooltip"
 export default function ProfileEditModal() {
   const [open, setOpen] = useState<boolean>(false);
   function openModal() {
@@ -30,7 +30,7 @@ export default function ProfileEditModal() {
         </WithToolTip>
       </DialogTrigger>
       <DialogContent>
-        <div className="mx-auto max-w-3xl space-y-8 py-12">
+        <div className="mx-auto container space-y-8 py-12">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Edit Profile</h1>
             <Button>Save Changes</Button>

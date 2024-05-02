@@ -1,7 +1,7 @@
 "use client";
 import api from '@/api/api';
 import bgImage from "@/assets/svgs/people.svg";
-import Form from "@/components/form";
+import Form from "@/components/forms/form";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/ui/loading";
 import { useAppSelector } from '@/hooks/redux-hooks';

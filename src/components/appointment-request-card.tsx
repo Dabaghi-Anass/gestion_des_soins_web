@@ -2,8 +2,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { Check, CreditCard, UserCog, X } from "lucide-react"
+import { Check, CreditCard, SendHorizontal, X } from "lucide-react"
 import Link from "next/link"
+import AppointmentModal from "./modals/appointment-request-modal"
+import ProfileModal from "./modals/user-profile-modal"
 import { Button } from "./ui/button"
 import WithToolTip from "./ui/with-tooltip"
 
@@ -36,26 +38,16 @@ export default function AppointmentRequestCard() {
               <div className="text-sm text-gray-500 dark:text-gray-400">Patient</div>
             </div>
           </div>
+          <ProfileModal user={{}} />
           <WithToolTip description="send email to patient">
             <Button variant="outline" className="aspect-square p-2" asChild>
-              <Link href="#"><UserCog color="#888" /></Link>
+              <Link href="#"><SendHorizontal color="#888" /></Link>
             </Button>
           </WithToolTip>
         </div>
         <Separator className="px-4" />
-        <div className="flex items-center gap-4 w-full">
-          <div className="w-1/2">
-            <div className="text-sm text-gray-500 dark:text-gray-400">crée le</div>
-            <div className="font-semibold text-sm">{Math.random() > 0.3 ? "aujourdhui" : "15/07/2024"}</div>
-          </div>
-          <div className="w-1/2">
-            <div className="text-sm text-gray-500 dark:text-gray-400">télephone</div>
-            <div className="font-semibold text-sm">+212617171717</div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-1 w-full">
-          <div className="text-sm text-gray-500 dark:text-gray-400">email</div>
-          <div className="text-sm font-semibold">anass.debbaghi123@gmail.com</div>
+        <div className="h-full line-clamp-3">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo quas voluptates reiciendis ullam repudiandae facere ut corrupti pariatur iure voluptatum incidunt placeat dolor, quibusdam consequatur sit obcaecati quos esse reprehenderit.
         </div>
         <Separator />
         <div className="flex gap-2 items-center">
@@ -77,6 +69,7 @@ export default function AppointmentRequestCard() {
           </div>
         </div>
         <Separator />
+        <AppointmentModal appointment={{}} />
         <div className="flex w-full items-center gap-2 pb-2">
           <Button variant="outline" className="w-full flex items-center gap-2">
             <X size={17} />
@@ -96,28 +89,6 @@ type IconProps = {
   [key: string]: any;
 }
 
-
-function CalendarIcon(props: IconProps) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-      <line x1="16" x2="16" y1="2" y2="6" />
-      <line x1="8" x2="8" y1="2" y2="6" />
-      <line x1="3" x2="21" y1="10" y2="10" />
-    </svg>
-  )
-}
 
 
 function CheckIcon(props: IconProps) {

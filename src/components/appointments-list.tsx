@@ -37,7 +37,7 @@ const appointment = {
   },
   "duration": 0
 };
-export default function ProfileAppointementSchedule() {
+export default function ProfileAppointementSchedule({ inModal }: { inModal?: boolean }) {
   function calculateColor(status: string): string {
     switch (status) {
       case "DONE":
@@ -51,7 +51,7 @@ export default function ProfileAppointementSchedule() {
     }
 
   }
-  return <div className="p-4 with-border flex flex-col gap-4 rounded-lg w-full h-full hide-footer lg:overflow-hidden sm:row-span-1 lg:row-span-full">
+  return <div className={`p-4 with-border flex flex-col gap-4 rounded-lg w-full h-full hide-footer lg:overflow-hidden sm:row-span-1 lg:row-span-full ${inModal ? "lg:col-span-2" : ""}`}>
     <h1 className="font-semibold capitalize mb-4">Appointments Schedule</h1>
     <div className="pl-10 flex flex-col gap-4 px-4 pt-4 h-full overflow-scroll">
       <SmallAppointment color={calculateColor("DONE")} appointment={appointment} />

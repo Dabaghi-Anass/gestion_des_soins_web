@@ -1,7 +1,7 @@
 "use client";
 import api from "@/api/api";
-import ProfileForm from "@/components/finalize-profile";
-import ProfileImageSelect from "@/components/image-select-form";
+import ProfileForm from "@/components/forms/finalize-profile";
+import ProfileImageSelect from "@/components/forms/image-select-form";
 import RegisterForm from "@/components/register-form";
 import Loading from "@/components/ui/loading";
 import { StepProgress } from "@/components/ui/progress-steps";

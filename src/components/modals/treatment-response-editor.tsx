@@ -20,8 +20,8 @@ import 'froala-editor/js/plugins/url.min.js';
 import { useEffect, useState } from "react";
 import FroalaEditor from "react-froala-wysiwyg";
 import { toast } from "sonner";
-import { Button } from "./button";
-import { Input } from "./input";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 type Props = {
   onUpdateRequest: (request: any) => void;
