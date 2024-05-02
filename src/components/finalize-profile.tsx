@@ -127,10 +127,10 @@ export default function ProfileForm({ onNext, onBack }: Props) {
           </SelectContent>
         </Select>
         <Label className="text-slate-400">Birth Date</Label>
-        <Form.Input
+        <input
           type="date"
           name="birthDate"
-          onInput={(e: any) => {
+          onChange={(e: any) => {
             const profileClone = {
               ...profile,
               birthDate: e.target.value,

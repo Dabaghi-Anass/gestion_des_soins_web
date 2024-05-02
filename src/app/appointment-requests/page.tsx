@@ -80,18 +80,18 @@ export default function AppointmentRequestsPage() {
               <DropdownMenuContent className="w-56 space-y-1">
                 <DropdownMenuLabel>Select a date range</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <div className="grid gap-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <Label className="text-sm" htmlFor="start-date">
-                      Start Date
+                <div className="flex flex-col gap-2 w-full">
+                  <div className="flex w-full items-center gap-2 py-2 px-4">
+                    <Label className="text-sm w-[70px]" htmlFor="start-date">
+                      Start
                     </Label>
-                    <Input id="start-date" type="date" />
+                    <input id="start-date" className="w-full" type="date" />
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Label className="text-sm" htmlFor="end-date">
-                      End Date
+                  <div className="flex w-full items-center gap-2 py-2 px-4">
+                    <Label className="text-sm w-[70px]" htmlFor="end-date">
+                      End
                     </Label>
-                    <Input id="end-date" type="date" />
+                    <input id="end-date" type="date" />
                   </div>
                 </div>
                 <DropdownMenuSeparator />

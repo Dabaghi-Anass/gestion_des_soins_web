@@ -153,3 +153,19 @@ main.main-content{
     /* max-width : 60vw !important; */
     max-width: 100% !important;
 }
+
+/*date input icon color*/
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+input{
+    background-color: transparent;
+    border: 1px solid #888;
+    padding: .2rem .5rem;
+    border-radius: .2rem;
+}
+input:focus{
+    outline: none;
+    border-color: var(--primary-clr);
+}
