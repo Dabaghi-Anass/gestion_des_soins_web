@@ -3,10 +3,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import WithToolTip from "@/components/ui/with-tooltip"
 import { useAppSelector } from "@/hooks/redux-hooks"
-import { randomHslaCombination } from "@/lib/utils/utils"
-import { CalendarDays, Mail, Send, UserCog } from "lucide-react"
+import { CalendarDays, Mail, Send } from "lucide-react"
 // import { User } from "@/types/types"
 import Link from "next/link"
+import { Badge } from "./ui/badge"
+import ProfileEditModal from "./ui/profile-edit-modal"
 type Props = {
   user?: any,
   hideEditLink?: boolean
@@ -29,26 +30,16 @@ export default function ProfileHeader({ user, hideEditLink }: Props) {
           Joined Since : {new Date(currentUser?.creationDate).toLocaleString("en-GB")}
         </span>
         <div className="flex gap-2 mt-1 flex-wrap">
-          {user?.specialities && user.specialities.map((spec: any) => {
-            const { backgroundColor } = randomHslaCombination(0.8);
-            return <span key={spec} className={`text-xs text-white p-1 rounded-lg`} style={{ backgroundColor }}>{spec.category}</span>
-          })}
+          {user?.specialities && user.specialities.map((spec: any) => <Badge variant="secondary">{spec.category}</Badge>)}
         </div>
         <div className="flex gap-2 mt-1 flex-wrap">
           {user?.qualities &&
-            user.qualities.split(",").map((spec: any) => {
-              const { backgroundColor } = randomHslaCombination(0.8);
-              return <span key={spec} className={`text-xs text-white p-1 rounded-lg`} style={{ backgroundColor }}>{spec}</span>
-            })}
+            user.qualities.split(",").map((spec: any) => <Badge variant="secondary">{spec}</Badge>)}
         </div>
       </div>
       <div className="user-profile-actions flex gap-2">
         {!hideEditLink ?
-          <WithToolTip description="send email to patient">
-            <Button variant="outline" className="aspect-square p-2" asChild>
-              <Link href="#"><UserCog color="#888" /></Link>
-            </Button>
-          </WithToolTip> :
+          <ProfileEditModal /> :
           <>
             <WithToolTip description="send email to patient">
               <Button variant="outline" className="aspect-square p-2" asChild>
