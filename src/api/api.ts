@@ -1,9 +1,9 @@
 const BASE_URL = 'http://localhost:8070/api' as const;
-const AUTH_URL =  `${BASE_URL}/auth`;
-const PROFILE_URL =  `${BASE_URL}/profile`;
-const APPOINTMENT_URL =  `${BASE_URL}/appointment`;
-const USER_URL =  `${BASE_URL}/users`;
-const TREATMENTS_URL =  `${BASE_URL}/treatments`;
+const AUTH_URL =  `${BASE_URL}/auth` as const;
+const PROFILE_URL =  `${BASE_URL}/profile` as const;
+const APPOINTMENT_URL =  `${BASE_URL}/appointment` as const;
+const USER_URL =  `${BASE_URL}/users` as const;
+const TREATMENTS_URL =  `${BASE_URL}/treatments` as const;
 import { User, UserProfile } from "@/types/types";
 import http from "./http";
 const registerUser = async (user: User) => {
@@ -298,9 +298,74 @@ async function getAppointmentRequests(userId: number, offset: number, limit = 5)
         console.log(e.message)
     }
 }
+async function acceptAppointmentRequest(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${APPOINTMENT_URL}/accept/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function cancelAppointmentRequest(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${APPOINTMENT_URL}/cancel/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function rejectAppointmentRequest(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${APPOINTMENT_URL}/reject/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function markAppointmentAsDone(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${APPOINTMENT_URL}/complete/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function markAppointmentAsNotDone(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${APPOINTMENT_URL}/uncomplete/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 
 const queries = {
     registerUser,
+    acceptAppointmentRequest,
+    cancelAppointmentRequest,
+    markAppointmentAsDone,
+    markAppointmentAsNotDone,
+    rejectAppointmentRequest,
     logout,
     loginUser,
     currentUser,

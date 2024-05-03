@@ -13,6 +13,9 @@ type Props = {
 export default function TreatmentDetails({ treatment }: Props) {
   function printDocument() {
     const element = document.getElementById('printable') as HTMLElement;
+    if (!element) return;
+    let oldWidth = element.style.width;
+    element.style.width = "100%";
     let dark = false;
     if (document.documentElement.classList.contains("dark")) {
       document.documentElement.classList.toggle("dark", false);
@@ -33,6 +36,7 @@ export default function TreatmentDetails({ treatment }: Props) {
     }
     worker.set(options).from(element).save(fileName).then(() => {
       if (dark) document.documentElement.classList.toggle("dark", true);
+      element.style.width = oldWidth;
     });
   }
   useEffect(() => {
@@ -44,7 +48,11 @@ export default function TreatmentDetails({ treatment }: Props) {
   if (!treatment) return <DataNotFound />
   return (
     <main className="w-full min-h-full py-4 px-4 md:px-4">
-      <Card className="w-full rounded-b-none" id="printable">
+      <div className="w-full flex">
+        <Button variant="outline" onClick={printDocument} className="w-full rounded-none rounded-tl-lg">download</Button>
+        <Button onClick={printDocument} className="w-full rounded-none rounded-tr-lg">upload to user documents</Button>
+      </div>
+      <Card className="w-full rounded-none" id="printable">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>{treatment.title}</CardTitle>
@@ -132,7 +140,6 @@ export default function TreatmentDetails({ treatment }: Props) {
           </div>
         </CardContent>
       </Card>
-      <Button onClick={printDocument} className="w-full rounded-t-none">download</Button>
     </main>
   )
 }

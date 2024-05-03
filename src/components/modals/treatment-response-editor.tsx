@@ -14,9 +14,9 @@ import 'froala-editor/js/plugins/char_counter.min.js';
 import 'froala-editor/js/plugins/colors.min.js';
 import 'froala-editor/js/plugins/font_size.min.js';
 import 'froala-editor/js/plugins/line_height.min.js';
+import 'froala-editor/js/plugins/link.min.js';
 import 'froala-editor/js/plugins/lists.min.js';
 import 'froala-editor/js/plugins/quote.min.js';
-import 'froala-editor/js/plugins/url.min.js';
 import { useEffect, useState } from "react";
 import FroalaEditor from "react-froala-wysiwyg";
 import { toast } from "sonner";
@@ -34,6 +34,7 @@ export default function TreatmentResponseEditor({ onCloseModal, onUpdateRequest,
   const [title, setTitle] = useState("");
   const [model, setModel] = useState('');
   const [treatment, setTreatment] = useState<any>(null);
+  if (typeof window == "undefined") return;
   function clearForm() {
     onCloseModal(false)
   }

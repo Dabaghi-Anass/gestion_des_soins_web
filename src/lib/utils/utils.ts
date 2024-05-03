@@ -48,7 +48,7 @@ export function randomHslaCombination(alpha: number = 0.5) {
 }
 export function getBadgeStyle(status: string, withBorder: boolean = false) {
     let getBgOfHue = (hue: number) => {
-    return `hsl(${hue},84%, 93%)`
+    return `hsl(${hue},84%, 85%)`
     };
     let getColorOfHue = (hue: number) => {
         return `hsl(${hue},64%, 24%)`
@@ -84,8 +84,8 @@ export function getStatusHue(status: string) {
         CONFIRMED: 141,
         IN_PROGRESS: 180,
         PENDING: 270,
-        DENIED: 300,
-        COMPLETED_TREATMENT: 330
+        DENIED: 354,
+        COMPLETED_TREATMENT: 210
     }
     return Status[status] || 270;
 }

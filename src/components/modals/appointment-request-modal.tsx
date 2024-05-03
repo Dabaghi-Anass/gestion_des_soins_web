@@ -1,4 +1,5 @@
 "use client"
+import api from "@/api/api";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -10,11 +11,18 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog";
 import Loading from "@/components/ui/loading";
+import { useAppDispatch } from "@/hooks/redux-hooks";
+import { updateAppointment } from "@/lib/features/appointment-reducer";
+import { getBadgeStyle } from "@/lib/utils/utils";
 import html2pdf from "html2pdf.js";
+import { FileUp, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { toast } from "sonner";
+import AsyncButton from "../ui/AsyncButton";
 import { Button } from "../ui/button";
 import WithToolTip from "../ui/with-tooltip";
+import ConfirmActionModal from "./confirm-action-modal";
 type Props = {
   appointment: any;
 }
@@ -24,19 +32,27 @@ export default function AppointmentModal({ appointment }: Props) {
   return <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
     <DialogTrigger>
       <WithToolTip description="send email to patient">
-        <Button className="w-full" size="sm" variant="outline">
+        <Button className="w-full mb-2" size="sm" variant="outline">
           <CalendarIcon className="mr-2 h-4 w-4" />
           View Details
         </Button>
       </WithToolTip>
     </DialogTrigger>
     <DialogContent className="w-full max-w-[90vw] h-full overflow-y-scroll max-h-[90vh]">
-      <DialogHeader>
-        <DialogTitle>{appointment.patient.firstName} {appointment.patient.lastName}</DialogTitle>
-        <DialogDescription>prévu dans {new Date(appointment.date).toLocaleString("fr-FR", {
-          timeStyle: "short",
-          dateStyle: "short"
-        })}</DialogDescription>
+      <DialogHeader className="flex flex-row items-center lg:justify-between gap-4 flex-wrap">
+        <div className="flex flex-col items-start">
+          <DialogTitle>{appointment.patient.firstName} {appointment.patient.lastName}</DialogTitle>
+          <DialogDescription>prévu dans {new Date(appointment.date).toLocaleString("fr-FR", {
+            timeStyle: "short",
+            dateStyle: "short"
+          })}</DialogDescription>
+        </div>
+        {appointment.accepted &&
+          <Button variant="outline" className="w-fit flex items-center gap-2">
+            <FileUp />
+            <span>placer le fichier traitment dans les document de {appointment.patient.firstName}</span>
+          </Button>
+        }
       </DialogHeader>
       <AppointmentComponent appointment={appointment} />
     </DialogContent>
@@ -44,8 +60,16 @@ export default function AppointmentModal({ appointment }: Props) {
 }
 
 function AppointmentComponent({ appointment }: { appointment: any }) {
+  const [modalMessage, setModalMessage] = useState<string>("")
+  const [modalTitle, setModalTitle] = useState<string>("")
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [modalConfirmAction, setModalConfirmAction] = useState<() => void>(() => { })
+  const dispatch = useAppDispatch();
   function printDocument() {
     const element = document.getElementById('printable') as HTMLElement;
+    if (!element) return;
+    let oldWidth = element.style.width;
+    element.style.width = "100%";
     let dark = false;
     if (document.documentElement.classList.contains("dark")) {
       document.documentElement.classList.toggle("dark", false);
@@ -66,12 +90,40 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
     }
     worker.set(options).from(element).save(fileName).then(() => {
       if (dark) document.documentElement.classList.toggle("dark", true);
+      element.style.width = oldWidth;
     });
   }
+  async function handleAcceptAppointment() {
+    const savedAppointment = await api.acceptAppointmentRequest(appointment.id);
+    dispatch(updateAppointment(savedAppointment));
+    setModalOpen(false);
+    toast("Appointment Accepted");
+  }
+  async function handleRejectAppointment() {
+    const savedAppointment = await api.rejectAppointmentRequest(appointment.id);
+    dispatch(updateAppointment(savedAppointment));
+    setModalOpen(false);
+    toast("Appointment Rejected");
+  }
+  async function handleCompleteAppointment() {
+    const savedAppointment = await api.markAppointmentAsDone(appointment.id);
+    dispatch(updateAppointment(savedAppointment));
+  }
+  async function handleUnCompleteAppointment() {
+    const savedAppointment = await api.markAppointmentAsNotDone(appointment.id);
+    dispatch(updateAppointment(savedAppointment));
+  }
   return (
-    <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row gap-8 justify-between">
-      <div className="w-1/2" id="printable">
-        <div className="my-4 w-full flex items-center justify-between gap-4">
+    <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row gap-8">
+      <ConfirmActionModal
+        title={modalTitle}
+        message={modalMessage}
+        open={modalOpen}
+        onConfirm={modalConfirmAction}
+        onCancel={() => setModalOpen(false)}
+      />
+      <div className="w-full" id="printable">
+        <div className="my-4 w-full flex items-center justify-between  gap-4">
           <h1 className="text-2xl font-bold w-full">Detailes De Rendez Vous</h1>
           <Badge variant="secondary">{appointment.type}</Badge>
         </div>
@@ -113,36 +165,64 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
         <div className="py-4 max-w-[50ch] w-full">{appointment.reason}
         </div>
       </div>
-      <div className="w-full lg:w-fit">
+      <div className="w-full flex flex-col ">
         <div className="flex items-center space-x-4 justify-end p-4">
           <Button variant="outline" onClick={printDocument}>
             <PrinterIcon className="h-5 w-5 mr-2" />
             Imprimer
           </Button>
-          <Button variant="outline">
-            <ShareIcon className="h-5 w-5 mr-2" />
-            Partager
-          </Button>
         </div>
-        <h2 className="text-lg font-medium mb-4">Actions</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <Button variant="outline">
-            <CheckIcon className="h-5 w-5 mr-2" />
-            Confirm Appointment
-          </Button>
-          <Button variant="outline">
-            <CalendarIcon className="h-5 w-5 mr-2" />
-            Reschedule Appointment
-          </Button>
-          <Button variant="outline">
-            <XIcon className="h-5 w-5 mr-2" />
-            Cancel Appointment
-          </Button>
-          <Button variant="outline">
-            <NotebookIcon className="h-5 w-5 mr-2" />
-            Add Notes
-          </Button>
-        </div>
+        <h2 className="text-lg font-medium mb-4 w-full text-start">Actions</h2>
+        {!appointment.status ?
+          <>
+            <p className="text-light text-sm max-w-prose my-4">
+              beware of cancelling the appointment, this action is irreversible and may affect the patient's trust in the clinic.
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <AsyncButton variant="success" onClick={() => {
+                setModalMessage("Are you sure you want to accept this appointment this action is not reversible?");
+                setModalTitle("Accept Appointment");
+                setModalOpen(true);
+                setModalConfirmAction(() => handleAcceptAppointment);
+              }}>
+                <CheckIcon className="h-5 w-5" />
+                Accepter Rendez vous
+              </AsyncButton>
+              <AsyncButton variant="destructive" onClick={() => {
+                setModalMessage("Are you sure you want to reject this appointment this action is not reversible?");
+                setModalTitle("Reject Appointment");
+                setModalOpen(true);
+                setModalConfirmAction(() => handleRejectAppointment);
+              }}>
+                <XIcon className="h-5 w-5" />
+                Refuser Rendez Vous
+              </AsyncButton>
+            </div>
+          </> : <>
+            <p className="text-light text-sm max-w-prose my-4">
+              beware of missing the appointment, you may affect the patient's trust in the clinic.
+            </p>
+            <div className="flex w-full items-center gap-4 justify-between mb-4">
+              <span>Status de Rendez Vous </span>
+              <Badge className="p-2 rounded-lg" style={getBadgeStyle(appointment.status)}>{appointment.status}</Badge>
+            </div>
+            {appointment.status !== "DENIED" ?
+              appointment.status !== "DONE" ?
+                <div className="grid grid-cols-2 gap-4">
+                  <Button variant="outline" className="w-full flex gap-2" onClick={handleCompleteAppointment}>
+                    <CheckIcon className="h-5 w-5" />
+                    Marquer Comme Réalisé
+                  </Button>
+                </div> :
+                <div className="grid grid-cols-2 gap-4">
+                  <Button variant="outline" className="w-full flex gap-2" onClick={handleUnCompleteAppointment}>
+                    <X className="h-5 w-5" />
+                    Marquer Comme Pas Réalisé
+                  </Button>
+                </div> : null
+            }
+          </>
+        }
       </div>
     </div>
   )

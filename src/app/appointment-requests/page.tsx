@@ -1,10 +1,10 @@
 "use client"
 import api from "@/api/api"
 import AppointmentRequestCard from "@/components/appointment-request-card"
+import AppointmentsHeader from "@/components/appointments-header"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
 import Loading from "@/components/ui/loading"
 import {
@@ -15,18 +15,55 @@ import {
   PaginationNext,
   PaginationPrevious
 } from "@/components/ui/pagination"
-import { useAppSelector } from "@/hooks/redux-hooks"
+import { useAppDispatch, useAppSelector } from "@/hooks/redux-hooks"
+import { useSearch } from "@/hooks/use-search"
+import { updateAppointments } from "@/lib/features/appointment-reducer"
 import { useQuery } from "@tanstack/react-query"
+import _ from "lodash"
 import Link from "next/link"
 import { useState } from "react"
 export default function AppointmentRequestsPage() {
+  const sortMap: {
+    [key: string]: (a: any, b: any) => number;
+  } = {
+    "date-asc": (a: any, b: any) => new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime(),
+    "date-desc": (a: any, b: any) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime(),
+    patient: (a: any, b: any) => a.patient.firstName.localeCompare(b.patient.firstName),
+    type: (a: any, b: any) => a.type.localeCompare(b.type),
+    status: (a: any, b: any) => a.status?.localeCompare(b.status),
+  }
   const currentUser: any = useAppSelector((state) => state.UserReducer.user);
+  const dispatch = useAppDispatch();
   const limit = 6;
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [page, setPage] = useState<number>(0);
+  function paginate(array: any[], page_size: number, page_number: number) {
+    const startIndex = page_number * page_size
+    return _.slice(array, startIndex, startIndex + page_size);
+  }
   const { data, isLoading } = useQuery({
-    queryKey: ["appointment-requests", currentUser?.id, page, limit],
-    queryFn: async ({ queryKey }) => await api.getAppointmentRequests(queryKey[1], queryKey[2], queryKey[3])
-  })
+    queryKey: ["appointment-requests", currentUser?.id, 0, 0],
+    queryFn: async ({ queryKey }) => {
+      const data = await api.getAppointmentRequests(queryKey[1], queryKey[2], queryKey[3]);
+      if (data) dispatch(updateAppointments(data.appointments));
+      return data;
+    }
+  });
+  const appointmentsFromCtx = useAppSelector((state) => state.AppointmentReducer.appointments);
+  // _.orderBy(appointments, ["date"], ["desc"]);
+  const [sortParam, setSortParam] = useState<string>("date-desc")
+  let appointments: any[] = appointmentsFromCtx.toSorted(sortMap[sortParam]);
+  appointments = paginate(useSearch(appointments, searchQuery), limit, page);
+  const statusList = appointmentsFromCtx.
+    filter((a: any) => a.type !== null)
+    .map((appointment: any) => appointment.type)
+    .filter((value: any, index: any, self: any) => self.indexOf(value) === index)
+  const userIdList = appointmentsFromCtx
+    .map((appointment: any) => appointment.patient.id)
+    .filter((value: any, index: any, self: any) => self.indexOf(value) === index)
+  const [filterStatusList, setFilterStatusList] = useState<string[]>(statusList)
+  const [filterUserList, setFilterUserList] = useState<number[]>(userIdList)
+
   if (isLoading) return <Loading />
   return (
     <div className="flex h-full w-full">
@@ -54,8 +91,7 @@ export default function AppointmentRequestsPage() {
           </Link>
           <Link
             className="flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 dark:text-gray-50 dark:hover:bg-gray-800"
-            href="#"
-          >
+            href="#">
             <XIcon className="mr-3 h-5 w-5 text-gray-400 dark:text-gray-500" />
             Non Accepté / Annulé
           </Link>
@@ -160,69 +196,21 @@ export default function AppointmentRequestsPage() {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
-        <header className="border-b bg-white px-6 py-4 dark:border-gray-800 dark:bg-gray-900">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold">Appointment Requests</h1>
-            <div className="flex items-center space-x-4">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button size="sm" variant="outline">
-                    <FilterIcon className="mr-2 h-4 w-4" />
-                    Filter
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 space-y-1">
-                  <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem>
-                    <div className="flex items-center justify-between">
-                      <span>Scheduled</span>
-                      <Checkbox defaultChecked id="filter-scheduled" />
-                    </div>
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem>
-                    <div className="flex items-center justify-between">
-                      <span>Completed</span>
-                      <Checkbox defaultChecked id="filter-completed" />
-                    </div>
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem>
-                    <div className="flex items-center justify-between">
-                      <span>Cancelled</span>
-                      <Checkbox defaultChecked id="filter-cancelled" />
-                    </div>
-                  </DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button size="sm" variant="outline">
-                    <ListOrderedIcon className="mr-2 h-4 w-4" />
-                    Sort
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 space-y-1">
-                  <DropdownMenuLabel>Sort by</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuRadioGroup value="date">
-                    <DropdownMenuRadioItem value="date">Date</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="patient">Patient</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="type">Type</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="status">Status</DropdownMenuRadioItem>
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Input className="max-w-xs" placeholder="Search appointments..." type="search" />
-            </div>
-          </div>
-        </header>
+        <AppointmentsHeader
+          onListUpdate={setFilterStatusList}
+          onSearch={setSearchQuery}
+          onSortParam={setSortParam}
+          searchQuery={searchQuery}
+          sortParam={sortParam}
+          statusList={statusList}
+        />
         <div className="p-4">
-          {data?.appointments?.length === 0 ?
+          {appointments?.length === 0 ?
             <div className="flex items-center justify-center h-64">
               <p className="text-lg text-gray-500 dark:text-gray-400">No appointments found</p>
             </div> :
             <div className="grid grid-cols-auto gap-4">
-              {data?.appointments?.map((appointment: any) => (<AppointmentRequestCard appointment={appointment} />))}
+              {appointments?.map((appointment: any) => (<AppointmentRequestCard key={appointment.id} appointment={appointment} />))}
             </div>
           }
           <div className="flex w-full mx-auto align-center p-4">
@@ -235,7 +223,7 @@ export default function AppointmentRequestsPage() {
                 <PaginationItem>
                   <PaginationLink>{page + 1}</PaginationLink>
                 </PaginationItem>
-                {data?.hasNext &&
+                {appointments.length === limit &&
                   <PaginationItem onClick={() => setPage((prev: number) => prev + 1)}>
                     <PaginationNext />
                   </PaginationItem>
