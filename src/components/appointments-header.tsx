@@ -32,14 +32,17 @@ export default function AppointmentsHeader({ searchQuery, sortParam, statusList,
               <DropdownMenuCheckboxItem key={`filter-${statusName}`}>
                 <div className="flex items-center justify-between gap-4 lowercase">
                   <span>{statusName}</span>
-                  <Checkbox checked={status.includes(statusName)} onCheckedChange={(checked) => {
-                    if (checked) {
-                      setStatus([...status, statusName])
-                    } else {
-                      setStatus(status.filter((statusItem) => statusItem !== statusName))
-                    }
-                    onListUpdate(status)
-                  }} id={`filter-${statusName}`} />
+                  <Checkbox
+                    checked={status.includes(statusName)}
+                    onCheckedChange={(checked) => {
+                      let data = [...status];
+                      if (checked) data = [...data, statusName]
+                      else data = data.filter(statusItem => statusItem !== statusName)
+                      setStatus(data)
+                      onListUpdate(data)
+                    }}
+                    id={`filter-${statusName}`}
+                  />
                 </div>
               </DropdownMenuCheckboxItem>)
             )}
@@ -56,7 +59,7 @@ export default function AppointmentsHeader({ searchQuery, sortParam, statusList,
             <DropdownMenuLabel>Sort by</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuRadioGroup value={sortParam?.toLowerCase()}>
-              <DropdownMenuRadioItem value="date-asc" onClick={() => onSortParam("date-asc")}>Date | Plus Ancienne </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="date-asc" onClick={() => onSortParam("date-asc")}>Date | Plus Ancienne</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="date-desc" onClick={() => onSortParam("date-desc")}>Date | Plus Recent</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="patient" onClick={() => onSortParam("patient")}>Patient</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="type" onClick={() => onSortParam("type")}>Type</DropdownMenuRadioItem>
