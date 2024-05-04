@@ -173,3 +173,27 @@ input:focus{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 }
+
+.btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    background: var(--primary-clr);
+    border: 1px solid var(--primary-clr);
+    border-radius: .5rem;
+    padding: .5rem 1rem;
+    color: white;
+    transition: background 300ms ,border-color 300ms;
+}
+.btn:hover{
+    background: var(--primary-clr-dark);
+}
+.btn.btn-outline{
+    background: transparent;
+    border-color: #dadada;
+    color: #272727;
+}
+.btn.btn-outline:hover{
+    filter: brightness(.8);
+}

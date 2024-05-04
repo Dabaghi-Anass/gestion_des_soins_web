@@ -3,42 +3,40 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
 type Props = {
   sortParam: string;
   searchQuery: string;
   statusList: string[];
+  pickedStatusList: string[];
   onSearch: (query: string) => void;
   onListUpdate: (statusList: string[]) => void;
   onSortParam: (param: string) => void;
 }
-export default function AppointmentsHeader({ searchQuery, sortParam, statusList, onSearch, onListUpdate, onSortParam }: Props) {
-  const [status, setStatus] = useState<string[]>(statusList)
+export default function AppointmentsHeader({ searchQuery, sortParam, pickedStatusList, statusList, onSearch, onListUpdate, onSortParam }: Props) {
   return <header className="border-b bg-white px-6 py-4 dark:border-gray-800 dark:bg-gray-900">
     <div className="flex flex-col lg:flex-row gap-4 lg:items-center justify-between">
-      <h1 className="text-xl font-semibold">Appointment Requests</h1>
+      <h1 className="text-xl font-semibold">Requetes de Rendez Vous</h1>
       <div className="flex items-center space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="outline">
               <FilterIcon className="mr-2 h-4 w-4" />
-              Filter
+              Filtrer
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 space-y-1">
-            <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+            <DropdownMenuLabel>Type De Rendez Vous</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {statusList?.map((statusName) => (
-              <DropdownMenuCheckboxItem key={`filter-${statusName}`}>
+              <DropdownMenuCheckboxItem onClick={(e) => e.preventDefault()} key={`filter-${statusName}`}>
                 <div className="flex items-center justify-between gap-4 lowercase">
                   <span>{statusName}</span>
                   <Checkbox
-                    checked={status.includes(statusName)}
+                    checked={pickedStatusList.includes(statusName)}
                     onCheckedChange={(checked) => {
-                      let data = [...status];
+                      let data = [...pickedStatusList];
                       if (checked) data = [...data, statusName]
                       else data = data.filter(statusItem => statusItem !== statusName)
-                      setStatus(data)
                       onListUpdate(data)
                     }}
                     id={`filter-${statusName}`}
@@ -52,11 +50,11 @@ export default function AppointmentsHeader({ searchQuery, sortParam, statusList,
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="outline">
               <ListOrderedIcon className="mr-2 h-4 w-4" />
-              Sort
+              Trier
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 space-y-1">
-            <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+            <DropdownMenuLabel>Trier par</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuRadioGroup value={sortParam?.toLowerCase()}>
               <DropdownMenuRadioItem value="date-asc" onClick={() => onSortParam("date-asc")}>Date | Plus Ancienne</DropdownMenuRadioItem>
@@ -71,7 +69,7 @@ export default function AppointmentsHeader({ searchQuery, sortParam, statusList,
           value={searchQuery}
           onChange={(e: any) => onSearch(e.target.value)}
           className="max-w-xs"
-          placeholder="Search rendez vous..."
+          placeholder="Rechercher rendez vous..."
           type="search"
         />
       </div>

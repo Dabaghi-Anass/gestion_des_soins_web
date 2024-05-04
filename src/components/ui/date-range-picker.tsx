@@ -10,32 +10,40 @@ import {
 import { Label } from "@/components/ui/label"
 
 type DateRangePickerProps = {
+  startDate: number;
+  endDate: number;
   onStartPick: (date: string) => void;
   onEndPick: (date: string) => void;
 }
-export default function DateRangePicker({ onStartPick, onEndPick }: DateRangePickerProps) {
+export default function DateRangePicker({ startDate, endDate, onStartPick, onEndPick }: DateRangePickerProps) {
+  const startDateParam = !isNaN(startDate) ? new Date(startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+  const endDateParam = !isNaN(endDate) ? new Date(endDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
   return <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button className="w-full justify-between" size="sm" variant="outline">
-        <span>Filter by Date</span>
+        <span>Filtrer par Date Planifié</span>
         <ChevronDownIcon className="h-4 w-4" />
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent className="w-72 space-y-1">
-      <DropdownMenuLabel>Select a date range</DropdownMenuLabel>
+      <DropdownMenuLabel>Sélectionnez un intervalle</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <div className="flex flex-col gap-2 w-full">
         <div className="flex w-full items-center gap-2 py-2 px-4">
           <Label className="text-sm w-[70px]" htmlFor="start-date">
-            Start
+            Début
           </Label>
-          <input id="start-date" onChange={(e) => onStartPick(e.target.value)} className="w-full" type="date" />
+          <input id="start-date"
+            value={startDateParam}
+            onChange={(e) => onStartPick(e.target.value)} className="w-full" type="date" />
         </div>
         <div className="flex w-full items-center gap-2 py-2 px-4">
           <Label className="text-sm w-[70px]" htmlFor="start-date">
-            End
+            Fin
           </Label>
-          <input id="start-date" onChange={(e) => onEndPick(e.target.value)} className="w-full" type="date" />
+          <input id="end-date"
+            value={endDateParam}
+            onChange={(e) => onEndPick(e.target.value)} className="w-full" type="date" />
         </div>
 
       </div>

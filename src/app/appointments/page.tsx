@@ -20,6 +20,8 @@ import { useSearch } from "@/hooks/use-search"
 import { updateAppointments } from "@/lib/features/appointment-reducer"
 import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
+import { FilterX } from "lucide-react"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 export default function AppointmentRequestsPage() {
   const sortMap: {
@@ -31,7 +33,6 @@ export default function AppointmentRequestsPage() {
     type: (a: any, b: any) => a.type.localeCompare(b.type),
     status: (a: any, b: any) => a.status?.localeCompare(b.status),
   }
-
   const limit = 6;
   const currentUser: any = useAppSelector((state) => state.UserReducer.user);
   const dispatch = useAppDispatch();
@@ -46,7 +47,7 @@ export default function AppointmentRequestsPage() {
     const startIndex = page_number * page_size
     return _.slice(array, startIndex, startIndex + page_size);
   }
-  const { isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["appointment-requests", currentUser?.id, 0, 0],
     queryFn: async ({ queryKey }) => {
       const data = await api.getAppointmentRequests(queryKey[1], queryKey[2], queryKey[3]);
@@ -58,9 +59,8 @@ export default function AppointmentRequestsPage() {
   const typeList = appointmentsFromCtx
     .map((appointment: any) => appointment.type)
     .filter((value: any, index: any, self: any) => self.indexOf(value) === index)
-  const statusList = appointmentsFromCtx.
-    filter((a: any) => a.status !== null)
-    .map((appointment: any) => appointment.status)
+  const statusList = appointmentsFromCtx
+    .map((appointment: any) => appointment.status || "N/A")
     .filter((value: any, index: any, self: any) => self.indexOf(value) === index)
   const userIdList = appointmentsFromCtx
     .map((appointment: any) => appointment.patient.id)
@@ -74,24 +74,34 @@ export default function AppointmentRequestsPage() {
     filterUserList: number[]
   ) => {
     return array.filter((appointment: any) => {
-      const appointmentDate = new Date(appointment.creationDate).getTime();
+      const appointmentDate = new Date(appointment.date).getTime();
+      let isBetweenDates = true;
+      const isAfter = (appointmentDate >= filterDateStart);
+      const isBefore = (appointmentDate <= filterDateEnd);
+      if (filterDateEnd === 0) {
+        isBetweenDates = isAfter;
+      } else {
+        isBetweenDates = isAfter && isBefore;
+      }
       const status = appointment.status || "N/A"
       return (filterStatus.includes(status) &&
         filterUserList.includes(appointment.patient.id) &&
-        filterType.includes(appointment.type)) &&
-        ((filterDateStart) ?
-          (appointmentDate > filterDateStart) :
-          true) &&
-        ((filterDateEnd) ?
-          (appointmentDate < filterDateEnd) :
-          true)
+        filterType.includes(appointment.type)) && isBetweenDates;
     })
   }
-  useEffect(() => {
+  function clearAllFilters() {
     setFilterType(typeList)
     setFilterUser(userIdList)
     setFilterStatus(statusList)
-  }, [appointmentsFromCtx])
+    setFilterDateStart(0)
+    setFilterDateEnd(0)
+  }
+  useEffect(() => {
+    clearAllFilters()
+  }, [data])
+  useEffect(() => {
+    console.log(filterDateStart, filterDateEnd);
+  }, [filterDateStart, filterDateEnd])
   appointments = paginate(useSearch(useFilter(appointments, filterStatus, filterType, filterUser), searchQuery), limit, page);
   if (isLoading) return <Loading />
   return (
@@ -99,9 +109,6 @@ export default function AppointmentRequestsPage() {
       <div className="hidden w-64 border-r h-full bg-gray-50 dark:border-gray-800 dark:bg-gray-900 lg:block">
         <div className="p-6">
           <h3 className="text-lg font-semibold">Rendez Vous</h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Gérez et suivez toutes vos demandes de rendez-vous
-          </p>
         </div>
         <StatusPicker
           filterStatus={filterStatus}
@@ -110,6 +117,8 @@ export default function AppointmentRequestsPage() {
           <h4 className="text-sm font-semibold">Filtres</h4>
           <div className="mt-4 space-y-2">
             <DateRangePicker
+              startDate={filterDateStart}
+              endDate={filterDateEnd}
               onStartPick={(date) => setFilterDateStart(new Date(date).getTime())}
               onEndPick={(date) => setFilterDateEnd(new Date(date).getTime())}
             />
@@ -119,31 +128,33 @@ export default function AppointmentRequestsPage() {
                   .map((a: any) => ({ id: a.patient.id, fullName: a.patient.firstName + " " + a.patient.lastName }))
               }
               pickedUsers={filterUser}
-              onListUpdate={(v) => {
-                setFilterUser(v)
-              }} />
+              onListUpdate={setFilterUser} />
           </div>
         </div>
         <div className="border-t px-4 py-4 dark:border-gray-800">
           <h4 className="text-sm font-semibold">Quick Actions</h4>
           <div className="mt-4 space-y-2">
-            <Button className="w-full" size="sm" variant="outline">
-              <CalendarCheckIcon className="mr-2 h-4 w-4" />
-              View Calendar
+            <Button className="w-full" size="sm" variant="outline" asChild>
+              <Link href="/calendar">
+                <CalendarCheckIcon className="mr-2 h-4 w-4" />
+                Voir Calendrier</Link>
+            </Button>
+            <Button className="w-full" size="sm" variant="outline" onClick={clearAllFilters}>
+              <FilterX className="mr-2 h-4 w-4" />
+              Supprimer Tout Les Filtres
             </Button>
           </div>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
         <AppointmentsHeader
-          onListUpdate={(data) => {
-            setFilterType(data)
-          }}
+          onListUpdate={setFilterType}
           onSearch={setSearchQuery}
           onSortParam={setSortParam}
           searchQuery={searchQuery}
           sortParam={sortParam}
           statusList={typeList}
+          pickedStatusList={filterType}
         />
         <div className="p-4">
           {appointments?.length === 0 ?
@@ -154,7 +165,7 @@ export default function AppointmentRequestsPage() {
               {appointments?.map((appointment: any) => (<AppointmentRequestCard key={appointment.id} appointment={appointment} />))}
             </div>
           }
-          <div className="flex w-full mx-auto align-center p-4">
+          <div className="flex w-full mx-auto align-center p-8">
             <Pagination className="cursor-pointer">
               <PaginationContent>
                 {page > 0 &&

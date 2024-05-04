@@ -29,13 +29,14 @@ type Props = {
 export default function AppointmentModal({ appointment }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   if (!appointment) return <Loading />
+  // debugger;
   return <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
     <DialogTrigger>
       <WithToolTip description="send email to patient">
-        <Button className="w-full mb-2" size="sm" variant="outline">
+        <div className="w-full mb-2 btn btn-outline" >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          View Details
-        </Button>
+          Voir Les Détails
+        </div>
       </WithToolTip>
     </DialogTrigger>
     <DialogContent className="w-full max-w-[90vw] h-full overflow-y-scroll max-h-[90vh]">
@@ -172,16 +173,16 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
             Imprimer
           </Button>
         </div>
-        <h2 className="text-lg font-medium mb-4 w-full text-start">Actions</h2>
+        <h2 className="text-lg font-medium mb-4 w-full text-start">Les Actions</h2>
         {!appointment.status ?
           <>
             <p className="text-light text-sm max-w-prose my-4">
-              beware of cancelling the appointment, this action is irreversible and may affect the patient's trust in the clinic.
+              attention à l'annulation du rendez-vous, cette action est irréversible et peut affecter la confiance du patient dans la clinique.
             </p>
             <div className="grid grid-cols-2 gap-4">
               <AsyncButton variant="success" onClick={() => {
-                setModalMessage("Are you sure you want to accept this appointment this action is not reversible?");
-                setModalTitle("Accept Appointment");
+                setModalMessage("Etes-vous sûr de vouloir accepter ce rendez-vous, cette action n'est pas réversible?");
+                setModalTitle("Accepter rendez-vous");
                 setModalOpen(true);
                 setModalConfirmAction(() => handleAcceptAppointment);
               }}>
@@ -189,8 +190,8 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
                 Accepter Rendez vous
               </AsyncButton>
               <AsyncButton variant="destructive" onClick={() => {
-                setModalMessage("Are you sure you want to reject this appointment this action is not reversible?");
-                setModalTitle("Reject Appointment");
+                setModalMessage("Etes-vous sûr de vouloir rejeter ce rendez-vous, cette action n'est pas réversible?");
+                setModalTitle("Rejeter le rendez-vous");
                 setModalOpen(true);
                 setModalConfirmAction(() => handleRejectAppointment);
               }}>
@@ -200,7 +201,7 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
             </div>
           </> : <>
             <p className="text-light text-sm max-w-prose my-4">
-              beware of missing the appointment, you may affect the patient's trust in the clinic.
+              méfiez-vous de manquer le rendez-vous, vous pourriez affecter la confiance du patient dans la clinique.
             </p>
             <div className="flex w-full items-center gap-4 justify-between mb-4">
               <span>Status de Rendez Vous </span>
