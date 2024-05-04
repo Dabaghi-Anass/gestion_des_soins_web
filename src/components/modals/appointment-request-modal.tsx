@@ -126,7 +126,11 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
       <div className="w-full" id="printable">
         <div className="my-4 w-full flex items-center justify-between  gap-4">
           <h1 className="text-2xl font-bold w-full">Detailes De Rendez Vous</h1>
-          <Badge variant="secondary">{appointment.type}</Badge>
+          <div className="flex gap-2"><div className="p-1 rounded-lg bg-amber-300 text-white">
+            {appointment.duration}h
+          </div>
+            <Badge variant="secondary">{appointment.type}</Badge>
+          </div>
         </div>
         <div className="flex items-center space-x-4 mb-4">
           <Avatar>

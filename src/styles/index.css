@@ -197,3 +197,16 @@ input:focus{
 .btn.btn-outline:hover{
     filter: brightness(.8);
 }
+.hour-indicator{
+    transform: translateY(-100%);
+}
+.hour-indicator::after{
+    --w : 150px;
+    content: '';
+    z-index: 9000;
+    position: absolute;
+    width: calc(100vw - var(--w));
+    bottom: 0;
+    left: 0;
+    border: 1px dashed var(--primary-clr);
+}

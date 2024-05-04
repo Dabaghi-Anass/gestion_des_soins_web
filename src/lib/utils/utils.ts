@@ -73,9 +73,23 @@ export function randomTileWindColor() {
         "rose",
         "cyan"
     ]
-    return tailwindColors[Math.floor(Math.random() * tailwindColors.length)];
+    return tailwindColors[Math.floor(Math.random() * tailwindColors.length - 1)];
 }
-
+export function randomHue() {
+    return Math.floor(Math.random() * 360);
+}
+export function weekStart(d: Date) {
+    let date = new Date(d);
+    const currentDate = date.getDate();
+    const currentDay = date.getDay();
+    return new Date(date.setDate(currentDate - currentDay));
+};
+export function weekEnd(d: Date) {
+    let date = new Date(d);
+    const currentDate = date.getDate();
+    const currentDay = date.getDay();
+    return new Date(date.setDate(currentDate + 6 - currentDay));
+};
 export function getStatusHue(status: string) {
     const Status :any = {
         DONE: 0,
@@ -101,4 +115,16 @@ export function getTypeHue(status: string) {
         Other: 270
     }
     return Status[status];
+}
+export function calculateProgress(now: Date, startHour: number,endHour:number): number {
+    const startTime = new Date(now);
+    startTime.setHours(startHour, 0, 0, 0);
+    const endTime = new Date(now);
+    endTime.setHours(endHour, 0, 0, 0);
+
+    const totalDuration = endTime.getTime() - startTime.getTime();
+    const elapsedTime = now.getTime() - startTime.getTime();
+
+    const progressPercentage = (elapsedTime / totalDuration) * 100;
+    return Math.min(Math.max(progressPercentage, 0), 100);
 }

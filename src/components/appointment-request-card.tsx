@@ -104,9 +104,14 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
                 timeStyle: "short"
               })}</div>
           </div>
-          {appointment.status &&
-            <div className="text-sm rounded-lg p-2 py-1 lowercase" style={getBadgeStyle(appointment.status)}>{appointment.status}</div>
-          }
+          <div className="flex gap-2">
+            <div className="p-1 rounded-lg bg-amber-300 text-white">
+              {appointment.duration}h
+            </div>
+            {appointment.status &&
+              <div className="text-sm rounded-lg p-2 py-1 lowercase" style={getBadgeStyle(appointment.status)}>{appointment.status}</div>
+            }
+          </div>
         </div>
         {!disableEditing && <>
           <Separator />
