@@ -44,11 +44,11 @@ export default function SideNav() {
           </div>
         </WithToolTip>
       </Link>
-      <Link href="/">
-        <WithToolTip description="agendas">
+      <Link href="/calendrier">
+        <WithToolTip description="calendrier des rendez vous">
           <div className="nav-link flex gap-4 items-center text-gray-400 hover:text-primary transition duration-300">
             <Sheet />
-            {open && <div>Agendas</div>}
+            {open && <div>Calendrier</div>}
           </div>
         </WithToolTip>
       </Link>
