@@ -17,8 +17,9 @@ import UserBadge from "./ui/user-badge"
 import WithToolTip from "./ui/with-tooltip"
 type AppointmentRequestCardProps = {
   appointment: any;
+  disableEditing?: boolean;
 }
-export default function AppointmentRequestCard({ appointment }: AppointmentRequestCardProps) {
+export default function AppointmentRequestCard({ appointment, disableEditing }: AppointmentRequestCardProps) {
   const [modalMessage, setModalMessage] = useState<string>("")
   const [modalTitle, setModalTitle] = useState<string>("")
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -107,9 +108,12 @@ export default function AppointmentRequestCard({ appointment }: AppointmentReque
             <div className="text-sm rounded-lg p-2 py-1 lowercase" style={getBadgeStyle(appointment.status)}>{appointment.status}</div>
           }
         </div>
-        <Separator />
-        <AppointmentModal appointment={appointment} />
-        {!appointment.status &&
+        {!disableEditing && <>
+          <Separator />
+          <AppointmentModal appointment={appointment} />
+        </>
+        }
+        {!appointment.status && !disableEditing &&
           <div className="flex flex-col-reverse md:flex-row-reverse w-full items-center gap-2 pb-2">
             <Button className="w-full flex items-center gap-2" onClick={() => {
               setModalMessage("Are you sure you want to accept this appointment this action is not reversible?");

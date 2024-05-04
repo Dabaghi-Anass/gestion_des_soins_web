@@ -358,12 +358,25 @@ async function markAppointmentAsNotDone(id: number) {
         console.log(e.message)
     }
 }
+async function getAppointmentById(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.get(`${APPOINTMENT_URL}/${id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 
 const queries = {
     registerUser,
     acceptAppointmentRequest,
     cancelAppointmentRequest,
     markAppointmentAsDone,
+    getAppointmentById,
     markAppointmentAsNotDone,
     rejectAppointmentRequest,
     logout,
