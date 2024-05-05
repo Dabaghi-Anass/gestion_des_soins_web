@@ -92,7 +92,7 @@ export function weekEnd(d: Date) {
 };
 export function getStatusHue(status: string) {
     const Status :any = {
-        DONE: 0,
+        DONE: 133,
         SCHEDULED: 42,
         CANCELED: 8,
         CONFIRMED: 141,
@@ -101,7 +101,7 @@ export function getStatusHue(status: string) {
         DENIED: 354,
         COMPLETED_TREATMENT: 210
     }
-    return Status[status] || 270;
+    return Status[status] ?? 270;
 }
 export function getTypeHue(status: string) {
     const Status :any = {
@@ -127,4 +127,8 @@ export function calculateProgress(now: Date, startHour: number,endHour:number): 
 
     const progressPercentage = (elapsedTime / totalDuration) * 100;
     return Math.min(Math.max(progressPercentage, 0), 100);
+}
+
+export function getTimeString(date: Date) {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }

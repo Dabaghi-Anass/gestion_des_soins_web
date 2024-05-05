@@ -2,7 +2,7 @@
 import caregiverSvg from "@/assets/svgs/caregiver.svg";
 import doctorSvg from "@/assets/svgs/doctor.svg";
 import nurseSvg from "@/assets/svgs/nurse.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Role } from "@/types/types";
@@ -10,9 +10,14 @@ import Image from "next/image";
 type Props = {
   onNext: (role: Role | undefined) => void;
   onBack: () => void;
+  role?: Role;
 }
-export default function UserTypeSelector({ onBack, onNext }: Props) {
-  const [selectedRole, setSelectedRole] = useState<Role>();
+export default function UserTypeSelector({ onBack, onNext, role }: Props) {
+  const [selectedRole, setSelectedRole] = useState<Role | undefined>(role);
+  useEffect(() => {
+    if (!selectedRole) return;
+    onNext(selectedRole);
+  }, [])
   return (
     <div className="w-full h-full flex flex-col items-center p-4 ">
       <h1 className="text-4xl text-slate-800 font-semibold">t'est un ?</h1>

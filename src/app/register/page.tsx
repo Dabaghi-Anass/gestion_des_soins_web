@@ -12,7 +12,6 @@ import { RegisterUserFormData, Role, User, UserProfile } from "@/types/types";
 import { OctagonAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
-	useEffect,
 	useState
 } from "react";
 import { toast } from "sonner";
@@ -32,30 +31,32 @@ export default function RegisterPage() {
 		<RegisterForm onNext={(userData: RegisterUserFormData) => {
 			if (!userData) return;
 			setUser(userData as User);
-			handleNext("Account Created", "Account has been created and verified successfully");
+			setCurrentComponentIndex(2);
 		}} />,
 		<UserTypeSelector
+			role={user?.role}
 			onNext={async (role: Role | undefined) => {
-				console.log(currentUser?.id, role)
-				if (!currentUser?.id || !role) return;
+				if (!user?.id || !role) return;
 				const userFromDb = await api.initUserRole({
 					id: currentUser.id,
 					role: role.toString()
 				} as User)
 				setUser((prev: any) => ({ ...userFromDb }))
-				handleNext("Role Selected", "Role selected successfully")
+				setCurrentComponentIndex(3);
 			}}
 			onBack={() => setCurrentComponentIndex(p => p - 1)}
 		/>,
-		<ProfileForm onNext={(profile: UserProfile) => {
-			if (!user) return;
-			profile = { ...profile, id: user?.profile?.id }
-			setUser({ ...user, profile })
-			handleUpdateProfile(profile);
-			setCurrentComponentIndex(4)
-		}} onBack={() => {
-			setCurrentComponentIndex(p => p - 1)
-		}} />,
+		<ProfileForm
+			profile={user?.profile}
+			onNext={(profile: UserProfile) => {
+				if (!user) return;
+				profile = { ...profile, id: user?.profile?.id }
+				setUser({ ...user, profile })
+				handleUpdateProfile(profile);
+				setCurrentComponentIndex(4)
+			}} onBack={() => {
+				setCurrentComponentIndex(p => p - 1)
+			}} />,
 		<ProfileImageSelect gender={true} onNext={(imageUrl) => {
 			if (!user) return;
 			setUser((prev: any) => ({ ...prev, profile: { ...prev.profile, imageUrl } }))
@@ -67,8 +68,7 @@ export default function RegisterPage() {
 		<UserRoleDedicatedForm user={user}
 			onNext={(userInfo: any) => {
 				if (!userInfo) return;
-				console.log({ userInfo })
-				router.replace("/")
+				window.location.replace("/")
 			}} onBack={() => {
 				setCurrentComponentIndex(p => p - 1)
 			}} />
@@ -88,9 +88,6 @@ export default function RegisterPage() {
 			setLoading(false)
 		}
 	}
-	useEffect(() => {
-		console.log(currentComponentIndex)
-	}, [currentComponentIndex])
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-background'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}

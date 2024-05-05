@@ -30,31 +30,14 @@ const RegisterSchema = z
 type Props = {
   onNext: (profile: UserProfile) => void;
   onBack: () => void;
+  profile: UserProfile;
 }
-export default function ProfileForm({ onNext, onBack }: Props) {
+export default function ProfileForm({ onNext, onBack, profile: propProfile }: Props) {
   const [formError, setFormError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [profile, setProfile] = useState<UserProfile>({});
+  const [profile, setProfile] = useState<UserProfile>(propProfile);
   const currentUser = useAppSelector((state: any) => state.UserReducer.user);
   const [loading, setLoading] = useState<boolean>(false);
-  const validateFields = (data: any) => {
-    setProfile(data)
-    const validationObj = RegisterSchema.safeParse(data);
-    if (!validationObj.success) {
-      const errors: {
-        [key: string]: string;
-      } = {}
-      for (let error of validationObj.error.errors) {
-        let path: string = error.path[0] as string;
-        errors[path] = error.message;
-      }
-      setErrors(errors);
-      return null;
-    } else {
-      setErrors({});
-      return validationObj.data;
-    }
-  }
   const validateField = (e: React.ChangeEvent) => {
     setFormError(null)
     const { name, value } = e.target as HTMLInputElement;
@@ -83,9 +66,9 @@ export default function ProfileForm({ onNext, onBack }: Props) {
     onNext(profile as UserProfile);
   };
   useEffect(() => {
-    if (!currentUser?.profile) return
-    setProfile(currentUser.profile)
-    onNext(currentUser.profile)
+    if (!profile) return
+    setProfile(profile)
+    onNext(profile)
   }, [currentUser])
   if (loading) return <Loading />
   return <section className="flex flex-col items-center w-full ">
