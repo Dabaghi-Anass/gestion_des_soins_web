@@ -40,7 +40,7 @@ export default function AppointmentPage() {
       {appointment.accepted && isOwner &&
         <Button variant="outline" className="w-fit flex items-center gap-2">
           <FileUp />
-          <span>placer le fichier traitment dans les document de {appointment.patient.firstName}</span>
+          <span>placer le fichier Rendez Vous dans les document de {appointment.patient.firstName}</span>
         </Button>
       }
     </header>
@@ -118,7 +118,7 @@ function AppointmentComponent({ appointment, isOwner }: { appointment: any, isOw
         </div>
         <div className="flex items-center space-x-4 mb-4">
           <Avatar>
-            <Image src={appointment.patient.profile.imageUrl} alt={appointment.patient.firstName} width={50} height={50} />
+            <Image src={appointment.patient.profile.imageUrl || "/user-m.svg"} alt={appointment.patient.firstName} width={50} height={50} />
             <AvatarFallback>{appointment.patient.firstName.charAt(0) + appointment.patient.lastName.charAt(0)}
             </AvatarFallback>
           </Avatar>

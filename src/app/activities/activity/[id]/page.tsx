@@ -1,65 +1,54 @@
 "use client"
+"use client"
 import api from "@/api/api";
+import ConfirmActionModal from "@/components/modals/confirm-action-modal";
+import AsyncButton from "@/components/ui/AsyncButton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import Loading from "@/components/ui/loading";
-import { useAppDispatch } from "@/hooks/redux-hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux-hooks";
 import { updateAppointment } from "@/lib/features/appointment-reducer";
 import { getBadgeStyle } from "@/lib/utils/utils";
+import { useQuery } from "@tanstack/react-query";
 import html2pdf from "html2pdf.js";
 import { FileUp, X } from "lucide-react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import AsyncButton from "../ui/AsyncButton";
-import { Button } from "../ui/button";
-import WithToolTip from "../ui/with-tooltip";
-import ConfirmActionModal from "./confirm-action-modal";
-type Props = {
-  appointment: any;
-}
-export default function ActivityModal({ appointment }: Props) {
-  const [open, setOpen] = useState<boolean>(false);
-  if (!appointment) return <Loading />
-  return <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
-    <DialogTrigger>
-      <WithToolTip description="send email to patient">
-        <div className="w-full mb-2 btn btn-outline" >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          Voir Les Détails
-        </div>
-      </WithToolTip>
-    </DialogTrigger>
-    <DialogContent className="w-full max-w-[90vw] h-full overflow-y-scroll max-h-[90vh]">
-      <DialogHeader className="flex flex-row items-center lg:justify-between gap-4 flex-wrap">
-        <div className="flex flex-col items-start">
-          <DialogTitle>{appointment.patient.firstName} {appointment.patient.lastName}</DialogTitle>
-          <DialogDescription>prévu dans {new Date(appointment.date).toLocaleString("fr-FR", {
-            timeStyle: "short",
-            dateStyle: "short"
-          })}</DialogDescription>
-        </div>
-        {appointment.accepted &&
-          <Button variant="outline" className="w-fit flex items-center gap-2">
-            <FileUp />
-            <span>placer le fichier Activité dans les document de {appointment.patient.firstName}</span>
-          </Button>
-        }
-      </DialogHeader>
-      <ActivityComponent appointment={appointment} />
-    </DialogContent>
-  </Dialog>
+export default function AppointmentPage() {
+  const { id } = useParams();
+  const currentUser: any = useAppSelector(state => state.UserReducer.user);
+  const { data: appointment, isLoading } = useQuery({
+    queryKey: ["appointment", id],
+    queryFn: async ({ queryKey }) => {
+      return await api.getActivityById(+queryKey[1]);
+    }
+  })
+  if (isLoading || !currentUser || !appointment) return <Loading />
+  const isOwner: boolean = appointment.caregiver.id === currentUser.id;
+  return <section className="w-full p-4 h-full overflow-y-scroll bg-primary-foreground">
+    <header className="flex flex-row items-center lg:justify-between gap-4 px-8 flex-wrap">
+      <div className="flex flex-col items-start">
+        <h1>{appointment.patient.firstName} {appointment.patient.lastName}</h1>
+        <div className="text-light text-sm">prévu dans {new Date(appointment.date).toLocaleString("fr-FR", {
+          timeStyle: "short",
+          dateStyle: "short"
+        })}</div>
+      </div>
+      {appointment.accepted && isOwner &&
+        <Button variant="outline" className="w-fit flex items-center gap-2">
+          <FileUp />
+          <span>placer le fichier Activité dans les document de {appointment.patient.firstName}</span>
+        </Button>
+      }
+    </header>
+    <ActivityComponent isOwner={isOwner} appointment={appointment} />
+  </section>
 }
 
-function ActivityComponent({ appointment }: { appointment: any }) {
+function ActivityComponent({ appointment, isOwner }: { appointment: any, isOwner: boolean }) {
   const [modalMessage, setModalMessage] = useState<string>("")
   const [modalTitle, setModalTitle] = useState<string>("")
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -97,8 +86,7 @@ function ActivityComponent({ appointment }: { appointment: any }) {
     const savedAppointment = await api.acceptActivityRequest(appointment.id);
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
-    if (savedAppointment.status === "DENIED") toast.error("Activité annulé par le service de consultation, il a un horodatage qui chevauche l'un de vos activitées");
-    else toast("Activité Accepté");
+    toast("Activité Accepté");
   }
   async function handleRejectAppointment() {
     const savedAppointment = await api.rejectActivityRequest(appointment.id);
@@ -126,15 +114,11 @@ function ActivityComponent({ appointment }: { appointment: any }) {
       <div className="w-full" id="printable">
         <div className="my-4 w-full flex items-center justify-between  gap-4">
           <h1 className="text-2xl font-bold w-full">Detailes De Activité</h1>
-          <div className="flex gap-2"><div className="p-1 rounded-lg bg-amber-400 text-white">
-            {appointment.duration}h
-          </div>
-            <Badge variant="secondary">{appointment.type}</Badge>
-          </div>
+          <Badge variant="secondary">{appointment.type}</Badge>
         </div>
         <div className="flex items-center space-x-4 mb-4">
           <Avatar>
-            <Image src={appointment?.patient?.profile?.imageUrl || "/user-m.svg"} alt={appointment.patient.firstName} width={50} height={50} />
+            <Image src={appointment.patient.profile.imageUrl || "/user-m.svg"} alt={appointment.patient.firstName} width={50} height={50} />
             <AvatarFallback>{appointment.patient.firstName.charAt(0) + appointment.patient.lastName.charAt(0)}
             </AvatarFallback>
           </Avatar>
@@ -159,76 +143,78 @@ function ActivityComponent({ appointment }: { appointment: any }) {
         <div className="flex items-center space-x-4">
           <UserIcon className="h-6 w-6 text-gray-500 dark:text-gray-400" />
           <div>
-            <p className="text-gray-900 dark:text-gray-50 font-medium">{appointment.caregiver.firstName + " " + appointment.caregiver.lastName}
+            <p className="text-gray-900 dark:text-gray-50 font-medium">Dr.{appointment.caregiver.firstName + " " + appointment.caregiver.lastName}
             </p>
             <p className="text-gray-500 dark:text-gray-400 text-sm capitalize">{appointment.caregiver.role.toLowerCase()}</p>
           </div>
         </div>
         <h1 className="text-xl my-4">
-          Reason Pour L'Activité
+          Plus Sur L'Activité
         </h1>
-        <div className="py-4 max-w-[50ch] w-full">{appointment.description}
+        <div className="py-4 max-w-[50ch] w-full">{appointment.description || "aucune description"}
         </div>
       </div>
-      <div className="w-full flex flex-col ">
-        <div className="flex items-center space-x-4 justify-end p-4">
-          <Button variant="outline" onClick={printDocument}>
-            <PrinterIcon className="h-5 w-5 mr-2" />
-            Imprimer
-          </Button>
+      {isOwner &&
+        <div className="w-full flex flex-col ">
+          <div className="flex items-center space-x-4 justify-end p-4">
+            <Button variant="outline" onClick={printDocument}>
+              <PrinterIcon className="h-5 w-5 mr-2" />
+              Imprimer
+            </Button>
+          </div>
+          <h2 className="text-lg font-medium mb-4 w-full text-start">Les Actions</h2>
+          {!appointment.status ?
+            <>
+              <p className="text-light text-sm max-w-prose my-4">
+                attention à l'annulation du activité, cette action est irréversible et peut affecter la confiance du patient dans la clinique.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <AsyncButton variant="success" onClick={() => {
+                  setModalMessage("Etes-vous sûr de vouloir accepter ce activité, cette action n'est pas réversible?");
+                  setModalTitle("Accepter activité");
+                  setModalOpen(true);
+                  setModalConfirmAction(() => handleAcceptAppointment);
+                }}>
+                  <CheckIcon className="h-5 w-5" />
+                  Accepter Activité
+                </AsyncButton>
+                <AsyncButton variant="destructive" onClick={() => {
+                  setModalMessage("Etes-vous sûr de vouloir rejeter ce activité, cette action n'est pas réversible?");
+                  setModalTitle("Rejeter le activité");
+                  setModalOpen(true);
+                  setModalConfirmAction(() => handleRejectAppointment);
+                }}>
+                  <XIcon className="h-5 w-5" />
+                  Refuser Activité
+                </AsyncButton>
+              </div>
+            </> : <>
+              <p className="text-light text-sm max-w-prose my-4">
+                méfiez-vous de manquer le activité, vous pourriez affecter la confiance du patient dans la clinique.
+              </p>
+              <div className="flex w-full items-center gap-4 justify-between mb-4">
+                <span>Status de Activité </span>
+                <Badge className="p-2 rounded-lg" style={getBadgeStyle(appointment.status)}>{appointment.status}</Badge>
+              </div>
+              {appointment.status !== "DENIED" ?
+                appointment.status !== "DONE" ?
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button variant="outline" className="w-full flex gap-2" onClick={handleCompleteAppointment}>
+                      <CheckIcon className="h-5 w-5" />
+                      Marquer Comme Réalisé
+                    </Button>
+                  </div> :
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button variant="outline" className="w-full flex gap-2" onClick={handleUnCompleteAppointment}>
+                      <X className="h-5 w-5" />
+                      Marquer Comme Pas Réalisé
+                    </Button>
+                  </div> : null
+              }
+            </>
+          }
         </div>
-        <h2 className="text-lg font-medium mb-4 w-full text-start">Les Actions</h2>
-        {!appointment.status ?
-          <>
-            <p className="text-light text-sm max-w-prose my-4">
-              attention à l'annulation du activity, cette action est irréversible et peut affecter la confiance du patient dans la clinique.
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              <AsyncButton variant="success" onClick={() => {
-                setModalMessage("Etes-vous sûr de vouloir accepter ce activity, tous les Activité en meme temps vont refusez, cette action n'est pas réversible ?");
-                setModalTitle("Accepter activity");
-                setModalOpen(true);
-                setModalConfirmAction(() => handleAcceptAppointment);
-              }}>
-                <CheckIcon className="h-5 w-5" />
-                Accepter Activité
-              </AsyncButton>
-              <AsyncButton variant="destructive" onClick={() => {
-                setModalMessage("Etes-vous sûr de vouloir rejeter ce activity, cette action n'est pas réversible?");
-                setModalTitle("Rejeter le activity");
-                setModalOpen(true);
-                setModalConfirmAction(() => handleRejectAppointment);
-              }}>
-                <XIcon className="h-5 w-5" />
-                Refuser Activité
-              </AsyncButton>
-            </div>
-          </> : <>
-            <p className="text-light text-sm max-w-prose my-4">
-              méfiez-vous de manquer le activity, vous pourriez affecter la confiance du patient dans la clinique.
-            </p>
-            <div className="flex w-full items-center gap-4 justify-between mb-4">
-              <span>Status de Activité </span>
-              <Badge className="p-2 rounded-lg" style={getBadgeStyle(appointment.status)}>{appointment.status}</Badge>
-            </div>
-            {appointment.status !== "DENIED" ?
-              appointment.status !== "DONE" ?
-                <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="w-full flex gap-2" onClick={handleCompleteAppointment}>
-                    <CheckIcon className="h-5 w-5" />
-                    Marquer Comme Réalisé
-                  </Button>
-                </div> :
-                <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="w-full flex gap-2" onClick={handleUnCompleteAppointment}>
-                    <X className="h-5 w-5" />
-                    Marquer Comme Pas Réalisé
-                  </Button>
-                </div> : null
-            }
-          </>
-        }
-      </div>
+      }
     </div>
   )
 }

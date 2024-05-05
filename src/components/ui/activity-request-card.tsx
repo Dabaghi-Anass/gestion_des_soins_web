@@ -26,17 +26,17 @@ export default function ActivityRequestCard({ appointment, disableEditing }: App
   const [modalConfirmAction, setModalConfirmAction] = useState<() => void>(() => { })
   const dispatch = useAppDispatch();
   async function handleAcceptAppointment() {
-    const savedAppointment = await api.acceptAppointmentRequest(appointment.id);
+    const savedAppointment = await api.acceptActivityRequest(appointment.id);
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
-    if (savedAppointment.status === "DENIED") toast.error("Activity annulé par le service de consultation, il a un horodatage qui chevauche l'un de vos rendez-vous");
-    else toast("Activity Accepté");
+    if (savedAppointment.status === "DENIED") toast.error("Activité annulé par le service de consultation, il a un horodatage qui chevauche l'un de vos activitées");
+    else toast("Activité Accepté");
   }
   async function handleRejectAppointment() {
-    const savedAppointment = await api.rejectAppointmentRequest(appointment.id);
+    const savedAppointment = await api.rejectActivityRequest(appointment.id);
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
-    toast("Appointment Rejected");
+    toast("Activité Rejeté");
   }
   return <Card className="bg-primary-foreground hover:shadow-lg transition-all w-full flex flex-col">
     <ConfirmActionModal

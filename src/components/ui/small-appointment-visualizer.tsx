@@ -5,10 +5,16 @@ type Props = {
   color: string;
   onClick?: (appointment: any) => void;
   showDoctorName?: boolean;
+  showCaregiverName?: boolean;
 }
-export default function SmallAppointment({ appointment, showDoctorName, color, onClick }: Props) {
-  const name = showDoctorName ? `${appointment.assignedTo.lastName.charAt(0)}.${appointment.assignedTo.firstName}` : `${appointment.patient.lastName.charAt(0)}.${appointment.patient.firstName}`;
-  return <Link href={`/appointments/appointment/${appointment.id}`}>
+export default function SmallAppointment({ appointment, showDoctorName, showCaregiverName, color, onClick }: Props) {
+  let name;
+  if (appointment.assignedto) {
+    name = showDoctorName ? `${appointment.assignedTo.lastName.charAt(0)}.${appointment.assignedTo.firstName}` : `${appointment.patient.lastName.charAt(0)}.${appointment.patient.firstName}`;
+  } else if (appointment.caregiver) {
+    name = showCaregiverName ? `${appointment.caregiver.lastName.charAt(0)}.${appointment.caregiver.firstName}` : `${appointment.patient.lastName.charAt(0)}.${appointment.patient.firstName}`;
+  }
+  return <Link href={`${appointment.description ? "/activities/activity" : "/appointments/appointment"}/${appointment.id}`}>
     <div className="flex flex-col items-start gap-2 hover:opacity-55">
       <div className="text-slate-500 text-xs flex items-center ">
         <span className="timeline-ring border-2 border-primary-foreground transform -translate-x-8 p-2 outline outline-1 outline-blue-400 rounded-full bg-blue-400"></span>

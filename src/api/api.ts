@@ -370,10 +370,83 @@ async function markAppointmentAsNotDone(id: number) {
         console.log(e.message)
     }
 }
+//activity
+async function acceptActivityRequest(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${ACTIVITY_URL}/accept/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function cancelActivityRequest(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${ACTIVITY_URL}/cancel/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function rejectActivityRequest(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${ACTIVITY_URL}/reject/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function markActivityAsDone(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${ACTIVITY_URL}/complete/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function markActivityAsNotDone(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.put(`${ACTIVITY_URL}/uncomplete/${id}`, {});
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 async function getAppointmentById(id: number) {
     try {
         if(!id && id !== 0) return null;
         const response = await http.get(`${APPOINTMENT_URL}/${id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function getActivityById(id: number) {
+    try {
+        if(!id && id !== 0) return null;
+        const response = await http.get(`${ACTIVITY_URL}/${id}`);
         if (response.ok) {
             return response.json();
         }
@@ -414,6 +487,12 @@ const queries = {
     updateDoctor,
     getSpecialities,
     getActivityRequests,
-    getAppointmentRequests
+    getAppointmentRequests,
+    acceptActivityRequest,
+    cancelActivityRequest,
+    rejectActivityRequest,
+    markActivityAsDone,
+    markActivityAsNotDone,
+    getActivityById
 };
 export default queries;

@@ -1,9 +1,8 @@
 "use client"
 import api from "@/api/api"
 import ActivityHeader from "@/components/activity-header"
+import AppointmentsHeader from "@/components/appointments-header"
 import ActivityRequestCard from "@/components/ui/activity-request-card"
-import { Button } from "@/components/ui/button"
-import DateRangePicker from "@/components/ui/date-range-picker"
 import Loading from "@/components/ui/loading"
 import {
   Pagination,
@@ -13,17 +12,15 @@ import {
   PaginationNext,
   PaginationPrevious
 } from "@/components/ui/pagination"
-import StatusPicker from "@/components/ui/status-picker"
-import UserPicker from "@/components/ui/user-picker"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux-hooks"
 import { useSearch } from "@/hooks/use-search"
 import { updateAppointments } from "@/lib/features/appointment-reducer"
 import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
-import { FilterX } from "lucide-react"
-import Link from "next/link"
+import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
-export default function ActivityRequestsPage() {
+export default function UserActivitiesRequestsPage() {
+  const { id } = useParams();
   const sortMap: {
     [key: string]: (a: any, b: any) => number;
   } = {
@@ -34,13 +31,7 @@ export default function ActivityRequestsPage() {
     status: (a: any, b: any) => a.status?.localeCompare(b.status),
   }
   const limit = 6;
-  const currentUser: any = useAppSelector((state) => state.UserReducer.user);
   const dispatch = useAppDispatch();
-  const [filterType, setFilterType] = useState<string[]>([])
-  const [filterUser, setFilterUser] = useState<number[]>([])
-  const [filterStatus, setFilterStatus] = useState<string[]>([])
-  const [filterDateStart, setFilterDateStart] = useState<number>(0)
-  const [filterDateEnd, setFilterDateEnd] = useState<number>(0)
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   function paginate(array: any[], page_size: number, page_number: number) {
@@ -48,101 +39,37 @@ export default function ActivityRequestsPage() {
     return _.slice(array, startIndex, startIndex + page_size);
   }
   const { data, isLoading } = useQuery({
-    queryKey: ["appointment-requests", currentUser?.id, 0, 0],
+    queryKey: ["activity-requests", id, 0, 0],
     queryFn: async ({ queryKey }) => {
-      const data = await api.getActivityRequests(queryKey[1], queryKey[2], queryKey[3]);
+      const data = await api.getActivityRequests(+queryKey[1], +queryKey[2], +queryKey[3]);
       if (data) dispatch(updateAppointments(data.activities));
       return data;
     }
   });
   const appointmentsFromCtx = useAppSelector((state) => state.AppointmentReducer.appointments);
-  const typeList = appointmentsFromCtx
-    .map((appointment: any) => appointment.type)
+  const typeList = appointmentsFromCtx?.map((appointment: any) => appointment.type)
     .filter((value: any, index: any, self: any) => self.indexOf(value) === index)
-  const statusList = appointmentsFromCtx
-    .map((appointment: any) => appointment.status || "N/A")
-    .filter((value: any, index: any, self: any) => self.indexOf(value) === index)
-  const userIdList = appointmentsFromCtx
-    .map((appointment: any) => appointment.patient.id)
-    .filter((value: any, index: any, self: any) => self.indexOf(value) === index)
+  const [filterType, setFilterType] = useState<string[]>([]);
   const [sortParam, setSortParam] = useState<string>("date-desc")
-  let appointments: any[] = appointmentsFromCtx.toSorted(sortMap[sortParam]);
+  let appointments: any[] = appointmentsFromCtx?.toSorted(sortMap[sortParam]);
   const useFilter = (
     array: any[],
-    filterStatus: string[],
     filterType: string[],
-    filterUserList: number[]
   ) => {
-    return array.filter((appointment: any) => {
-      const appointmentDate = new Date(appointment.date).getTime();
-      let isBetweenDates = true;
-      const isAfter = (appointmentDate >= filterDateStart);
-      const isBefore = (appointmentDate <= filterDateEnd);
-      if (filterDateEnd === 0) {
-        isBetweenDates = isAfter;
-      } else {
-        isBetweenDates = isAfter && isBefore;
-      }
-      const status = appointment.status || "N/A"
-      return (filterStatus.includes(status) &&
-        filterUserList.includes(appointment.patient.id) &&
-        filterType.includes(appointment.type)) && isBetweenDates;
+    return array?.filter((appointment: any) => {
+      return filterType.includes(appointment.type);
     })
   }
   function clearAllFilters() {
     setFilterType(typeList)
-    setFilterUser(userIdList)
-    setFilterStatus(statusList)
-    setFilterDateStart(0)
-    setFilterDateEnd(0)
   }
   useEffect(() => {
     clearAllFilters()
   }, [data])
-  appointments = paginate(useSearch(useFilter(appointments, filterStatus, filterType, filterUser), searchQuery), limit, page);
+  appointments = paginate(useSearch(useFilter(appointments, filterType), searchQuery), limit, page);
   if (isLoading) return <Loading />
   return (
     <div className="flex h-full w-full">
-      <div className="hidden w-64 border-r h-full bg-gray-50 dark:border-gray-800 dark:bg-gray-900 lg:block">
-        <div className="p-6">
-          <h3 className="text-lg font-semibold">Activitées</h3>
-        </div>
-        <StatusPicker
-          filterStatus={filterStatus}
-          onFilterStatus={setFilterStatus} />
-        <div className="border-t px-4 py-6 dark:border-gray-800">
-          <h4 className="text-sm font-semibold">Filtres</h4>
-          <div className="mt-4 space-y-2">
-            <DateRangePicker
-              startDate={filterDateStart}
-              endDate={filterDateEnd}
-              onStartPick={(date) => setFilterDateStart(new Date(date).getTime())}
-              onEndPick={(date) => setFilterDateEnd(new Date(date).getTime())}
-            />
-            <UserPicker
-              users={
-                appointmentsFromCtx
-                  .map((a: any) => ({ id: a.patient.id, fullName: a.patient.firstName + " " + a.patient.lastName }))
-              }
-              pickedUsers={filterUser}
-              onListUpdate={setFilterUser} />
-          </div>
-        </div>
-        <div className="border-t px-4 py-4 dark:border-gray-800">
-          <h4 className="text-sm font-semibold">Actions</h4>
-          <div className="mt-4 space-y-2">
-            <Button className="w-full" size="sm" variant="outline" asChild>
-              <Link href="/agendas">
-                <CalendarCheckIcon className="mr-2 h-4 w-4" />
-                Voir Calendrier</Link>
-            </Button>
-            <Button className="w-full" size="sm" variant="outline" onClick={clearAllFilters}>
-              <FilterX className="mr-2 h-4 w-4" />
-              Supprimer Tout Les Filtres
-            </Button>
-          </div>
-        </div>
-      </div>
       <div className="flex-1 overflow-y-auto">
         <ActivityHeader
           onListUpdate={setFilterType}
@@ -153,14 +80,14 @@ export default function ActivityRequestsPage() {
           statusList={typeList}
           pickedStatusList={filterType}
         />
-        <div className="p-4 h-full">
+        <div className="p-4">
           {appointments?.length === 0 ?
-            <div className="w-full h-full grid place-content-center text-xl">Aucune Activité</div> :
-            <>
-              <div className="grid grid-cols-auto gap-4">
-                {appointments?.map((appointment: any) => (<ActivityRequestCard key={appointment.id} appointment={appointment} />))}
-              </div>
-            </>
+            <div className="flex items-center justify-center h-64">
+              <p className="text-lg text-gray-500 dark:text-gray-400">No appointments found</p>
+            </div> :
+            <div className="grid grid-cols-auto gap-4">
+              {appointments?.map((appointment: any) => (<ActivityRequestCard disableEditing key={appointment.id} appointment={appointment} />))}
+            </div>
           }
           <div className="flex w-full mx-auto align-center p-8">
             <Pagination className="cursor-pointer">
