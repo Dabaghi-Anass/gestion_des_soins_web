@@ -1,7 +1,7 @@
 "use client"
 import api from "@/api/api"
-import AppointmentRequestCard from "@/components/appointment-request-card"
 import AppointmentsHeader from "@/components/appointments-header"
+import ActivityRequestCard from "@/components/ui/activity-request-card"
 import { Button } from "@/components/ui/button"
 import DateRangePicker from "@/components/ui/date-range-picker"
 import Loading from "@/components/ui/loading"
@@ -23,7 +23,7 @@ import _ from "lodash"
 import { FilterX } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-export default function AppointmentRequestsPage() {
+export default function ActivityRequestsPage() {
   const sortMap: {
     [key: string]: (a: any, b: any) => number;
   } = {
@@ -50,8 +50,8 @@ export default function AppointmentRequestsPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["appointment-requests", currentUser?.id, 0, 0],
     queryFn: async ({ queryKey }) => {
-      const data = await api.getAppointmentRequests(queryKey[1], queryKey[2], queryKey[3]);
-      if (data) dispatch(updateAppointments(data.appointments));
+      const data = await api.getActivityRequests(queryKey[1], queryKey[2], queryKey[3]);
+      if (data) dispatch(updateAppointments(data.activities));
       return data;
     }
   });
@@ -105,7 +105,7 @@ export default function AppointmentRequestsPage() {
     <div className="flex h-full w-full">
       <div className="hidden w-64 border-r h-full bg-gray-50 dark:border-gray-800 dark:bg-gray-900 lg:block">
         <div className="p-6">
-          <h3 className="text-lg font-semibold">Rendez Vous</h3>
+          <h3 className="text-lg font-semibold">Activitées</h3>
         </div>
         <StatusPicker
           filterStatus={filterStatus}
@@ -129,10 +129,10 @@ export default function AppointmentRequestsPage() {
           </div>
         </div>
         <div className="border-t px-4 py-4 dark:border-gray-800">
-          <h4 className="text-sm font-semibold">Quick Actions</h4>
+          <h4 className="text-sm font-semibold">Actions</h4>
           <div className="mt-4 space-y-2">
             <Button className="w-full" size="sm" variant="outline" asChild>
-              <Link href="/calendrier">
+              <Link href="/agendas">
                 <CalendarCheckIcon className="mr-2 h-4 w-4" />
                 Voir Calendrier</Link>
             </Button>
@@ -155,10 +155,10 @@ export default function AppointmentRequestsPage() {
         />
         <div className="p-4 h-full">
           {appointments?.length === 0 ?
-            <div className="w-full h-full grid place-content-center text-xl">Aucune Rendez Vous</div> :
+            <div className="w-full h-full grid place-content-center text-xl">Aucune Activité</div> :
             <>
               <div className="grid grid-cols-auto gap-4">
-                {appointments?.map((appointment: any) => (<AppointmentRequestCard key={appointment.id} appointment={appointment} />))}
+                {appointments?.map((appointment: any) => (<ActivityRequestCard key={appointment.id} appointment={appointment} />))}
               </div>
             </>
           }

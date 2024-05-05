@@ -7,31 +7,31 @@ type Props = {
 }
 export default function StatusPicker({ onFilterStatus, filterStatus }: Props) {
   return <nav className="space-y-1 px-4">
-    <div onClick={() => onFilterStatus(["SCHEDULED"])} className={`flex items-center rounded-md px-3 py-2 text-sm font-medium dark:text-gray-50 dark:hover:bg-gray-800 cursor-pointer ${filterStatus.length === 1 && filterStatus.includes("SCHEDULED") ? "bg-blue-500 hover:bg-blue-400 text-white" : "hover:bg-gray-100 text-gray-900"}`}>
+    <div onClick={() => onFilterStatus(["SCHEDULED"])} className={`flex items-center rounded-md px-3 py-2 text-sm font-medium dark:text-gray-50 cursor-pointer ${filterStatus.length === 1 && filterStatus.includes("SCHEDULED") ? "bg-blue-500 hover:bg-blue-400 text-white" : "dark:hover:bg-gray-800 hover:bg-gray-100 text-gray-900"}`}>
       <CalendarIcon className="mr-3 h-5 w-5" />
       Programmé
     </div>
     <div onClick={() => onFilterStatus(["DONE"])}
-      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium dark:text-gray-50 dark:hover:bg-gray-800 cursor-pointer ${filterStatus.length === 1 && filterStatus.includes("DONE") ? "bg-blue-500 hover:bg-blue-400 text-white" : "hover:bg-gray-100 text-gray-900"}`}
+      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium dark:text-gray-50 cursor-pointer ${filterStatus.length === 1 && filterStatus.includes("DONE") ? "bg-blue-500 hover:bg-blue-400 text-white" : "dark:hover:bg-gray-800 hover:bg-gray-100 text-gray-900"}`}
     >
       <CheckIcon className="mr-3 h-5 w-5" />
       Completé
     </div>
     <div onClick={() => onFilterStatus(["N/A"])}
-      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium dark:text-gray-50 dark:hover:bg-gray-800 cursor-pointer ${filterStatus.length === 1 && filterStatus.includes("N/A") ? "bg-blue-500 hover:bg-blue-400 text-white" : "hover:bg-gray-100 text-gray-900"}`}
+      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium dark:text-gray-50 cursor-pointer ${filterStatus.length === 1 && filterStatus.includes("N/A") ? "bg-blue-500 hover:bg-blue-400 text-white" : "dark:hover:bg-gray-800 hover:bg-gray-100 text-gray-900"}`}
     >
       <Timer className="mr-3 h-5 w-5" />
       En Attente
     </div>
     <div
       onClick={() => onFilterStatus(["DENIED", "CANCELLED"])}
-      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium dark:text-gray-50 dark:hover:bg-gray-800 cursor-pointer ${filterStatus.length === 2 && filterStatus.includes("DENIED") ? "bg-blue-500 hover:bg-blue-400 text-white" : "hover:bg-gray-100 text-gray-900"}`}>
+      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium dark:text-gray-50 cursor-pointer ${filterStatus.length === 2 && filterStatus.includes("DENIED") ? "bg-blue-500 hover:bg-blue-400 text-white" : "dark:hover:bg-gray-800 hover:bg-gray-100 text-gray-900"}`}>
       <XIcon className="mr-3 h-5 w-5" />
       Non Accepté / Annulé
     </div>
     <div
       onClick={() => onFilterStatus(["DENIED", "N/A", "DONE", "SCHEDULED", "CANCELLED"])}
-      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors dark:text-gray-50 dark:hover:bg-gray-800 cursor-pointer ${filterStatus.length > 2 ? "bg-blue-500 hover:bg-blue-400 text-white" : "hover:bg-gray-100 text-gray-900"}`}>
+      className={`flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors dark:text-gray-50 cursor-pointer ${filterStatus.length > 2 ? "bg-blue-500 hover:bg-blue-400 text-white" : "dark:hover:bg-gray-800 hover:bg-gray-100 text-gray-900"}`}>
       <GalleryVerticalEnd className="mr-3 h-5 w-5" />
       Tous
     </div>

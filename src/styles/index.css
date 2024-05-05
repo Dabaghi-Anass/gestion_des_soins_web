@@ -183,7 +183,6 @@ input:focus{
     border: 1px solid var(--primary-clr);
     border-radius: .5rem;
     padding: .5rem 1rem;
-    color: white;
     transition: background 300ms ,border-color 300ms;
 }
 .btn:hover{
@@ -192,7 +191,6 @@ input:focus{
 .btn.btn-outline{
     background: transparent;
     border-color: #dadada;
-    color: #272727;
 }
 .btn.btn-outline:hover{
     filter: brightness(.8);

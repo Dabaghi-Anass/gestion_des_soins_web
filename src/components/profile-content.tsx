@@ -38,8 +38,9 @@ export default function ProfileContent({ user, currentUser, inModal }: Props) {
   return <>
     <ProfileBasicinformations user={user} />
     <ProfileAppointementSchedule isInProfilePage={currentUser} appointments={appointments} inModal={inModal} />
-    {treatments.length === 0 ? <h2 className={`text-xl text-gray-600 place-content-center p-4 text-center bg-indigo-100 ${inModal ? "lg:col-span-3" : "col-span-2"}`}>Aucune Traitement Crée Pour Le Moment 🙌</h2> :
-      <TreatmentHistory inModal={inModal} profilePage={currentUser} data={treatments} />
+    {!(currentUserFromDb?.role === "CAREGIVER") &&
+      (treatments.length === 0 ? <h2 className={`text-xl text-gray-600 place-content-center p-4 text-center bg-indigo-100 ${inModal ? "lg:col-span-3" : "col-span-2"}`}>Aucune Traitement Crée Pour Le Moment 🙌</h2> :
+        <TreatmentHistory inModal={inModal} profilePage={currentUser} data={treatments} />)
     }
   </>
 }

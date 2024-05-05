@@ -26,10 +26,9 @@ import ConfirmActionModal from "./confirm-action-modal";
 type Props = {
   appointment: any;
 }
-export default function AppointmentModal({ appointment }: Props) {
+export default function ActivityModal({ appointment }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   if (!appointment) return <Loading />
-  // debugger;
   return <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
     <DialogTrigger>
       <WithToolTip description="send email to patient">
@@ -51,16 +50,16 @@ export default function AppointmentModal({ appointment }: Props) {
         {appointment.accepted &&
           <Button variant="outline" className="w-fit flex items-center gap-2">
             <FileUp />
-            <span>placer le fichier Rendez Vous dans les document de {appointment.patient.firstName}</span>
+            <span>placer le fichier Activité dans les document de {appointment.patient.firstName}</span>
           </Button>
         }
       </DialogHeader>
-      <AppointmentComponent appointment={appointment} />
+      <ActivityComponent appointment={appointment} />
     </DialogContent>
   </Dialog>
 }
 
-function AppointmentComponent({ appointment }: { appointment: any }) {
+function ActivityComponent({ appointment }: { appointment: any }) {
   const [modalMessage, setModalMessage] = useState<string>("")
   const [modalTitle, setModalTitle] = useState<string>("")
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -98,14 +97,14 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
     const savedAppointment = await api.acceptAppointmentRequest(appointment.id);
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
-    if (savedAppointment.status === "DENIED") toast.error("Rendez vous annulé par le service de consultation, il a un horodatage qui chevauche l'un de vos rendez-vous");
-    else toast("Rendez Vous Accepté");
+    if (savedAppointment.status === "DENIED") toast.error("Activité annulé par le service de consultation, il a un horodatage qui chevauche l'un de vos activitées");
+    else toast("Activité Accepté");
   }
   async function handleRejectAppointment() {
     const savedAppointment = await api.rejectAppointmentRequest(appointment.id);
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
-    toast("Rendez Vous Rejeté");
+    toast("Activité Rejeté");
   }
   async function handleCompleteAppointment() {
     const savedAppointment = await api.markAppointmentAsDone(appointment.id);
@@ -126,7 +125,7 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
       />
       <div className="w-full" id="printable">
         <div className="my-4 w-full flex items-center justify-between  gap-4">
-          <h1 className="text-2xl font-bold w-full">Detailes De Rendez Vous</h1>
+          <h1 className="text-2xl font-bold w-full">Detailes De Activité</h1>
           <div className="flex gap-2"><div className="p-1 rounded-lg bg-amber-400 text-white">
             {appointment.duration}h
           </div>
@@ -160,15 +159,15 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
         <div className="flex items-center space-x-4">
           <UserIcon className="h-6 w-6 text-gray-500 dark:text-gray-400" />
           <div>
-            <p className="text-gray-900 dark:text-gray-50 font-medium">Dr.{appointment.assignedTo.firstName + " " + appointment.assignedTo.lastName}
+            <p className="text-gray-900 dark:text-gray-50 font-medium">{appointment.caregiver.firstName + " " + appointment.caregiver.lastName}
             </p>
-            <p className="text-gray-500 dark:text-gray-400 text-sm capitalize">{appointment.assignedTo.role.toLowerCase()}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm capitalize">{appointment.caregiver.role.toLowerCase()}</p>
           </div>
         </div>
         <h1 className="text-xl my-4">
-          Reason Pour Le Rendez Vous
+          Reason Pour L'Activité
         </h1>
-        <div className="py-4 max-w-[50ch] w-full">{appointment.reason}
+        <div className="py-4 max-w-[50ch] w-full">{appointment.description}
         </div>
       </div>
       <div className="w-full flex flex-col ">
@@ -182,34 +181,34 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
         {!appointment.status ?
           <>
             <p className="text-light text-sm max-w-prose my-4">
-              attention à l'annulation du rendez-vous, cette action est irréversible et peut affecter la confiance du patient dans la clinique.
+              attention à l'annulation du activity, cette action est irréversible et peut affecter la confiance du patient dans la clinique.
             </p>
             <div className="grid grid-cols-2 gap-4">
               <AsyncButton variant="success" onClick={() => {
-                setModalMessage("Etes-vous sûr de vouloir accepter ce rendez-vous, tous les rendez vous en meme temps vont refusez, cette action n'est pas réversible ?");
-                setModalTitle("Accepter rendez-vous");
+                setModalMessage("Etes-vous sûr de vouloir accepter ce activity, tous les Activité en meme temps vont refusez, cette action n'est pas réversible ?");
+                setModalTitle("Accepter activity");
                 setModalOpen(true);
                 setModalConfirmAction(() => handleAcceptAppointment);
               }}>
                 <CheckIcon className="h-5 w-5" />
-                Accepter Rendez vous
+                Accepter Activité
               </AsyncButton>
               <AsyncButton variant="destructive" onClick={() => {
-                setModalMessage("Etes-vous sûr de vouloir rejeter ce rendez-vous, cette action n'est pas réversible?");
-                setModalTitle("Rejeter le rendez-vous");
+                setModalMessage("Etes-vous sûr de vouloir rejeter ce activity, cette action n'est pas réversible?");
+                setModalTitle("Rejeter le activity");
                 setModalOpen(true);
                 setModalConfirmAction(() => handleRejectAppointment);
               }}>
                 <XIcon className="h-5 w-5" />
-                Refuser Rendez Vous
+                Refuser Activité
               </AsyncButton>
             </div>
           </> : <>
             <p className="text-light text-sm max-w-prose my-4">
-              méfiez-vous de manquer le rendez-vous, vous pourriez affecter la confiance du patient dans la clinique.
+              méfiez-vous de manquer le activity, vous pourriez affecter la confiance du patient dans la clinique.
             </p>
             <div className="flex w-full items-center gap-4 justify-between mb-4">
-              <span>Status de Rendez Vous </span>
+              <span>Status de Activité </span>
               <Badge className="p-2 rounded-lg" style={getBadgeStyle(appointment.status)}>{appointment.status}</Badge>
             </div>
             {appointment.status !== "DENIED" ?

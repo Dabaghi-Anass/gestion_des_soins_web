@@ -2,6 +2,7 @@ const BASE_URL = 'http://localhost:8070/api' as const;
 const AUTH_URL =  `${BASE_URL}/auth` as const;
 const PROFILE_URL =  `${BASE_URL}/profile` as const;
 const APPOINTMENT_URL =  `${BASE_URL}/appointment` as const;
+const ACTIVITY_URL =  `${BASE_URL}/care-activity` as const;
 const USER_URL =  `${BASE_URL}/users` as const;
 const TREATMENTS_URL =  `${BASE_URL}/treatments` as const;
 import { User, UserProfile } from "@/types/types";
@@ -287,6 +288,17 @@ const getSpecialities = async () => {
         console.log(e.message)
     }
 }
+async function getActivityRequests(userId: number, offset: number, limit = 5) {
+    try {
+        const response = await http.get(`${ACTIVITY_URL}?userId=${userId}&offset=${offset}&limit=${limit}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 async function getAppointmentRequests(userId: number, offset: number, limit = 5) {
     try {
         const response = await http.get(`${APPOINTMENT_URL}?userId=${userId}&offset=${offset}&limit=${limit}`);
@@ -401,6 +413,7 @@ const queries = {
     updateNurse,
     updateDoctor,
     getSpecialities,
+    getActivityRequests,
     getAppointmentRequests
 };
 export default queries;

@@ -114,7 +114,7 @@ export function getTypeHue(status: string) {
         Emergency: 0,
         Other: 270
     }
-    return Status[status];
+    return Status[status] ?? 270;
 }
 export function calculateProgress(now: Date, startHour: number,endHour:number): number {
     const startTime = new Date(now);

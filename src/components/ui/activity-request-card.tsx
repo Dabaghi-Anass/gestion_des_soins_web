@@ -11,15 +11,15 @@ import { Check, CreditCard, SendHorizontal, X } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { toast } from "sonner"
-import AppointmentModal from "./modals/appointment-request-modal"
-import { Button } from "./ui/button"
-import UserBadge from "./ui/user-badge"
-import WithToolTip from "./ui/with-tooltip"
+import ActivityModal from "../modals/activity-modal"
+import { Button } from "./button"
+import UserBadge from "./user-badge"
+import WithToolTip from "./with-tooltip"
 type AppointmentRequestCardProps = {
   appointment: any;
   disableEditing?: boolean;
 }
-export default function AppointmentRequestCard({ appointment, disableEditing }: AppointmentRequestCardProps) {
+export default function ActivityRequestCard({ appointment, disableEditing }: AppointmentRequestCardProps) {
   const [modalMessage, setModalMessage] = useState<string>("")
   const [modalTitle, setModalTitle] = useState<string>("")
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -29,8 +29,8 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
     const savedAppointment = await api.acceptAppointmentRequest(appointment.id);
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
-    if (savedAppointment.status === "DENIED") toast.error("Rendez vous annulé par le service de consultation, il a un horodatage qui chevauche l'un de vos rendez-vous");
-    else toast("Rendez Vous Accepté");
+    if (savedAppointment.status === "DENIED") toast.error("Activity annulé par le service de consultation, il a un horodatage qui chevauche l'un de vos rendez-vous");
+    else toast("Activity Accepté");
   }
   async function handleRejectAppointment() {
     const savedAppointment = await api.rejectAppointmentRequest(appointment.id);
@@ -84,7 +84,7 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
         </div>
         <Separator className="px-4" />
         <div className="line-clamp-3">
-          {appointment.reason}
+          {appointment.description || "Pas de description"}
         </div>
         {appointment.patient.companion &&
           <>
@@ -116,14 +116,14 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
         </div>
         {!disableEditing && <>
           <Separator />
-          <AppointmentModal appointment={appointment} />
+          <ActivityModal appointment={appointment} />
         </>
         }
         {!appointment.status && !disableEditing &&
           <div className="flex flex-col-reverse md:flex-row-reverse w-full items-center gap-2 pb-2">
             <Button className="w-full flex items-center gap-2" onClick={() => {
-              setModalMessage("Etes-vous sûr de vouloir accepter ce rendez-vous, tous les rendez vous en meme temps vont refusez, cette action n'est pas réversible?");
-              setModalTitle("Accepter Rendez Vous");
+              setModalMessage("Etes-vous sûr de vouloir accepter ce rendez-vous, tous les Activity en meme temps vont refusez, cette action n'est pas réversible?");
+              setModalTitle("Accepter Activity");
               setModalOpen(true);
               setModalConfirmAction(() => handleAcceptAppointment);
             }}>
@@ -132,7 +132,7 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
             </Button>
             <Button variant="outline" className="w-full flex items-center gap-2" onClick={() => {
               setModalMessage("Etes-vous sûr de vouloir rejeter ce rendez-vous, cette action n'est pas réversible?");
-              setModalTitle("Refuser Rendez Vous");
+              setModalTitle("Refuser Activity");
               setModalOpen(true);
               setModalConfirmAction(() => handleRejectAppointment);
             }}>
