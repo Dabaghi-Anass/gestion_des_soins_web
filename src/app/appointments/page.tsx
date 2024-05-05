@@ -38,7 +38,7 @@ export default function AppointmentRequestsPage() {
   const dispatch = useAppDispatch();
   const [filterType, setFilterType] = useState<string[]>([])
   const [filterUser, setFilterUser] = useState<number[]>([])
-  const [filterStatus, setFilterStatus] = useState<string[]>([])
+  const [filterStatus, setFilterStatus] = useState<string[]>(["DONE", "SCHEDULED"])
   const [filterDateStart, setFilterDateStart] = useState<number>(0)
   const [filterDateEnd, setFilterDateEnd] = useState<number>(0)
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -99,9 +99,6 @@ export default function AppointmentRequestsPage() {
   useEffect(() => {
     clearAllFilters()
   }, [data])
-  useEffect(() => {
-    console.log(filterDateStart, filterDateEnd);
-  }, [filterDateStart, filterDateEnd])
   appointments = paginate(useSearch(useFilter(appointments, filterStatus, filterType, filterUser), searchQuery), limit, page);
   if (isLoading) return <Loading />
   return (

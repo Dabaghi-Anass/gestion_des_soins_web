@@ -29,7 +29,8 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
     const savedAppointment = await api.acceptAppointmentRequest(appointment.id);
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
-    toast("Appointment Accepted");
+    if (savedAppointment.status === "DENIED") toast.error("Rendez vous annulé par le service de consultation, il a un horodatage qui chevauche l'un de vos rendez-vous");
+    else toast("Rendez Vous Accepté");
   }
   async function handleRejectAppointment() {
     const savedAppointment = await api.rejectAppointmentRequest(appointment.id);
@@ -82,7 +83,7 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
           </WithToolTip>
         </div>
         <Separator className="px-4" />
-        <div className="h-full line-clamp-3">
+        <div className="line-clamp-3">
           {appointment.reason}
         </div>
         {appointment.patient.companion &&
@@ -105,7 +106,7 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
               })}</div>
           </div>
           <div className="flex gap-2">
-            <div className="p-1 rounded-lg bg-amber-300 text-white">
+            <div className="p-1 text-sm rounded-lg bg-amber-400 text-white">
               {appointment.duration}h
             </div>
             {appointment.status &&
@@ -121,8 +122,8 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
         {!appointment.status && !disableEditing &&
           <div className="flex flex-col-reverse md:flex-row-reverse w-full items-center gap-2 pb-2">
             <Button className="w-full flex items-center gap-2" onClick={() => {
-              setModalMessage("Are you sure you want to accept this appointment this action is not reversible?");
-              setModalTitle("Accept Appointment");
+              setModalMessage("Etes-vous sûr de vouloir accepter ce rendez-vous, tous les rendez vous en meme temps vont refusez, cette action n'est pas réversible?");
+              setModalTitle("Accepter Rendez Vous");
               setModalOpen(true);
               setModalConfirmAction(() => handleAcceptAppointment);
             }}>
@@ -130,8 +131,8 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
               <span>Accepter</span>
             </Button>
             <Button variant="outline" className="w-full flex items-center gap-2" onClick={() => {
-              setModalMessage("Are you sure you want to reject this appointment this action is not reversible?");
-              setModalTitle("Reject Appointment");
+              setModalMessage("Etes-vous sûr de vouloir rejeter ce rendez-vous, cette action n'est pas réversible?");
+              setModalTitle("Refuser Rendez Vous");
               setModalOpen(true);
               setModalConfirmAction(() => handleRejectAppointment);
             }}>

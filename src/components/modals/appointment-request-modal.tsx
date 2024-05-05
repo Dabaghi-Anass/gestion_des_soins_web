@@ -98,7 +98,8 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
     const savedAppointment = await api.acceptAppointmentRequest(appointment.id);
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
-    toast("Appointment Accepted");
+    if (savedAppointment.status === "DENIED") toast.error("Rendez vous annulé par le service de consultation, il a un horodatage qui chevauche l'un de vos rendez-vous");
+    else toast("Rendez Vous Accepté");
   }
   async function handleRejectAppointment() {
     const savedAppointment = await api.rejectAppointmentRequest(appointment.id);
@@ -126,7 +127,7 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
       <div className="w-full" id="printable">
         <div className="my-4 w-full flex items-center justify-between  gap-4">
           <h1 className="text-2xl font-bold w-full">Detailes De Rendez Vous</h1>
-          <div className="flex gap-2"><div className="p-1 rounded-lg bg-amber-300 text-white">
+          <div className="flex gap-2"><div className="p-1 rounded-lg bg-amber-400 text-white">
             {appointment.duration}h
           </div>
             <Badge variant="secondary">{appointment.type}</Badge>
@@ -134,7 +135,7 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
         </div>
         <div className="flex items-center space-x-4 mb-4">
           <Avatar>
-            <Image src={appointment.patient.profile.imageUrl} alt={appointment.patient.firstName} width={50} height={50} />
+            <Image src={appointment?.patient?.profile?.imageUrl || "/user-m.svg"} alt={appointment.patient.firstName} width={50} height={50} />
             <AvatarFallback>{appointment.patient.firstName.charAt(0) + appointment.patient.lastName.charAt(0)}
             </AvatarFallback>
           </Avatar>
@@ -185,7 +186,7 @@ function AppointmentComponent({ appointment }: { appointment: any }) {
             </p>
             <div className="grid grid-cols-2 gap-4">
               <AsyncButton variant="success" onClick={() => {
-                setModalMessage("Etes-vous sûr de vouloir accepter ce rendez-vous, cette action n'est pas réversible?");
+                setModalMessage("Etes-vous sûr de vouloir accepter ce rendez-vous, tous les rendez vous en meme temps vont refusez, cette action n'est pas réversible ?");
                 setModalTitle("Accepter rendez-vous");
                 setModalOpen(true);
                 setModalConfirmAction(() => handleAcceptAppointment);

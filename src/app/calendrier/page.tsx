@@ -13,6 +13,7 @@ import { useAppSelector } from "@/hooks/redux-hooks";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 export default function CalendrierPage() {
+  const colorsMap: { [key: string | number]: number } = {}
   const currentUser: any = useAppSelector((state) => state.UserReducer.user);
   const [date, setDate] = useState(new Date());
   const [startOfWeek, setStartOfWeek] = useState(new Date());
@@ -43,7 +44,8 @@ export default function CalendrierPage() {
     const appointmentDate = new Date(appointment.date);
     const startOfWeek = weekStart(date);
     const endOfWeek = weekEnd(date);
-    return appointmentDate >= startOfWeek && appointmentDate <= endOfWeek;
+    endOfWeek.setDate(endOfWeek.getDate() + 1);
+    return (appointmentDate >= startOfWeek && appointmentDate <= endOfWeek) && appointment.accepted;
   });
 
   const groupedAppointments = groupBy(filteredAppointments || [], (appointment) => {
@@ -52,9 +54,9 @@ export default function CalendrierPage() {
   });
   useEffect(() => {
     filteredAppointments?.forEach((appointment: any) => {
-      appointment.color = randomHue();
+      colorsMap[appointment.id] = colorsMap[appointment.id] || randomHue();
     })
-  }, [filteredAppointments])
+  }, [data])
   if (isLoading) return <Loading />
   return <section className="w-full h-full p-4">
     <section className='h-full w-full p-4 bg-primary-foreground rounded-lg with-border overflow-y-scroll'>
@@ -67,7 +69,7 @@ export default function CalendrierPage() {
       </header>
       <div className="flex items-stretch border border-secondary">
         <WithTooltip description={timeZoneName}>
-          <div className="time-zone text-semibold border-r border-secondary aspect-square w-[90px] p-5 grid place-content-center cursor-pointer">{timeZone}</div>
+          <div className="time-zone text-xs text-bold border-r border-secondary aspect-square w-[90px] p-5 grid place-content-center cursor-pointer">{timeZone}</div>
         </WithTooltip>
         <DayList startOfWeek={startOfWeek} currentDate={date} />
       </div>
@@ -83,7 +85,7 @@ export default function CalendrierPage() {
             return <div key={i} className="time text-sm border-b border-secondary h-[180px] grid place-content-center">{i + 8}:00</div>
           })}
         </div>
-        <div className="days-cols w-full grid grid-cols-6">
+        <div className="days-cols w-full grid grid-cols-6 gap-1">
           {Array.from({ length: 6 }).map((_, i) => {
             let day = new Date(startOfWeek);
             day.setDate(day.getDate() + i + 1);
@@ -95,10 +97,10 @@ export default function CalendrierPage() {
                 let userFullName = `${appointment.patient.firstName} ${appointment.patient.lastName}`
                 endDate.setHours(startDate.getHours() + amount)
                 let dateRange = `${getTimeString(startDate)} - ${getTimeString(endDate)}`
-                let hue = randomHue();
-                return <Link href={`/appointments/appointment/${appointment.id}`} className="appintment-card w-full rounded-lg p-4 flex flex-col gap-2" style={{
+                let hue = colorsMap[appointment.id] || randomHue();
+                return <Link href={`/appointments/appointment/${appointment.id}`} className="appintment-card w-full rounded-lg p-4 flex flex-col gap-2 absolute" style={{
                   height: `calc(${(amount / 10) * 100}%)`,
-                  transform: `translateY(${180 * (startDate.getHours() + (startDate.getMinutes() / 60) - 8)}px)`,
+                  top: `${180 * (startDate.getHours() + (startDate.getMinutes() / 60) - 8)}px`,
                   left: 0,
                   backgroundColor: `hsl(${hue}, 100%, 50%, 0.3)`,
                   border: `1px solid hsl(${hue}, 100%, 40%)`,
@@ -106,7 +108,7 @@ export default function CalendrierPage() {
                   <div className="flex gap-2 items-center w-full">
                     <Image
                       className='rounded-full'
-                      src={appointment.patient.profile.imageUrl} alt="doctor" width={30} height={30} />
+                      src={appointment?.patient?.profile?.imageUrl || '/user-m.svg'} alt="doctor" width={30} height={30} />
                     <span className="font-semibold capitalize truncate">{userFullName}</span>
                   </div>
                   <span className="text-sm">{appointment.type}</span>
