@@ -4,13 +4,13 @@ export function DayList({ startOfWeek, currentDate }: { startOfWeek: Date, curre
       let day = new Date(startOfWeek);
       day.setDate(day.getDate() + i + 1);
       return (
-        <div className="day flex flex-col gap-2 items-center p-4 w-full" key={i}>
+        <div className={`day flex flex-col gap-2 items-center p-4 w-full ${day.getDate() === currentDate.getDate() ? "bg-primary text-white" : ""}`} key={i}>
           <span className="text-sm">
             {day.toLocaleDateString("fr-FR", {
               weekday: 'long',
             })}
           </span>
-          <span className={`text-xl font-semibold ${day.getDate() === currentDate.getDate() ? "bg-primary text-white px-2 rounded-lg" : ""}`}>
+          <span className={`text-xl font-semibold`}>
             {day.toLocaleDateString("fr-FR", {
               day: 'numeric',
             })}

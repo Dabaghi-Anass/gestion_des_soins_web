@@ -135,7 +135,7 @@ export default function AppointmentRequestsPage() {
           <h4 className="text-sm font-semibold">Quick Actions</h4>
           <div className="mt-4 space-y-2">
             <Button className="w-full" size="sm" variant="outline" asChild>
-              <Link href="/calendar">
+              <Link href="/calendrier">
                 <CalendarCheckIcon className="mr-2 h-4 w-4" />
                 Voir Calendrier</Link>
             </Button>

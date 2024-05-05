@@ -4,7 +4,6 @@ import { Label } from "@/components/ui/label";
 import Loading from "@/components/ui/loading";
 import { UserProfile } from "@/types/types";
 // import { RegisterProfileFormData , UserProfile } from "@/types/types";
-import { useAppSelector } from "@/hooks/redux-hooks";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -30,13 +29,13 @@ const RegisterSchema = z
 type Props = {
   onNext: (profile: UserProfile) => void;
   onBack: () => void;
+  onSkip: () => void;
   profile: UserProfile;
 }
-export default function ProfileForm({ onNext, onBack, profile: propProfile }: Props) {
+export default function ProfileForm({ onNext, onBack, onSkip, profile: propProfile }: Props) {
   const [formError, setFormError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [profile, setProfile] = useState<UserProfile>(propProfile);
-  const currentUser = useAppSelector((state: any) => state.UserReducer.user);
+  const [profile, setProfile] = useState<UserProfile>();
   const [loading, setLoading] = useState<boolean>(false);
   const validateField = (e: React.ChangeEvent) => {
     setFormError(null)
@@ -44,7 +43,6 @@ export default function ProfileForm({ onNext, onBack, profile: propProfile }: Pr
     const profileClone = { ...profile };
     profileClone[name] = value;
     setProfile(profileClone);
-    console.log(profileClone)
     const schema = RegisterSchema.pick({ [name]: true });
     const validationObj = schema.safeParse({ [name]: value });
     if (!validationObj.success) {
@@ -66,10 +64,13 @@ export default function ProfileForm({ onNext, onBack, profile: propProfile }: Pr
     onNext(profile as UserProfile);
   };
   useEffect(() => {
-    if (!profile) return
+    if (!propProfile?.address || !propProfile?.birthDate) return
     setProfile(profile)
-    onNext(profile)
-  }, [currentUser])
+    onSkip()
+  }, [propProfile])
+  useEffect(() => {
+    setProfile(propProfile)
+  }, []);
   if (loading) return <Loading />
   return <section className="flex flex-col items-center w-full ">
     <h1 className="md:text-3xl mb-8">Dites-nous en plus à propos de vous</h1>
@@ -82,6 +83,7 @@ export default function ProfileForm({ onNext, onBack, profile: propProfile }: Pr
           onChange={validateField}
           error={errors.phoneNumber}
           value={profile?.phoneNumber}
+          required
           name='phoneNumber'
           placeholder='entrer votre numero de telephone'
           label="Phone Number"
@@ -91,12 +93,14 @@ export default function ProfileForm({ onNext, onBack, profile: propProfile }: Pr
           error={errors.address}
           name='address'
           value={profile?.address}
+          required
           label="Address"
           placeholder='entrer votre address'
         />
         <Label className="text-slate-400">Sexe</Label>
         <Select
           value={profile?.gender}
+          required
           onValueChange={(value) => {
             const profileClone = { ...profile, gender: value };
             setProfile(profileClone);
@@ -112,6 +116,7 @@ export default function ProfileForm({ onNext, onBack, profile: propProfile }: Pr
         <Label className="text-slate-400">Birth Date</Label>
         <input
           type="date"
+          required
           name="birthDate"
           onChange={(e: any) => {
             const profileClone = {

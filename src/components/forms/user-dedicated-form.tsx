@@ -1,38 +1,24 @@
 "use client";
-import { useState } from "react";
-import { z } from "zod";
+import { useEffect, useState } from "react";
 import DoctorForm from "./doctor-info-form";
 import NurseForm from "./nurse-info-form";
 
-const RegisterSchema = z
-  .object({
-    birthDate: z.string().datetime({
-      message: "Invalid date format",
-    }),
-    phoneNumber: z
-      .string()
-      .min(5, { message: "Phone Number must be at least 5 characters long" })
-      .max(50, {
-        message: "Phone Number must be at most 50 characters long",
-      })
-      .regex(/^[+,0-9]*$/, { message: "Phone Number Must Contain numbers only" })
-      .nullish(),
-    address: z
-      .string()
-      .optional().nullish(),
-  })
 
 type Props = {
   onNext: (data: any) => void;
   onBack: () => void;
+  onSkip: () => void;
   user: any;
 }
-export default function UserRoleDedicatedForm({ user, onNext, onBack }: Props) {
+export default function UserRoleDedicatedForm({ user, onNext, onBack, onSkip }: Props) {
   const [formError, setFormError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({});
-  if (user.role === "CAREGIVER") onNext({ role: user.role })
-  if (user.specialities || user.qualities) onNext({ role: user.role })
-  const userAbbr = `${user.profile.gender === "MALE" ? "mr" : "mlle"} ${user.firstName} ${user.lastName}`
+  useEffect(() => {
+    if (user?.specialities?.length || user?.qualities?.length) onSkip()
+    else if (user.role === "CAREGIVER") onSkip()
+  }, [user])
+  const userAbbr =
+    `${user.profile.gender === "MALE" ? "mr" : "mlle"} ${user.firstName} ${user.lastName}`
   return <section className="flex flex-col items-center w-full ">
     {user.role === "DOCTOR" ?
       <h1 className="md:text-3xl mb-8 capitalize">
@@ -48,9 +34,7 @@ export default function UserRoleDedicatedForm({ user, onNext, onBack }: Props) {
           user={user}
           formError={formError}
           errors={errors}
-          onData={(data) => {
-            onNext(data);
-          }}
+          onData={onNext}
           onErrors={setErrors}
           onFormError={setFormError} />
         : user.role === "NURSE" ?
@@ -58,9 +42,7 @@ export default function UserRoleDedicatedForm({ user, onNext, onBack }: Props) {
             user={user}
             formError={formError}
             errors={errors}
-            onData={(data) => {
-              onNext(data);
-            }}
+            onData={onNext}
             onErrors={setErrors}
             onFormError={setFormError} /> : null
       }

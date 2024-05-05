@@ -12,6 +12,7 @@ import { RegisterUserFormData, Role, User, UserProfile } from "@/types/types";
 import { OctagonAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
+	useEffect,
 	useState
 } from "react";
 import { toast } from "sonner";
@@ -21,6 +22,7 @@ export default function RegisterPage() {
 	const [loading, setLoading] = useState<boolean>(false);
 	const currentUser = useAppSelector((state: any) => state.UserReducer.user);
 	const [user, setUser] = useState<any>(currentUser);
+	const [imageUrl, setImageUrl] = useState<string | null>(null);
 	function handleNext(summary: string, message: string) {
 		setCurrentComponentIndex((prev) => prev + 1);
 		toast(summary, {
@@ -28,17 +30,20 @@ export default function RegisterPage() {
 		})
 	}
 	const components = [
-		<RegisterForm onNext={(userData: RegisterUserFormData) => {
-			if (!userData) return;
-			setUser(userData as User);
-			setCurrentComponentIndex(2);
-		}} />,
+		<RegisterForm
+			onSkip={() => setCurrentComponentIndex(2)}
+			onNext={(userData: RegisterUserFormData) => {
+				if (!userData) return;
+				setUser(userData as User);
+				setCurrentComponentIndex(2);
+			}} />,
 		<UserTypeSelector
+			onSkip={() => setCurrentComponentIndex(3)}
 			role={user?.role}
 			onNext={async (role: Role | undefined) => {
 				if (!user?.id || !role) return;
 				const userFromDb = await api.initUserRole({
-					id: currentUser.id,
+					id: user.id,
 					role: role.toString()
 				} as User)
 				setUser((prev: any) => ({ ...userFromDb }))
@@ -48,24 +53,32 @@ export default function RegisterPage() {
 		/>,
 		<ProfileForm
 			profile={user?.profile}
+			onSkip={() => setCurrentComponentIndex(4)}
 			onNext={(profile: UserProfile) => {
 				if (!user) return;
 				profile = { ...profile, id: user?.profile?.id }
-				setUser({ ...user, profile })
 				handleUpdateProfile(profile);
+				setUser({ ...user, profile })
 				setCurrentComponentIndex(4)
 			}} onBack={() => {
 				setCurrentComponentIndex(p => p - 1)
 			}} />,
-		<ProfileImageSelect gender={true} onNext={(imageUrl) => {
-			if (!user) return;
-			setUser((prev: any) => ({ ...prev, profile: { ...prev.profile, imageUrl } }))
-			handleUpdateProfile(user.profile);
-			setCurrentComponentIndex(5)
-		}} onBack={() => {
-			setCurrentComponentIndex(p => p - 1)
-		}} />,
-		<UserRoleDedicatedForm user={user}
+		<ProfileImageSelect
+			imageUrl={imageUrl}
+			onImage={setImageUrl}
+			onSkip={() => setCurrentComponentIndex(5)}
+			user={user}
+			onNext={(imageUrl) => {
+				if (!user) return;
+				setUser((prev: any) => ({ ...prev, profile: { ...prev.profile, imageUrl } }))
+				handleUpdateProfile({ ...user.profile, imageUrl });
+				setCurrentComponentIndex(5)
+			}} onBack={() => {
+				setCurrentComponentIndex(p => p - 1)
+			}} />,
+		<UserRoleDedicatedForm
+			user={user}
+			onSkip={() => window.location.replace("/")}
 			onNext={(userInfo: any) => {
 				if (!userInfo) return;
 				window.location.replace("/")
@@ -88,9 +101,22 @@ export default function RegisterPage() {
 			setLoading(false)
 		}
 	}
+	const specifity = user?.role === "DOCTOR" ? user?.specialities?.length : user?.role === "NURSE" ? user?.qualities?.length : false;
+	const component = (!user?.profile?.imageUrl || !user?.profile?.address || !user?.role || !user?.username || !specifity) ?
+		currentComponentIndex !== 0 && components[currentComponentIndex - 1] :
+		<div className='text-xl h-full'>loading...</div>
+
+	useEffect(() => {
+		const isFullyRegistred = (user?.profile?.imageUrl && user?.profile?.address && user?.role && user?.username)
+		if (isFullyRegistred) {
+			if (user.role === "DOCTOR" && user?.specialities?.length) window.location.replace("/")
+			else if (user.role === "NURSE" && user?.qualities?.length) window.location.replace("/")
+			else if (user.role === "CAREGIVER") window.location.replace("/")
+		}
+	}, [user])
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-background'>
 		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
 		{loading && <Loading />}
-		{currentComponentIndex !== 0 && components[currentComponentIndex - 1]}
+		{component}
 	</main>;
 }

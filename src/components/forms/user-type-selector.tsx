@@ -10,17 +10,18 @@ import Image from "next/image";
 type Props = {
   onNext: (role: Role | undefined) => void;
   onBack: () => void;
+  onSkip: () => void;
   role?: Role;
 }
-export default function UserTypeSelector({ onBack, onNext, role }: Props) {
+export default function UserTypeSelector({ onBack, onNext, onSkip, role }: Props) {
   const [selectedRole, setSelectedRole] = useState<Role | undefined>(role);
   useEffect(() => {
     if (!selectedRole) return;
-    onNext(selectedRole);
+    onSkip();
   }, [])
   return (
     <div className="w-full h-full flex flex-col items-center p-4 ">
-      <h1 className="text-4xl text-slate-800 font-semibold">t'est un ?</h1>
+      <h1 className="text-4xl font-semibold">t'est un ?</h1>
       <div className="roleImagesContainer flex flex-wrap items-center gap-4 md:w-1/2 rounded-lg my-8 w-full">
         <div
           className={`user-type-container relative w-full flex items-center justify-center p-4 border border-primary rounded ${selectedRole === Role.Nurse ? "aria-selected" : ""

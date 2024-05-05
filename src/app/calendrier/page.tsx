@@ -73,7 +73,7 @@ export default function CalendrierPage() {
       </div>
       <div className="flex">
         <div className="times w-[96px] relative border border-t-0 border-secondary">
-          <div className={`hour-indicator px-2 lowercase w-[90px] text-center rounded-lg rounded-b-none text-white flex items-center bg-primary absolute ${50 > 100 ? "hidden" : ""}`} style={{
+          <div className={`hour-indicator text-sm px-2 lowercase w-[80px] flex justify-center items-center rounded-sm rounded-b-none text-white bg-primary absolute ${50 > 100 ? "hidden" : ""}`} style={{
             top: `${timePercentage.toFixed(2)}%`,
             left: ".2rem"
           }}>

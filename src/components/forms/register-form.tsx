@@ -52,9 +52,10 @@ const RegisterSchema = NotRefinedRegisterSchema
 	})
 type Props = {
 	onNext: (user: RegisterUserFormData) => void;
+	onSkip: () => void;
 };
 
-export default function RegisterForm({ onNext }: Props) {
+export default function RegisterForm({ onNext, onSkip }: Props) {
 	const [formError, setFormError] = useState<string | null>(null)
 	const [emailVerificationMessage, setEmailVerificationMessage] = useState<string>("A verification link has been sent to your email address please visit it and return")
 	const [errors, setErrors] = useState<Record<string, string>>({});
@@ -159,7 +160,7 @@ export default function RegisterForm({ onNext }: Props) {
 		if (!currentUser) return;
 		setUser(currentUser);
 		if (!currentUser.isVerified) setShowEmailToast(true);
-		else onNext(currentUser);
+		else onSkip();
 	}, [currentUser])
 	return <section className="flex justify-between w-full ">
 		<div className="w-full h-full hidden lg:flex  flex-col items-center gap-2 justify-center filter">

@@ -35,7 +35,6 @@ export default function ProfileContent({ user, currentUser, inModal }: Props) {
   useEffect(() => {
     Promise.all([getTreatments(), getAppointments()])
   }, [])
-
   return <>
     <ProfileBasicinformations user={user} />
     <ProfileAppointementSchedule isInProfilePage={currentUser} appointments={appointments} inModal={inModal} />

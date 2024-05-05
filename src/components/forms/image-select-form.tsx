@@ -1,49 +1,50 @@
 "use client";
 import imageIcon from "@/assets/svgs/edit-image.svg";
-import defaultUserImageFemale from "@/assets/svgs/user-f.svg";
-import defaultUserImageMale from "@/assets/svgs/user-m.svg";
 import Form from "@/components/forms/form";
 import Loading from "@/components/ui/loading";
-import { useAppSelector } from "@/hooks/redux-hooks";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type Props = {
-  onNext: (imageUrl: string) => void;
+  user: any;
+  imageUrl: string | null;
   onBack: () => void;
-  gender: boolean;
+  onSkip: () => void;
+  onNext: (imageUrl: string) => void;
+  onImage: (imageUrl: string) => void;
 }
-export default function ProfileImageSelect({ onNext, onBack, gender }: Props) {
-  const currentUser = useAppSelector((state: any) => state.UserReducer.user);
+export default function ProfileImageSelect({
+  onNext,
+  onBack,
+  onSkip,
+  onImage,
+  user,
+  imageUrl: imageProp
+}: Props) {
+  const genderImage = (user?.profile?.gender === "FEMALE" ?
+    "/user-f.svg" : '/user-m.svg');
+  const imageUrl = imageProp || genderImage;
+
   const [formError, setFormError] = useState<string | null>(null)
-  const [image, setImage] = useState<string>(defaultUserImageMale.src);
   const [loading, setLoading] = useState<boolean>(false);
   const handleSubmit = async () => {
     setFormError(null)
     setLoading(true);
-    await onNext(image);
+    await onNext(imageUrl);
     setLoading(false);
   };
   const handlePickImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
     const imageFile = e.target.files?.[0];
     if (!imageFile) return;
-    const imageUrl = URL.createObjectURL(imageFile);
-    setImage(imageUrl);
+    onImage(URL.createObjectURL(imageFile));
     setLoading(false);
   }
+
   useEffect(() => {
-    if (gender) {
-      setImage(defaultUserImageMale.src)
-    } else {
-      setImage(defaultUserImageFemale.src)
-    }
-  }, [gender])
-  useEffect(() => {
-    if (currentUser?.profile?.imageUrl) {
-      onNext(currentUser.profile.imageUrl)
-    }
-  }, [currentUser])
+    if (user?.profile?.imageUrl) onSkip()
+    else onImage(imageUrl)
+  }, [user])
   return <section className="flex flex-col items-center w-full ">
     <h1 className="md:text-3xl">selectioner une image</h1>
     <div className="h-screen w-full flex flex-col gap-4 items-center">
@@ -57,13 +58,13 @@ export default function ProfileImageSelect({ onNext, onBack, gender }: Props) {
             <input onChange={handlePickImage} type="file" accept="image/*" className="hidden" />
             <Image src={imageIcon.src} alt="edit image icon" className="max-w-full aspect-square" width={200} height={200} />
           </label>
-          <Image src={image} alt="profile image" className="rounded-lg w-full h-full object-cover max-w-md" width={200} height={200} />
+          <Image src={imageUrl} loading="lazy" alt="profile image" className="rounded-lg w-full h-full object-cover max-w-md" width={200} height={200} />
         </div>
         <div className="button-group flex gap-4 w-full justify-center">
           <Form.Button variant="outline" onClick={onBack}>retourne</Form.Button>
           <Form.Button onClick={handleSubmit}>Save Image</Form.Button>
           <Form.Button variant="outline" onClick={() => {
-            const image = gender ? defaultUserImageMale.src : defaultUserImageFemale.src;
+            const image = user?.profile?.gender === "MALE" ? '/user-m.svg' : '/user-f.svg';
             onNext(image)
           }}>Je Prefer pas</Form.Button>
         </div>
