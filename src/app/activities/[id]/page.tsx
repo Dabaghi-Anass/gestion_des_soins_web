@@ -1,7 +1,6 @@
 "use client"
 import api from "@/api/api"
 import ActivityHeader from "@/components/activity-header"
-import AppointmentsHeader from "@/components/appointments-header"
 import ActivityRequestCard from "@/components/ui/activity-request-card"
 import Loading from "@/components/ui/loading"
 import {
@@ -20,6 +19,7 @@ import _ from "lodash"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 export default function UserActivitiesRequestsPage() {
+  if (typeof window === 'undefined') return;
   const { id } = useParams();
   const sortMap: {
     [key: string]: (a: any, b: any) => number;

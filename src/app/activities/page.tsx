@@ -24,6 +24,7 @@ import { FilterX } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 export default function ActivityRequestsPage() {
+  if (typeof window === 'undefined') return;
   const sortMap: {
     [key: string]: (a: any, b: any) => number;
   } = {

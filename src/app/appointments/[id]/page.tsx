@@ -29,6 +29,7 @@ export default function UserAppointmentRequestsPage() {
     type: (a: any, b: any) => a.type.localeCompare(b.type),
     status: (a: any, b: any) => a.status?.localeCompare(b.status),
   }
+  if (typeof window === 'undefined') return;
   const limit = 6;
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState<string>("");

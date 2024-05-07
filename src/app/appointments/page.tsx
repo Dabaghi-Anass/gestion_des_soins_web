@@ -33,6 +33,7 @@ export default function AppointmentRequestsPage() {
     type: (a: any, b: any) => a.type.localeCompare(b.type),
     status: (a: any, b: any) => a.status?.localeCompare(b.status),
   }
+  if (typeof window === 'undefined') return;
   const limit = 6;
   const currentUser: any = useAppSelector((state) => state.UserReducer.user);
   const dispatch = useAppDispatch();
@@ -48,7 +49,7 @@ export default function AppointmentRequestsPage() {
     return _.slice(array, startIndex, startIndex + page_size);
   }
   const { data, isLoading } = useQuery({
-    queryKey: ["appointment-requests", currentUser?.id, 0, 0],
+    queryKey: ["appointment-requests-query", currentUser?.id, 0, 0],
     queryFn: async ({ queryKey }) => {
       const data = await api.getAppointmentRequests(queryKey[1], queryKey[2], queryKey[3]);
       if (data) dispatch(updateAppointments(data.appointments));

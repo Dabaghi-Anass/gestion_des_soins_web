@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 export default function TreatmentsRequestsPage() {
+  if (typeof window === 'undefined') return;
   const currentUser: any = useAppSelector(state => state.UserReducer.user)
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [selectedRequest, setSelectedRequest] = useState<any>(null)
