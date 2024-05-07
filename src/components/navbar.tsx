@@ -2,7 +2,7 @@
 import api from '@/api/api'
 import Loading from "@/components/ui/loading"
 import useAuth from "@/hooks/use-auth"
-import { Bell, Moon, Sun } from "lucide-react"
+import { Moon, Sun } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from 'react'
 import AppBreadCrump from './app-bread-crumb'
@@ -55,7 +55,6 @@ export default function NavBar() {
         <Button onClick={toggleDarkMode} variant="ghost" className='p-0 aspect-square'>
           {!darkMode ? <Moon color='#aaa' /> : <Sun color='#fff' />}
         </Button>
-        <Bell color="#aaa" />
         <div className="dark:bg-slate-700 bg-slate-200 w-[1px] self-stretch"></div>
         <div className="flex items-center py-3 gap-4 text-secondary-foreground">
           <UserProfileBadge lastLogin={lastLogin || 0} onLogout={logout} user={user || {

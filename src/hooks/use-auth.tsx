@@ -60,6 +60,9 @@ const useAuth = ({
     if (!currentUser) fetchUser();
     else setUser(currentUser);
   }, []);
+  useEffect(() => {
+    setUser(currentUser);
+  }, [currentUser]);
 
   return { user, lastLogin, pending };
 };

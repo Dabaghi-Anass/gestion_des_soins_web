@@ -5,6 +5,7 @@ import ProfileImageSelect from "@/components/forms/image-select-form";
 import RegisterForm from "@/components/forms/register-form";
 import UserRoleDedicatedForm from "@/components/forms/user-dedicated-form";
 import UserTypeSelector from "@/components/forms/user-type-selector";
+import { Button } from "@/components/ui/button";
 import Loading from "@/components/ui/loading";
 import { StepProgress } from "@/components/ui/progress-steps";
 import { useAppSelector } from "@/hooks/redux-hooks";
@@ -116,7 +117,12 @@ export default function RegisterPage() {
 		}
 	}, [user])
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-background'>
-		<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
+		<div className="flex items-center justify-center gap-4 w-full">
+			<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
+			<Button onClick={async () => {
+				await api.logout()
+			}} type='button' className="text-sm" variant="destructive">Se deconnecter</Button>
+		</div>
 		{loading && <Loading />}
 		{component}
 	</main>;

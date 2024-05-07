@@ -61,6 +61,13 @@ export default function ProfileForm({ onNext, onBack, onSkip, profile: propProfi
     }
   }
   const handleSubmit = async (data: any) => {
+    for (let key in profile) {
+      if (key === 'imageUrl') continue
+      if (!profile[key]) {
+        setFormError("All fields are required")
+        return
+      }
+    }
     onNext(profile as UserProfile);
   };
   useEffect(() => {

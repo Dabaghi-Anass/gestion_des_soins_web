@@ -6,7 +6,7 @@ import Loading from "./ui/loading";
 export default function ProfileAnnouncement({ user }: { user: any }) {
   const { data, isLoading } = useQuery({
     queryKey: ["get-documents", user?.id],
-    queryFn: async ({ queryKey }) => await api.getUserDocuments(queryKey[1]),
+    queryFn: async ({ queryKey }) => await api.getUserDocuments(queryKey[1]) || [],
   })
   if (!data) return <Loading />
   return <section className="flex flex-col w-full p-4 with-border rounded-lg gap-4 row-span-2 row-start-1 justify-between">
