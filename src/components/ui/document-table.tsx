@@ -1,3 +1,4 @@
+"use client"
 import {
   Table,
   TableBody,
@@ -6,13 +7,16 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { useAppSelector } from "@/hooks/redux-hooks";
 import Link from "next/link";
 type Props = {
   data?: any;
   inModal?: boolean;
+  isCurrentUser?: boolean;
 }
-export default function DocumentTable({ data, inModal }: Props) {
+export default function DocumentTable({ data, inModal, isCurrentUser }: Props) {
   let owner = data?.[0]?.owner;
+  if (isCurrentUser) owner = useAppSelector(state => state.UserReducer.user)
   return <div className={`p-4 with-border flex flex-col gap-4 rounded-lg w-full h-fit sm:row-span-1 ${inModal ? "lg:col-span-3" : "lg:col-span-2"}`}>
     <h1 className="font-semibold capitalize mb-4 text-xl">les documents de {owner?.firstName} {owner?.lastName}</h1>
     <Table className="w-full">

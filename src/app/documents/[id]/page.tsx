@@ -11,6 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious
 } from "@/components/ui/pagination"
+import { useAppSelector } from "@/hooks/redux-hooks"
 import { generateNumberArray, paginate } from "@/lib/utils/utils"
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
@@ -18,6 +19,7 @@ import { useState } from "react"
 export default function DocumentsPage() {
   const pageSize = 6;
   const { id } = useParams()
+  const currentUser: any = useAppSelector(state => state.UserReducer.user);
   const { data, isLoading }: any = useQuery({
     queryKey: ["get-user", id],
     queryFn: async ({ queryKey }) => await api.getAllUserDocuments(+queryKey[1]),
@@ -28,7 +30,7 @@ export default function DocumentsPage() {
     {data?.length === 0 ?
       <DataNotFound /> :
       <div className="flex flex-col justify-between h-full">
-        <DocumentTable data={paginate(data, pageSize, currentPage + 1)} />
+        <DocumentTable isCurrentUser={+currentUser?.id === +id} data={paginate(data, pageSize, currentPage + 1)} />
         <div className="flex gap-4 p-4 justify-center">
           <Pagination className="cursor-pointer">
             <PaginationContent>
