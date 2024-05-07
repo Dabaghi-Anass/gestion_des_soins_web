@@ -162,7 +162,7 @@ export default function RegisterForm({ onNext, onSkip }: Props) {
 		if (!currentUser.isVerified) setShowEmailToast(true);
 		else onSkip();
 	}, [currentUser])
-	return <section className="flex justify-between w-full ">
+	return <section className="flex justify-between w-full">
 		<div className="w-full h-full hidden lg:flex  flex-col items-center gap-2 justify-center filter">
 			<h1 className='text-slate-800 dark:text-slate-300 text-2xl font-semibold'>Créer Un Compte</h1>
 			<p className='text-slate-600 dark:text-slate-400'>toutes vos donées sont bien securisé</p>

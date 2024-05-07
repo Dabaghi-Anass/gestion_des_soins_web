@@ -94,8 +94,11 @@ export default function CalendrierPage() {
                 let startDate = new Date(appointment.date)
                 let endDate = new Date(appointment.date)
                 let amount = appointment.duration;
+                let minutes = appointment.duration - Math.floor(appointment.duration);
+                let minuteAmount = (minutes * 60);
                 let userFullName = `${appointment.patient.firstName} ${appointment.patient.lastName}`
                 endDate.setHours(startDate.getHours() + amount)
+                endDate.setMinutes(startDate.getMinutes() + minuteAmount)
                 let dateRange = `${getTimeString(startDate)} - ${getTimeString(endDate)}`
                 let hue = colorsMap[appointment.id] || randomHue();
                 return <Link href={`/appointments/appointment/${appointment.id}`} className="appintment-card w-full rounded-lg p-4 flex flex-col gap-2 absolute" style={{

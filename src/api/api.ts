@@ -1,10 +1,11 @@
-const BASE_URL = 'http://localhost:8070/api' as const;
-const AUTH_URL =  `${BASE_URL}/auth` as const;
-const PROFILE_URL =  `${BASE_URL}/profile` as const;
-const APPOINTMENT_URL =  `${BASE_URL}/appointment` as const;
-const ACTIVITY_URL =  `${BASE_URL}/care-activity` as const;
-const USER_URL =  `${BASE_URL}/users` as const;
-const TREATMENTS_URL =  `${BASE_URL}/treatments` as const;
+const BASE_URL = 'http://localhost:8070' as const;
+const API_URL = `${BASE_URL}/api` as const;
+const AUTH_URL =  `${API_URL}/auth` as const;
+const STORAGE_URL = `${BASE_URL}/media` as const;
+const APPOINTMENT_URL =  `${API_URL}/appointment` as const;
+const ACTIVITY_URL =  `${API_URL}/care-activity` as const;
+const USER_URL =  `${API_URL}/users` as const;
+const TREATMENTS_URL =  `${API_URL}/treatments` as const;
 import { User, UserProfile } from "@/types/types";
 import http from "./http";
 const registerUser = async (user: User) => {
@@ -455,6 +456,58 @@ async function getActivityById(id: number) {
         console.log(e.message)
     }
 }
+async function uploadImage(user_id: number, image: any) {
+    try {
+        if (!user_id && user_id !== 0) return null;
+        let data = new FormData();
+        data.append("file", image);
+        const response = await http.postFile(`${STORAGE_URL}/upload-image/${user_id}`,data);
+        if (response.ok) {
+            return response.text();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function uploadFile(user_id: number, file: any) {
+    try {
+        if (!user_id && user_id !== 0) return null;
+        let data = new FormData();
+        data.append("file", file);
+        const response = await http.postFile(`${STORAGE_URL}/upload/${user_id}`,data);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function getUserDocuments(user_id: number) {
+    try {
+        if (!user_id && user_id !== 0) return null;
+        const response = await http.get(`${STORAGE_URL}/user-files/${user_id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
+async function getAllUserDocuments(user_id: number) {
+    try {
+        if (!user_id && user_id !== 0) return null;
+        const response = await http.get(`${STORAGE_URL}/user-files/all/${user_id}`);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 
 const queries = {
     registerUser,
@@ -493,6 +546,10 @@ const queries = {
     rejectActivityRequest,
     markActivityAsDone,
     markActivityAsNotDone,
-    getActivityById
+    getActivityById,
+    uploadImage,
+    uploadFile,
+    getUserDocuments,
+    getAllUserDocuments
 };
 export default queries;

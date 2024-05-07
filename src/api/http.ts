@@ -15,6 +15,14 @@ const http = {
         },
         body: JSON.stringify(body)
     }),
+    postFile: (url: string, body: FormData) => fetch(url, {
+        method: 'POST',
+        headers: {
+            "x-auth": localStorage.getItem("x-auth") || "",
+            'Access-Control-Allow-Origin': window.location.origin
+        },
+        body: body
+    }),
     put: (url: string, body: any) => fetch(url, {
         method: 'PUT',
         headers: {

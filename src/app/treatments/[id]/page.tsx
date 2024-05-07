@@ -32,7 +32,7 @@ export default function TreatmentsPage() {
     {loading && <Loading />}
     {treatments?.length === 0 ?
       <div className="w-full h-full flex items-center justify-center text-2xl">no treatments found</div> :
-      <>
+      <div className="flex flex-col justify-between h-full">
         <TreatmentHistory data={paginate(treatments, pageSize, currentPage + 1)} hideLink />
         <div className="flex gap-4 p-4 justify-center">
           <Pagination className="cursor-pointer">
@@ -54,7 +54,7 @@ export default function TreatmentsPage() {
             </PaginationContent>
           </Pagination>
         </div>
-      </>
+      </div>
     }
   </section>
 }

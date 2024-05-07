@@ -1,14 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 const appointmentSlice = createSlice({
     name: "AppointmentReducer",
-    initialState : {appointments : []},
+    initialState : {appointments : [], appointment : null},
     reducers: {
         updateAppointments: (state,payload) => {
             state.appointments = payload.payload
       },
       updateAppointment: (state,payload) => {
         const newAppointments: any[] = state.appointments.map((appointment:any) => {
-          if(appointment.id === payload.payload.id) {
+          if (appointment.id === payload.payload.id) {
+            state.appointment = payload.payload
             return payload.payload
           }
           return appointment;

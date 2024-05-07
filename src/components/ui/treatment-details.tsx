@@ -1,10 +1,12 @@
 "use client"
+import api from "@/api/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { calculateAgeFromBirtDate, getBadgeStyle } from "@/lib/utils/utils";
 import html2pdf from "html2pdf.js";
 import NextImage from "next/image";
 import { useEffect } from "react";
 import FroalaEditorView from "react-froala-wysiwyg/FroalaEditorView";
+import { toast } from "sonner";
 import { Button } from "./button";
 import DataNotFound from "./data-not-found";
 type Props = {
@@ -39,6 +41,39 @@ export default function TreatmentDetails({ treatment }: Props) {
       element.style.width = oldWidth;
     });
   }
+  function uploadDocument() {
+    const element = document.getElementById('printable') as HTMLElement;
+    if (!element) return;
+    let oldWidth = element.style.width;
+    element.style.width = "100%";
+    let dark = false;
+    if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.toggle("dark", false);
+      dark = true;
+    }
+    let fileName = `treatment-${treatment.sentTo.firstName}-${Date.now()}.pdf`;
+    const worker = html2pdf()
+    let options = {
+      margin: 1,
+      filename: fileName,
+      image: {
+        type: "jpeg", quality: 0.98
+      },
+      html2canvas: {
+        dpi: 192, letterRendering: true
+      },
+      jsPDF: { unit: "in", format: "a3", orientaion: "landscape" },
+    }
+    worker.set(options).from(element).toPdf().get("pdf").then(async (pdf: any) => {
+      const pdfBlob = new Blob([pdf.output('blob')], { type: 'application/pdf' });
+      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      if (dark) document.documentElement.classList.toggle("dark", true);
+      element.style.width = oldWidth;
+      const response = await api.uploadFile(treatment?.sentTo?.id, pdfFile);
+      if (response) toast("document téléchargé avec succès");
+      else toast.error("document téléchargé avec succès")
+    });
+  }
   useEffect(() => {
     const froalaView = document.querySelector(".fr-view") as HTMLElement;
     if (froalaView) {
@@ -50,7 +85,7 @@ export default function TreatmentDetails({ treatment }: Props) {
     <main className="w-full min-h-full py-4 px-4 md:px-4">
       <div className="w-full flex">
         <Button variant="outline" onClick={printDocument} className="w-full rounded-none rounded-tl-lg">download</Button>
-        <Button onClick={printDocument} className="w-full rounded-none rounded-tr-lg">upload to user documents</Button>
+        <Button onClick={uploadDocument} className="w-full rounded-none rounded-tr-lg">upload to user documents</Button>
       </div>
       <Card className="w-full rounded-none" id="printable">
         <CardHeader>
@@ -71,7 +106,7 @@ export default function TreatmentDetails({ treatment }: Props) {
                   alt="Patient Avatar"
                   height={64}
                   className="w-full h-full rounded-full"
-                  src={treatment.sentTo?.profile?.imageUrl || "/user-placeholder.svg"}
+                  src={treatment.sentTo?.profile?.imageUrl || "/user-m.svg"}
                   style={{
                     aspectRatio: "64/64",
                     objectFit: "cover",
@@ -120,7 +155,7 @@ export default function TreatmentDetails({ treatment }: Props) {
                   height={64}
                   loading="lazy"
                   className="w-full h-full rounded-full"
-                  src={treatment.sentBy?.profile?.imageUrl || "/user-placeholder.svg"}
+                  src={treatment.sentBy?.profile?.imageUrl || "/user-m.svg"}
                   style={{
                     aspectRatio: "64/64",
                     objectFit: "cover",

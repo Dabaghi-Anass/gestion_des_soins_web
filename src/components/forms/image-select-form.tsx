@@ -1,4 +1,5 @@
 "use client";
+import api from "@/api/api";
 import imageIcon from "@/assets/svgs/edit-image.svg";
 import Form from "@/components/forms/form";
 import Loading from "@/components/ui/loading";
@@ -38,6 +39,9 @@ export default function ProfileImageSelect({
     const imageFile = e.target.files?.[0];
     if (!imageFile) return;
     onImage(URL.createObjectURL(imageFile));
+    const imageUrlFromDB = await api.uploadImage(user?.id, imageFile);
+    console.log(imageUrlFromDB)
+    if (imageUrlFromDB) onImage(imageUrlFromDB);
     setLoading(false);
   }
 

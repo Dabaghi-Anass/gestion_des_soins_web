@@ -20,12 +20,48 @@ import { toast } from "sonner";
 export default function AppointmentPage() {
   const { id } = useParams();
   const currentUser: any = useAppSelector(state => state.UserReducer.user);
+  const dispatch = useAppDispatch();
   const { data: appointment, isLoading } = useQuery({
     queryKey: ["appointment", id],
     queryFn: async ({ queryKey }) => {
-      return await api.getAppointmentById(+queryKey[1]);
+      const savedAppointment = await api.getAppointmentById(+queryKey[1]);
+      dispatch(updateAppointment(savedAppointment));
+      return savedAppointment;
     }
   })
+  function uploadDocument() {
+    const element = document.getElementById('printable') as HTMLElement;
+    if (!element) return;
+    let oldWidth = element.style.width;
+    element.style.width = "100%";
+    let dark = false;
+    if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.toggle("dark", false);
+      dark = true;
+    }
+    let fileName = `treatment-${appointment.patient.firstName}-${Date.now()}.pdf`;
+    const worker = html2pdf()
+    let options = {
+      margin: 1,
+      filename: fileName,
+      image: {
+        type: "jpeg", quality: 0.98
+      },
+      html2canvas: {
+        dpi: 192, letterRendering: true
+      },
+      jsPDF: { unit: "in", format: "a3", orientaion: "landscape" },
+    }
+    worker.set(options).from(element).toPdf().get("pdf").then(async (pdf: any) => {
+      const pdfBlob = new Blob([pdf.output('blob')], { type: 'application/pdf' });
+      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      if (dark) document.documentElement.classList.toggle("dark", true);
+      element.style.width = oldWidth;
+      const response = await api.uploadFile(appointment?.patient?.id, pdfFile);
+      if (response) toast("document téléchargé avec succès");
+      else toast.error("document téléchargé avec succès")
+    });
+  }
   if (isLoading || !currentUser || !appointment) return <Loading />
   const isOwner: boolean = appointment.assignedTo.id === currentUser.id;
   return <section className="w-full p-4 h-full overflow-y-scroll bg-primary-foreground">
@@ -38,22 +74,23 @@ export default function AppointmentPage() {
         })}</div>
       </div>
       {appointment.accepted && isOwner &&
-        <Button variant="outline" className="w-fit flex items-center gap-2">
+        <Button variant="outline" className="w-fit flex items-center gap-2" onClick={uploadDocument}>
           <FileUp />
           <span>placer le fichier Rendez Vous dans les document de {appointment.patient.firstName}</span>
         </Button>
       }
     </header>
-    <AppointmentComponent isOwner={isOwner} appointment={appointment} />
+    <AppointmentComponent isOwner={isOwner} />
   </section>
 }
 
-function AppointmentComponent({ appointment, isOwner }: { appointment: any, isOwner: boolean }) {
+function AppointmentComponent({ isOwner }: { isOwner: boolean }) {
   const [modalMessage, setModalMessage] = useState<string>("")
   const [modalTitle, setModalTitle] = useState<string>("")
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [modalConfirmAction, setModalConfirmAction] = useState<() => void>(() => { })
   const dispatch = useAppDispatch();
+  const appointment: any = useAppSelector(state => state.AppointmentReducer.appointment);
   function printDocument() {
     const element = document.getElementById('printable') as HTMLElement;
     if (!element) return;
@@ -102,6 +139,7 @@ function AppointmentComponent({ appointment, isOwner }: { appointment: any, isOw
     const savedAppointment = await api.markAppointmentAsNotDone(appointment.id);
     dispatch(updateAppointment(savedAppointment));
   }
+  if (!appointment) return;
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row gap-8">
       <ConfirmActionModal

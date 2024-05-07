@@ -76,11 +76,7 @@ export default function ActivityRequestCard({ appointment, disableEditing }: App
         <Separator className="px-4" />
         <div className="flex gap-2 items-center">
           <UserBadge user={appointment.patient} />
-          <WithToolTip description="send email to patient">
-            <Button variant="outline" className="aspect-square p-2" asChild>
-              <Link href="#"><SendHorizontal color="#888" /></Link>
-            </Button>
-          </WithToolTip>
+          <span></span>
         </div>
         <Separator className="px-4" />
         <div className="line-clamp-3">

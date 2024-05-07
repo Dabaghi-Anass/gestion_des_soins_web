@@ -1,7 +1,7 @@
 "use client"
 import api from "@/api/api"
-import TreatmentHistory from "@/components/treatement-history"
 import DataNotFound from "@/components/ui/data-not-found"
+import DocumentTable from "@/components/ui/document-table"
 import Loading from "@/components/ui/loading"
 import {
   Pagination,
@@ -11,32 +11,24 @@ import {
   PaginationNext,
   PaginationPrevious
 } from "@/components/ui/pagination"
-import { useAppSelector } from "@/hooks/redux-hooks"
 import { generateNumberArray, paginate } from "@/lib/utils/utils"
-import { useEffect, useState } from "react"
-export default function TreatmentsPage() {
-  const currentUser: any = useAppSelector(state => state.UserReducer.user)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [treatments, setTreatments] = useState<any[]>([])
-  const [currentPage, setCurrentPage] = useState<number>(0)
+import { useQuery } from "@tanstack/react-query"
+import { useParams } from "next/navigation"
+import { useState } from "react"
+export default function DocumentsPage() {
   const pageSize = 6;
-  async function getTreatments() {
-    if (currentUser) {
-      setLoading(true)
-      const data = await api.getAllTreatmentsByUserId(currentUser.id)
-      if (data) setTreatments(data)
-      setLoading(false)
-    }
-  }
-  useEffect(() => {
-    getTreatments()
-  }, [])
+  const { id } = useParams()
+  const { data, isLoading }: any = useQuery({
+    queryKey: ["get-user", id],
+    queryFn: async ({ queryKey }) => await api.getAllUserDocuments(+queryKey[1]),
+  })
+  const [currentPage, setCurrentPage] = useState<number>(0)
+  if (!data || isLoading) return <Loading />
   return <section className="p-4 w-full h-full bg-primary-foreground">
-    {loading && <Loading />}
-    {treatments?.length === 0 ?
+    {data?.length === 0 ?
       <DataNotFound /> :
       <div className="flex flex-col justify-between h-full">
-        <TreatmentHistory data={paginate(treatments, pageSize, currentPage + 1)} hideLink />
+        <DocumentTable data={paginate(data, pageSize, currentPage + 1)} />
         <div className="flex gap-4 p-4 justify-center">
           <Pagination className="cursor-pointer">
             <PaginationContent>
@@ -44,12 +36,12 @@ export default function TreatmentsPage() {
                 <PaginationItem onClick={() => setCurrentPage((prev: number) => prev - 1)}>
                   <PaginationPrevious />
                 </PaginationItem>}
-              {generateNumberArray(currentPage, 3, Math.ceil(treatments.length / pageSize)).map((page: number) => (
+              {generateNumberArray(currentPage, 3, Math.ceil(data.length / pageSize)).map((page: number) => (
                 <PaginationItem onClick={() => setCurrentPage(page)}>
                   <PaginationLink isActive={page === currentPage}>{page + 1}</PaginationLink>
                 </PaginationItem>
               ))}
-              {currentPage < Math.floor(treatments.length / pageSize) &&
+              {currentPage < Math.floor(data.length / pageSize) &&
                 <PaginationItem onClick={() => setCurrentPage((prev: number) => prev + 1)}>
                   <PaginationNext />
                 </PaginationItem>

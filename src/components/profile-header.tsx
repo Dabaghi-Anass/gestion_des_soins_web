@@ -46,9 +46,8 @@ export default function ProfileHeader({ user, hideEditLink }: Props) {
                 <Link href={`mailto:${user?.username}`}><Mail color="#888" /></Link>
               </Button>
             </WithToolTip>
-            <WithToolTip description="message privatly">
-              <Button variant="outline" className=" aspect-square p-2"><Send color="#888" /></Button>
-            </WithToolTip></>
+            <span></span>
+          </>
         }
       </div>
     </div>

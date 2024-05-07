@@ -20,12 +20,48 @@ import { toast } from "sonner";
 export default function AppointmentPage() {
   const { id } = useParams();
   const currentUser: any = useAppSelector(state => state.UserReducer.user);
+  const dispatch = useAppDispatch();
   const { data: appointment, isLoading } = useQuery({
     queryKey: ["appointment", id],
     queryFn: async ({ queryKey }) => {
-      return await api.getActivityById(+queryKey[1]);
+      const app = await api.getActivityById(+queryKey[1]);
+      dispatch(updateAppointment(app));
+      return app;
     }
   })
+  function uploadDocument() {
+    const element = document.getElementById('printable') as HTMLElement;
+    if (!element) return;
+    let oldWidth = element.style.width;
+    element.style.width = "100%";
+    let dark = false;
+    if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.toggle("dark", false);
+      dark = true;
+    }
+    let fileName = `treatment-${appointment.patient.firstName}-${Date.now()}.pdf`;
+    const worker = html2pdf()
+    let options = {
+      margin: 1,
+      filename: fileName,
+      image: {
+        type: "jpeg", quality: 0.98
+      },
+      html2canvas: {
+        dpi: 192, letterRendering: true
+      },
+      jsPDF: { unit: "in", format: "a3", orientaion: "landscape" },
+    }
+    worker.set(options).from(element).toPdf().get("pdf").then(async (pdf: any) => {
+      const pdfBlob = new Blob([pdf.output('blob')], { type: 'application/pdf' });
+      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      if (dark) document.documentElement.classList.toggle("dark", true);
+      element.style.width = oldWidth;
+      const response = await api.uploadFile(appointment?.patient?.id, pdfFile);
+      if (response) toast("document téléchargé avec succès");
+      else toast.error("document téléchargé avec succès")
+    });
+  }
   if (isLoading || !currentUser || !appointment) return <Loading />
   const isOwner: boolean = appointment.caregiver.id === currentUser.id;
   return <section className="w-full p-4 h-full overflow-y-scroll bg-primary-foreground">
@@ -38,7 +74,7 @@ export default function AppointmentPage() {
         })}</div>
       </div>
       {appointment.accepted && isOwner &&
-        <Button variant="outline" className="w-fit flex items-center gap-2">
+        <Button variant="outline" className="w-fit flex items-center gap-2" onClick={uploadDocument}>
           <FileUp />
           <span>placer le fichier Activité dans les document de {appointment.patient.firstName}</span>
         </Button>
@@ -48,11 +84,12 @@ export default function AppointmentPage() {
   </section>
 }
 
-function ActivityComponent({ appointment, isOwner }: { appointment: any, isOwner: boolean }) {
+function ActivityComponent({ appointment: appointmentProp, isOwner }: { appointment: any, isOwner: boolean }) {
   const [modalMessage, setModalMessage] = useState<string>("")
   const [modalTitle, setModalTitle] = useState<string>("")
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [modalConfirmAction, setModalConfirmAction] = useState<() => void>(() => { })
+  const [appointment, setAppointment] = useState(appointmentProp);
   const dispatch = useAppDispatch();
   function printDocument() {
     const element = document.getElementById('printable') as HTMLElement;
@@ -84,22 +121,26 @@ function ActivityComponent({ appointment, isOwner }: { appointment: any, isOwner
   }
   async function handleAcceptAppointment() {
     const savedAppointment = await api.acceptActivityRequest(appointment.id);
+    setAppointment(savedAppointment)
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
     toast("Activité Accepté");
   }
   async function handleRejectAppointment() {
     const savedAppointment = await api.rejectActivityRequest(appointment.id);
+    setAppointment(savedAppointment)
     dispatch(updateAppointment(savedAppointment));
     setModalOpen(false);
     toast("Activité Rejeté");
   }
   async function handleCompleteAppointment() {
     const savedAppointment = await api.markActivityAsDone(appointment.id);
+    setAppointment(savedAppointment)
     dispatch(updateAppointment(savedAppointment));
   }
   async function handleUnCompleteAppointment() {
     const savedAppointment = await api.markActivityAsNotDone(appointment.id);
+    setAppointment(savedAppointment)
     dispatch(updateAppointment(savedAppointment));
   }
   return (

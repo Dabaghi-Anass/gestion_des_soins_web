@@ -130,5 +130,5 @@ export function calculateProgress(now: Date, startHour: number,endHour:number): 
 }
 
 export function getTimeString(date: Date) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
 }

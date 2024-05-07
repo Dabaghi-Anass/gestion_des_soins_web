@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import WithToolTip from "@/components/ui/with-tooltip";
 import { useAppSelector } from "@/hooks/redux-hooks";
-import { CalendarDays, FileUp, Mail, Send } from "lucide-react";
+import { CalendarDays, FileUp, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import MedicalInformation from "./medical-information";
@@ -67,9 +67,11 @@ export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: P
   if (isLoading) return <Loading />
   return <section className="profile bg-primary-foreground rounded-lg with-border flex flex-col gap-8 w-full p-6 overflow-y-scroll relative">
     {request.responded &&
-      <Button variant="outline" className="w-fit flex items-center gap-2 sticky">
-        <FileUp />
-        <span>placer le fichier traitment dans les document de {currentUser?.firstName}</span>
+      <Button variant="outline" className="w-fit flex items-center gap-2 sticky" asChild>
+        <Link href={`/treatments/treatment/${request.id}`}>
+          <FileUp />
+          <span>placer le fichier traitment dans les document de {currentUser?.firstName}</span>
+        </Link>
       </Button>
     }
     <div className="profile-header flex justify-between gap-4 md:items-center w-full">
@@ -111,9 +113,7 @@ export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: P
               <Link href={`mailto:${currentUser?.username}`}><Mail color="#888" /></Link>
             </Button>
           </WithToolTip>
-          <WithToolTip description="message privatly">
-            <Button variant="outline" className=" aspect-square p-2"><Send color="#888" /></Button>
-          </WithToolTip>
+          <span></span>
         </div>
       </div>
     </div>

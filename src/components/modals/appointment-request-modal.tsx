@@ -28,6 +28,39 @@ type Props = {
 }
 export default function AppointmentModal({ appointment }: Props) {
   const [open, setOpen] = useState<boolean>(false);
+  function uploadDocument() {
+    const element = document.getElementById('printable') as HTMLElement;
+    if (!element) return;
+    let oldWidth = element.style.width;
+    element.style.width = "100%";
+    let dark = false;
+    if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.toggle("dark", false);
+      dark = true;
+    }
+    let fileName = `treatment-${appointment.patient.firstName}-${Date.now()}.pdf`;
+    const worker = html2pdf()
+    let options = {
+      margin: 1,
+      filename: fileName,
+      image: {
+        type: "jpeg", quality: 0.98
+      },
+      html2canvas: {
+        dpi: 192, letterRendering: true
+      },
+      jsPDF: { unit: "in", format: "a3", orientaion: "landscape" },
+    }
+    worker.set(options).from(element).toPdf().get("pdf").then(async (pdf: any) => {
+      const pdfBlob = new Blob([pdf.output('blob')], { type: 'application/pdf' });
+      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      if (dark) document.documentElement.classList.toggle("dark", true);
+      element.style.width = oldWidth;
+      const response = await api.uploadFile(appointment?.patient?.id, pdfFile);
+      if (response) toast("document téléchargé avec succès");
+      else toast.error("document téléchargé avec succès")
+    });
+  }
   if (!appointment) return <Loading />
   // debugger;
   return <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
@@ -49,7 +82,7 @@ export default function AppointmentModal({ appointment }: Props) {
           })}</DialogDescription>
         </div>
         {appointment.accepted &&
-          <Button variant="outline" className="w-fit flex items-center gap-2">
+          <Button variant="outline" className="w-fit flex items-center gap-2" onClick={uploadDocument}>
             <FileUp />
             <span>placer le fichier Rendez Vous dans les document de {appointment.patient.firstName}</span>
           </Button>

@@ -4,7 +4,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { DayList } from "@/components/ui/day-list";
 import Loading from "@/components/ui/loading";
 import WithTooltip from "@/components/ui/with-tooltip";
-import { calculateProgress, getBadgeStyle, getTimeString, randomHue, weekEnd, weekStart } from "@/lib/utils/utils";
+import { getBadgeStyle, getTimeString, randomHue, weekEnd, weekStart } from "@/lib/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import { groupBy } from "lodash";
 import Image from "next/image";
@@ -20,7 +20,6 @@ export default function AgendasPage() {
   const [timeZone, setTimeZone] = useState("GMT");
   const [timeZoneName, setTimeZoneName] = useState("GMT");
   let [currentDateTime, setCurrentDateTime] = useState(new Date());
-  let timePercentage = calculateProgress(currentDateTime, 8, 17);
   const { data, isLoading } = useQuery({
     queryKey: ["activity-requests", currentUser?.id, 0, 0],
     queryFn: async ({ queryKey }) => await api.getActivityRequests(queryKey[1], queryKey[2], queryKey[3])
@@ -76,7 +75,7 @@ export default function AgendasPage() {
       <div className="flex">
         <div className="times w-[96px] relative border border-t-0 border-secondary">
           <div className={`hour-indicator text-sm px-2 lowercase w-[80px] flex justify-center items-center rounded-sm rounded-b-none text-white bg-primary absolute ${50 > 100 ? "hidden" : ""}`} style={{
-            top: `${timePercentage.toFixed(2)}%`,
+            top: `${180 * (currentDateTime.getHours() + (currentDateTime.getMinutes() / 60) - 8)}px`,
             left: ".2rem"
           }}>
             {getTimeString(currentDateTime)}
@@ -94,8 +93,11 @@ export default function AgendasPage() {
                 let startDate = new Date(appointment.date)
                 let endDate = new Date(appointment.date)
                 let amount = appointment.duration;
+                let minutes = appointment.duration - Math.floor(appointment.duration);
+                let minutesAmount = minutes * 60;
                 let userFullName = `${appointment.patient.firstName} ${appointment.patient.lastName}`
                 endDate.setHours(startDate.getHours() + amount)
+                endDate.setMinutes(startDate.getMinutes() + minutesAmount);
                 let dateRange = `${getTimeString(startDate)} - ${getTimeString(endDate)}`
                 let hue = colorsMap[appointment.id] || randomHue();
                 return <Link href={`/activities/activity/${appointment.id}`} className="appintment-card w-full rounded-lg p-4 flex flex-col gap-2 absolute" style={{

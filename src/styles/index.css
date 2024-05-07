@@ -1,3 +1,6 @@
+:root{
+    --nav-height: 4rem;
+}
 html,body{
     height: 100%;
 }
@@ -12,7 +15,6 @@ body{
     overflow: hidden;
 }
 main.main-content{
-    --nav-height: 4rem;
     width: 100%;
     height: calc(100vh - var(--nav-height));
     overflow-y: scroll;
@@ -126,7 +128,7 @@ main.main-content{
 .hide-footer::before{
     content: '';
     position: absolute;
-    z-index: 100;
+    z-index: 8;
     inset: 0;
     background: linear-gradient(180deg,transparent 70%, white 95%);
     pointer-events: none;

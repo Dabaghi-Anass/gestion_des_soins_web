@@ -107,6 +107,7 @@ export default function RegisterPage() {
 		<div className='text-xl h-full'>loading...</div>
 
 	useEffect(() => {
+		document.documentElement.style.setProperty("--nav-height", "0");
 		const isFullyRegistred = (user?.profile?.imageUrl && user?.profile?.address && user?.role && user?.username)
 		if (isFullyRegistred) {
 			if (user.role === "DOCTOR" && user?.specialities?.length) window.location.replace("/")
