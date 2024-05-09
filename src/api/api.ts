@@ -508,6 +508,18 @@ async function getAllUserDocuments(user_id: number) {
         console.log(e.message)
     }
 }
+async function updateAppointment(id: number, appointment: any) {
+    try {
+        if (!id && id !== 0) return null;
+        const response = await http.put(`${APPOINTMENT_URL}/update/${id}`,appointment);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 
 const queries = {
     registerUser,
@@ -548,6 +560,7 @@ const queries = {
     markActivityAsNotDone,
     getActivityById,
     uploadImage,
+    updateAppointment,
     uploadFile,
     getUserDocuments,
     getAllUserDocuments

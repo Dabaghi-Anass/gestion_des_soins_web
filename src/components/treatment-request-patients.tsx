@@ -21,6 +21,7 @@ type Props = {
   onSearch: (text: string) => void
 }
 export function TreatmentRequestPatients({ requests, onSearch, onReply, onDeleteRequest, onSelect, selected }: Props) {
+  if (typeof window === 'undefined') return;
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [idToBeDeleted, setIdToBeDeleted] = useState<number>(0)
   async function handleDeleteRequest() {

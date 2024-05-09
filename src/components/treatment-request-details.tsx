@@ -21,6 +21,7 @@ type Props = {
   onOpenModal: (requestId: number) => void;
 }
 export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: Props) {
+  if (typeof window === 'undefined') return;
   let currentUser: any = useAppSelector(state => state.UserReducer.user);
   const [request, setRequest] = useState<any>();
   const { data: treatmentHistory, error, isLoading } = useQuery({

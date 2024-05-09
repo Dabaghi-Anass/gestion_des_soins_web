@@ -30,11 +30,11 @@ type Props = {
   request: any;
 }
 export default function TreatmentResponseEditor({ onCloseModal, onUpdateRequest, open, request }: Props) {
+  if (typeof window === "undefined") return;
   const currentUser: any = useAppSelector(state => state.UserReducer.user)
   const [title, setTitle] = useState("");
   const [model, setModel] = useState('');
   const [treatment, setTreatment] = useState<any>(null);
-  if (typeof window == "undefined") return;
   function clearForm() {
     onCloseModal(false)
   }
