@@ -95,11 +95,15 @@ export default function ActivityRequestsPage() {
     setFilterUser(userIdList)
     setFilterStatus(statusList)
     setFilterDateStart(0)
+    setPage(0);
     setFilterDateEnd(0)
   }
   useEffect(() => {
     clearAllFilters()
   }, [data])
+  useEffect(() => {
+    setPage(0)
+  }, [filterType, filterStatus, searchQuery])
   appointments = paginate(useSearch(useFilter(appointments, filterStatus, filterType, filterUser), searchQuery), limit, page);
   if (isLoading) return <Loading />
   return (
