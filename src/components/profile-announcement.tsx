@@ -10,20 +10,28 @@ export default function ProfileAnnouncement({ user }: { user: any }) {
   })
   if (!data) return <Loading />
   return <section className="flex flex-col w-full p-4 with-border rounded-lg gap-4 row-span-2 row-start-1 justify-between">
-    <div className="flex flex-col gap-4 w-full">
-      <h1 className="font-semibold mb-4">Documents</h1>
-      {data?.map((doc: any) =>
-        <FileDetails
-          key={doc.id}
-          title={doc.originalName}
-          fileType={doc.contentType}
-          owner={doc.owner}
-          creator={doc.creator}
-          size={doc.size}
-          url={doc.url}
-        />)
-      }
-    </div>
-    <Link href={`/documents/${user?.id}`} className="z-[10] w-full text-center link">see all</Link>
+    {!data?.length ?
+      <div className="grid w-full h-full place-content-center">
+        <h1>pas de fichiers pour le moment</h1>
+      </div>
+      :
+      <>
+        <div className="flex flex-col gap-4 w-full">
+          <h1 className="font-semibold mb-4">Documents</h1>
+          {data?.map((doc: any) =>
+            <FileDetails
+              key={doc.id}
+              title={doc.originalName}
+              fileType={doc.contentType}
+              owner={doc.owner}
+              creator={doc.creator}
+              size={doc.size}
+              url={api.getUrlFromPath(doc.url)}
+            />)
+          }
+        </div>
+        <Link href={`/documents/${user?.id}`} className="z-[10] w-full text-center link">see all</Link>
+      </>
+    }
   </section>
 }

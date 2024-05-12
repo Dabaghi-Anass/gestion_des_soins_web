@@ -1,4 +1,5 @@
 "use client"
+import api from "@/api/api";
 import {
   Table,
   TableBody,
@@ -41,7 +42,7 @@ export default function DocumentTable({ data, inModal, isCurrentUser }: Props) {
               </Link>
             </TableCell>
             <TableCell>
-              <Link href={document.url} download target="_blank" className="link">
+              <Link href={api.getUrlFromPath(document.url)} download target="_blank" className="link">
                 telecharger
               </Link>
             </TableCell>

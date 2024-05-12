@@ -159,7 +159,7 @@ function ActivityComponent({ appointment: appointmentProp, isOwner }: { appointm
         </div>
         <div className="flex items-center space-x-4 mb-4">
           <Avatar>
-            <Image src={appointment.patient.profile.imageUrl || "/user-m.svg"} alt={appointment.patient.firstName} width={50} height={50} />
+            <Image src={api.getUrlFromPath(appointment.patient.profile.imageUrl) || "/user-m.svg"} alt={appointment.patient.firstName} width={50} height={50} />
             <AvatarFallback>{appointment.patient.firstName.charAt(0) + appointment.patient.lastName.charAt(0)}
             </AvatarFallback>
           </Avatar>

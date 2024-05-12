@@ -1,6 +1,8 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import api from "@/api/api"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +25,7 @@ export default function UserProfileBadge({ className, lastLogin, user, onLogout 
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className={cn("hover:opacity-65 transition-all duration-300", className)}>
-          <AvatarImage src={user.profile?.imageUrl} />
+          <AvatarImage src={api.getUrlFromPath(user.profile?.imageUrl)} />
           <AvatarFallback>
             {user.firstName?.toUpperCase().slice(0, 1)}
             {user.lastName?.toUpperCase().slice(0, 1)}

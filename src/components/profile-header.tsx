@@ -3,8 +3,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import WithToolTip from "@/components/ui/with-tooltip"
 import { useAppSelector } from "@/hooks/redux-hooks"
-import { CalendarDays, Mail, Send } from "lucide-react"
+import { CalendarDays, Mail } from "lucide-react"
 // import { User } from "@/types/types"
+import api from "@/api/api"
 import Link from "next/link"
 import ProfileEditModal from "./modals/profile-edit-modal"
 import { Badge } from "./ui/badge"
@@ -18,7 +19,7 @@ export default function ProfileHeader({ user, hideEditLink }: Props) {
   else currentUser = useAppSelector(state => state.UserReducer.user);
   return <div className="profile-header flex justify-between gap-4 md:items-center w-full">
     <Avatar className="with-border w-16 h-16">
-      <AvatarImage src={currentUser?.profile?.imageUrl} />
+      <AvatarImage src={api.getUrlFromPath(currentUser?.profile?.imageUrl)} />
       <AvatarFallback className="uppercase font-semibold">{currentUser?.firstName?.charAt(0)}{currentUser?.lastName?.charAt(0)}</AvatarFallback>
     </Avatar>
     <div className="flex md:items-center gap-4 flex-col md:flex-row justify-between w-full">
@@ -30,11 +31,15 @@ export default function ProfileHeader({ user, hideEditLink }: Props) {
           Joined Since : {new Date(currentUser?.creationDate).toLocaleString("fr-FR")}
         </span>
         <div className="flex gap-2 mt-1 flex-wrap">
-          {user?.specialities && user.specialities.map((spec: any) => <Badge variant="secondary">{spec.category}</Badge>)}
+          {user?.specialities && user.specialities.map((spec: any) => <Badge
+            key={spec.category}
+            variant="secondary">{spec.category}</Badge>)}
         </div>
         <div className="flex gap-2 mt-1 flex-wrap">
           {user?.qualities &&
-            user.qualities.split(",").map((spec: any) => <Badge variant="secondary">{spec}</Badge>)}
+            user.qualities.split(",").map((spec: any) => <Badge
+              key={spec}
+              variant="secondary">{spec}</Badge>)}
         </div>
       </div>
       <div className="user-profile-actions flex gap-2">

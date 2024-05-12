@@ -1,4 +1,5 @@
-const BASE_URL = 'http://localhost:8070' as const;
+// const BASE_URL = 'http://localhost:8070' as const;
+const BASE_URL = 'http://192.168.1.141:8070' as const;
 const API_URL = `${BASE_URL}/api` as const;
 const AUTH_URL =  `${API_URL}/auth` as const;
 const STORAGE_URL = `${BASE_URL}/media` as const;
@@ -456,6 +457,9 @@ async function getActivityById(id: number) {
         console.log(e.message)
     }
 }
+function getUrlFromPath(path: string | undefined): string {
+    return BASE_URL + path;
+}
 async function uploadImage(user_id: number, image: any) {
     try {
         if (!user_id && user_id !== 0) return null;
@@ -563,6 +567,7 @@ const queries = {
     updateAppointment,
     uploadFile,
     getUserDocuments,
-    getAllUserDocuments
+    getAllUserDocuments,
+    getUrlFromPath
 };
 export default queries;

@@ -110,7 +110,7 @@ export default function AgendasPage() {
                   <div className="flex gap-2 items-center w-full">
                     <Image
                       className='rounded-full'
-                      src={appointment?.patient?.profile?.imageUrl || '/user-m.svg'} alt="doctor" width={30} height={30} />
+                      src={api.getUrlFromPath(appointment?.patient?.profile?.imageUrl) || '/user-m.svg'} alt="doctor" width={30} height={30} />
                     <span className="font-semibold capitalize truncate">{userFullName}</span>
                   </div>
                   <span className="text-sm">{appointment.type}</span>

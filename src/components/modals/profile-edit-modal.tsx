@@ -79,7 +79,7 @@ export default function ProfileEditModal() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-[300px_1fr]">
             <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-44 w-44 object-cover">
-                <AvatarImage alt="Profile Image" src={user?.profile?.imageUrl || "user-m.svg"} />
+                <AvatarImage alt="Profile Image" src={api.getUrlFromPath(user?.profile?.imageUrl) || "user-m.svg"} />
                 <AvatarFallback className="uppercase">{user?.firstName?.charAt(0) + user?.lastName?.charAt(0)}</AvatarFallback>
               </Avatar>
               {fileError && <div className="text-red-500">{fileError}</div>}

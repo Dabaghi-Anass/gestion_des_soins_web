@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Link from "next/link";
+import api from "@/api/api"
 import { Button } from "./ui/button";
 import Dots from "./ui/dots";
 type Props = {
@@ -14,7 +15,7 @@ export function TreatmentRequest({ request, selected, onClick, onDelete, onReply
   return <div onClick={onClick} className={`with-border p-4 flex flex-col gap-2 bg-primary-foreground rounded-lg treatment-request cursor-pointer ${selected && "active-request"}`}>
     <div className="header flex justify-between">
       <Avatar>
-        <AvatarImage className="rounded-full" src={request?.sentBy?.profile?.imageUrl || ""} />
+        <AvatarImage className="rounded-full" src={api.getUrlFromPath(request?.sentBy?.profile?.imageUrl) || ""} />
         <AvatarFallback className="rounded-full uppercase" >{request?.sentBy?.firstName?.charAt(0)}{request?.sentBy?.lastName?.charAt(0)}</AvatarFallback>
       </Avatar>
       <Popover>

@@ -1,3 +1,4 @@
+import Dynamic from "@/components/dynamic-route";
 import NavBar from "@/components/navbar";
 import SideNav from "@/components/side-nav";
 import { Toaster } from "@/components/ui/sonner";

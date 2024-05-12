@@ -1,3 +1,4 @@
+import api from "@/api/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProfileModal from "../modals/user-profile-modal";
 
@@ -5,7 +6,7 @@ export default function UserBadge({ user }: { user: any }) {
   return <div className="w-full flex items-center gap-2">
     <ProfileModal user={user}>
       <Avatar className="rounded-full">
-        <AvatarImage src={user.profile.imageUrl} />
+        <AvatarImage src={api.getUrlFromPath(user.profile.imageUrl)} />
         <AvatarFallback className="uppercase">
           {user.firstName.charAt(0) + user.lastName.charAt(0)}
         </AvatarFallback>
