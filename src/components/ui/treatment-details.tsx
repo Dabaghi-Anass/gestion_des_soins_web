@@ -106,7 +106,7 @@ export default function TreatmentDetails({ treatment }: Props) {
                   alt="Patient Avatar"
                   height={64}
                   className="w-full h-full rounded-full"
-                  src={treatment.sentTo?.profile?.imageUrl || "/user-m.svg"}
+                  src={api.getUrlFromPath(treatment.sentTo?.profile?.imageUrl) || "/user-m.svg"}
                   style={{
                     aspectRatio: "64/64",
                     objectFit: "cover",
@@ -155,7 +155,7 @@ export default function TreatmentDetails({ treatment }: Props) {
                   height={64}
                   loading="lazy"
                   className="w-full h-full rounded-full"
-                  src={treatment.sentBy?.profile?.imageUrl || "/user-m.svg"}
+                  src={api.getUrlFromPath(treatment.sentBy?.profile?.imageUrl) || "/user-m.svg"}
                   style={{
                     aspectRatio: "64/64",
                     objectFit: "cover",

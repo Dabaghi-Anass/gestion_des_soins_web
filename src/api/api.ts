@@ -1,5 +1,5 @@
-// const BASE_URL = 'http://localhost:8070' as const;
-const BASE_URL = 'http://192.168.1.141:8070' as const;
+const BASE_URL = 'http://localhost:8070' as const;
+// const BASE_URL = 'http://100.103.110.93:8070' as const;
 const API_URL = `${BASE_URL}/api` as const;
 const AUTH_URL =  `${API_URL}/auth` as const;
 const STORAGE_URL = `${BASE_URL}/media` as const;

@@ -119,9 +119,11 @@ export default function RegisterPage() {
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-background'>
 		<div className="flex items-center justify-center gap-4 w-full">
 			<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
-			<Button onClick={async () => {
-				await api.logout()
-			}} type='button' className="text-sm" variant="destructive">Se deconnecter</Button>
+			{currentUser &&
+				<Button onClick={async () => {
+					await api.logout()
+				}} type='button' className="text-sm" variant="destructive">Se deconnecter</Button>
+			}
 		</div>
 		{loading && <Loading />}
 		{component}

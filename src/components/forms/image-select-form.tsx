@@ -62,7 +62,7 @@ export default function ProfileImageSelect({
             <input onChange={handlePickImage} type="file" accept="image/*" className="hidden" />
             <Image src={imageIcon.src} alt="edit image icon" className="max-w-full aspect-square" width={200} height={200} />
           </label>
-          <Image src={api.getUrlFromPath(imageUrl)} loading="lazy" alt="profile image" className="rounded-lg w-full h-full object-cover max-w-md" width={200} height={200} />
+          <Image src={!(imageProp?.startsWith("/user-") || imageProp?.startsWith("blob:")) ? api.getUrlFromPath(imageUrl) : imageUrl} loading="lazy" alt="profile image" className="rounded-lg w-full h-full object-cover max-w-md" width={200} height={200} />
         </div>
         <div className="button-group flex gap-4 w-full justify-center">
           <Form.Button variant="outline" onClick={onBack}>retourne</Form.Button>

@@ -1,3 +1,4 @@
+"use client"
 import { Progress } from '@/components/ui/progress';
 type Props = {
   currentStep: number;
