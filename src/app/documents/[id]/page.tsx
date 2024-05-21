@@ -15,7 +15,7 @@ import { useAppSelector } from "@/hooks/redux-hooks"
 import { generateNumberArray, paginate } from "@/lib/utils/utils"
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 export default function DocumentsPage() {
   const pageSize = 6;
   const { id } = useParams()
@@ -25,12 +25,19 @@ export default function DocumentsPage() {
     queryFn: async ({ queryKey }) => await api.getAllUserDocuments(+queryKey[1]),
   })
   const [currentPage, setCurrentPage] = useState<number>(0)
+  const [documents, setDocuments] = useState<any[]>()
+  useEffect(() => {
+    setDocuments(data)
+  }, [data])
   if (!data || isLoading) return <Loading />
   return <section className="p-4 w-full h-full bg-primary-foreground">
-    {data?.length === 0 ?
-      <DataNotFound /> :
+    {documents === null ? <DataNotFound /> :
       <div className="flex flex-col justify-between h-full">
-        <DocumentTable isCurrentUser={+currentUser?.id === +id} data={paginate(data, pageSize, currentPage + 1)} />
+        <DocumentTable
+          ownerId={id as string}
+          onUpdate={(data: any[]) => setDocuments(data)}
+          isCurrentUser={+currentUser?.id === +id}
+          data={paginate(documents || [], pageSize, currentPage + 1)} />
         <div className="flex gap-4 p-4 justify-center">
           <Pagination className="cursor-pointer">
             <PaginationContent>

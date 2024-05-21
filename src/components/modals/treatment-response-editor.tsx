@@ -54,13 +54,15 @@ export default function TreatmentResponseEditor({ onCloseModal, onUpdateRequest,
     if (!request?.responded) {
       response = await api.addTreatment(treatmentDTO);
       if (response) {
-        toast(`Treatment created for user ${request.sentBy.firstName} ${request.sentBy.lastName}`)
+        toast(`Treatment created for user ${request?.sentBy?.firstName} ${request?.sentBy?.lastName}`)
       }
     } else {
       treatmentDTO.id = treatment.id;
       response = await api.updateTreatment(treatmentDTO);
       if (response) {
-        toast(`Treatment modified for user ${request.sentBy.firstName} ${request.sentBy.lastName}`)
+        toast(`Treatment modified for user ${request?.sentBy?.firstName} ${request?.sentBy?.lastName}`)
+      } else {
+        toast("Traitement non modifié merci de respecter le nombre maximum de caractères")
       }
     }
     onUpdateRequest(response.request)
@@ -68,13 +70,15 @@ export default function TreatmentResponseEditor({ onCloseModal, onUpdateRequest,
   async function fetchResponse(id: number) {
     const response = await api.getTreatmentByRequestId(id)
     if (response) {
-      setTitle(response.title)
-      setModel(response.response)
+      setTitle(response?.title)
+      setModel(response?.response)
       setTreatment(response)
+    } else {
+      toast("Error Réseau")
     }
   }
   useEffect(() => {
-    if (request?.responded) fetchResponse(request.id)
+    if (request?.responded) fetchResponse(request?.id)
     setTreatment(null)
     setTitle("")
     setModel("")
@@ -92,7 +96,7 @@ export default function TreatmentResponseEditor({ onCloseModal, onUpdateRequest,
             config={{
               placeholderText: 'Ecrire une response detaillée ici...',
               charCounterCount: true,
-              charCounterMax: 3000,
+              charCounterMax: 1000,
               attribution: false,
             }}
             onModelChange={handleModelChange}

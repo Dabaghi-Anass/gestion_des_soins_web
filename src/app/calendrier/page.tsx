@@ -45,7 +45,7 @@ export default function CalendrierPage() {
     const startOfWeek = weekStart(date);
     const endOfWeek = weekEnd(date);
     endOfWeek.setDate(endOfWeek.getDate() + 1);
-    return (appointmentDate >= startOfWeek && appointmentDate <= endOfWeek) && appointment.accepted;
+    return (appointmentDate >= startOfWeek && appointmentDate <= endOfWeek) && appointment.accepted && appointment.duration > 0;
   });
 
   const groupedAppointments = groupBy(filteredAppointments || [], (appointment) => {

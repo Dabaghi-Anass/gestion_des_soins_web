@@ -70,8 +70,8 @@ export default function TreatmentDetails({ treatment }: Props) {
       if (dark) document.documentElement.classList.toggle("dark", true);
       element.style.width = oldWidth;
       const response = await api.uploadFile(treatment?.sentTo?.id, pdfFile);
-      if (response) toast("document téléchargé avec succès");
-      else toast.error("document téléchargé avec succès")
+      if (response?.id) toast("document téléchargé avec succès");
+      else toast.error("error lors de la telechargement de document")
     });
   }
   useEffect(() => {

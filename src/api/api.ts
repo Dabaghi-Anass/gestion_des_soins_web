@@ -1,5 +1,5 @@
-const BASE_URL = 'http://localhost:8070' as const;
-// const BASE_URL = 'http://100.103.110.93:8070' as const;
+// const BASE_URL = 'http://192.168.1.116:8070' as const;
+const BASE_URL = 'http://192.168.1.106:8070' as const;
 const API_URL = `${BASE_URL}/api` as const;
 const AUTH_URL =  `${API_URL}/auth` as const;
 const STORAGE_URL = `${BASE_URL}/media` as const;
@@ -524,6 +524,15 @@ async function updateAppointment(id: number, appointment: any) {
         console.log(e.message)
     }
 }
+async function deleteDocumentById(doc_id: number) {
+    try {
+        if (!doc_id && doc_id !== 0) return null;
+        await http.delete(`${STORAGE_URL}/delete-doc/${doc_id}`);
+        return null;
+    } catch (e: any) {
+        alert(e.message)
+    }
+}
 
 const queries = {
     registerUser,
@@ -568,6 +577,7 @@ const queries = {
     uploadFile,
     getUserDocuments,
     getAllUserDocuments,
-    getUrlFromPath
+    getUrlFromPath,
+    deleteDocumentById
 };
 export default queries;
