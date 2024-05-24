@@ -44,7 +44,7 @@ export default function AgendasPage() {
     const startOfWeek = weekStart(date);
     const endOfWeek = weekEnd(date);
     endOfWeek.setDate(endOfWeek.getDate() + 1);
-    return (appointmentDate >= startOfWeek && appointmentDate <= endOfWeek) && appointment.accepted;
+    return (appointmentDate >= startOfWeek && appointmentDate <= endOfWeek) && appointment.accepted && appointment.duration > 0;
   });
 
   const groupedAppointments = groupBy(filteredAppointments || [], (appointment) => {
@@ -100,7 +100,7 @@ export default function AgendasPage() {
                 endDate.setMinutes(startDate.getMinutes() + minutesAmount);
                 let dateRange = `${getTimeString(startDate)} - ${getTimeString(endDate)}`
                 let hue = colorsMap[appointment.id] || randomHue();
-                return <Link href={`/activities/activity/${appointment.id}`} className="appintment-card w-full rounded-lg p-4 flex flex-col gap-2 absolute" style={{
+                return <Link href={`#`} className="appintment-card w-full rounded-lg p-4 flex flex-col gap-2 absolute" style={{
                   height: `calc(${(amount / 10) * 100}%)`,
                   top: `${180 * (startDate.getHours() + (startDate.getMinutes() / 60) - 8)}px`,
                   left: 0,
@@ -110,7 +110,7 @@ export default function AgendasPage() {
                   <div className="flex gap-2 items-center w-full">
                     <Image
                       className='rounded-full'
-                      src={api.getUrlFromPath(appointment?.patient?.profile?.imageUrl) || '/user-m.svg'} alt="doctor" width={30} height={30} />
+                      src={appointment?.patient?.profile?.imageUrl.startsWith("http") ? appointment?.patient?.profile?.imageUrl : (api.getUrlFromPath(appointment?.patient?.profile?.imageUrl) || '/user-m.svg')} alt="doctor" width={30} height={30} />
                     <span className="font-semibold capitalize truncate">{userFullName}</span>
                   </div>
                   <span className="text-sm">{appointment.type}</span>

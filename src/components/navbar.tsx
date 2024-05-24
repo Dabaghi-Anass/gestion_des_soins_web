@@ -2,6 +2,7 @@
 import api from '@/api/api'
 import Loading from "@/components/ui/loading"
 import useAuth from "@/hooks/use-auth"
+import { getRoleName } from '@/lib/utils/utils'
 import { Moon, Sun } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from 'react'
@@ -12,6 +13,14 @@ export default function NavBar() {
   const pathname = usePathname();
   const [darkMode, setDarkMode] = useState(false)
   const isAuthPage = pathname === "/login" || pathname === "/register";
+  const roles: {
+    [key: string]: string | undefined
+  } = {
+    "DOCTOR": "medcine",
+    "PATIENT": "patient",
+    "CAREGIVER": "aid soignant",
+
+  }
   const [links, setLinks] = useState([
     { path: "/home", label: "home" },
   ]);
@@ -63,7 +72,7 @@ export default function NavBar() {
           }} className="only-md-screen" />
           <div className="nav-user-name-displayer flex flex-col items-start">
             <span className="leading-tight capitalize font-bold">{user?.firstName} {user?.lastName}</span>
-            <span className='leading-tight'>as {user?.role?.startsWith("A") ? "an" : "a"} <span className='lowercase'>{user?.role}</span></span>
+            <span className='leading-tight'><span className='lowercase'>{getRoleName(user?.role)}</span></span>
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ type Props = {
 export default function ActivityHeader({ searchQuery, sortParam, pickedStatusList, statusList, onSearch, onListUpdate, onSortParam }: Props) {
   return <header className="border-b bg-white px-6 py-4 dark:border-gray-800 dark:bg-gray-900">
     <div className="flex flex-col lg:flex-row gap-4 lg:items-center justify-between">
-      <h1 className="text-xl font-semibold">Requetes de Activité</h1>
+      <h1 className="text-xl font-semibold">Requetes D'Activité</h1>
       <div className="flex items-center space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

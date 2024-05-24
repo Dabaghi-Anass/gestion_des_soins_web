@@ -524,6 +524,18 @@ async function updateAppointment(id: number, appointment: any) {
         console.log(e.message)
     }
 }
+async function updateActivity(id: number, appointment: any) {
+    try {
+        if (!id && id !== 0) return null;
+        const response = await http.put(`${ACTIVITY_URL}/update/${id}`,appointment);
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
+    } catch (e: any) {
+        console.log(e.message)
+    }
+}
 async function deleteDocumentById(doc_id: number) {
     try {
         if (!doc_id && doc_id !== 0) return null;
@@ -574,6 +586,7 @@ const queries = {
     getActivityById,
     uploadImage,
     updateAppointment,
+    updateActivity,
     uploadFile,
     getUserDocuments,
     getAllUserDocuments,

@@ -101,7 +101,7 @@ export default function CalendrierPage() {
                 endDate.setMinutes(startDate.getMinutes() + minuteAmount)
                 let dateRange = `${getTimeString(startDate)} - ${getTimeString(endDate)}`
                 let hue = colorsMap[appointment.id] || randomHue();
-                return <Link href={`/appointments/appointment/${appointment.id}`} className="appintment-card w-full rounded-lg p-4 flex flex-col gap-2 absolute" style={{
+                return <Link href={`#`} className="appintment-card w-full rounded-lg p-4 flex flex-col gap-2 absolute" style={{
                   height: `calc(${(amount / 10) * 100}%)`,
                   top: `${180 * (startDate.getHours() + (startDate.getMinutes() / 60) - 8)}px`,
                   left: 0,

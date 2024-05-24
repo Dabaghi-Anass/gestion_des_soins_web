@@ -46,7 +46,7 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
     if (savedAppointment) {
       dispatch(updateAppointment(savedAppointment));
       setDurationModalOpen(false);
-      toast("Appointment Duration Updated succefully");
+      toast("rendez-vous mis à jour avec succès");
     }
   }
   return <Card className="bg-primary-foreground hover:shadow-lg transition-all w-full flex flex-col">
@@ -127,7 +127,7 @@ export default function AppointmentRequestCard({ appointment, disableEditing }: 
                 {appointment.duration}h
               </div> :
               appointment.accepted ?
-                <Button variant="outline" size="sm" onClick={() => setDurationModalOpen(true)}>specify duration</Button> : null
+                <Button variant="outline" size="sm" onClick={() => setDurationModalOpen(true)}>specifier durée</Button> : null
             }
             {appointment.status &&
               <div className="text-sm rounded-lg p-2 py-1 lowercase" style={getBadgeStyle(appointment.status)}>{appointment.status}</div>

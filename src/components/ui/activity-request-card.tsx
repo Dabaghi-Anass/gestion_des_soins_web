@@ -7,14 +7,14 @@ import { Separator } from "@/components/ui/separator"
 import { useAppDispatch } from "@/hooks/redux-hooks"
 import { updateAppointment } from "@/lib/features/appointment-reducer"
 import { getBadgeStyle, getTypeHue } from "@/lib/utils/utils"
-import { Check, CreditCard, SendHorizontal, X } from "lucide-react"
-import Link from "next/link"
+import { Check, CreditCard, X } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 import ActivityModal from "../modals/activity-modal"
 import { Button } from "./button"
+import { Dialog, DialogContent } from "./dialog"
+import { Input } from "./input"
 import UserBadge from "./user-badge"
-import WithToolTip from "./with-tooltip"
 type AppointmentRequestCardProps = {
   appointment: any;
   disableEditing?: boolean;
@@ -23,6 +23,9 @@ export default function ActivityRequestCard({ appointment, disableEditing }: App
   const [modalMessage, setModalMessage] = useState<string>("")
   const [modalTitle, setModalTitle] = useState<string>("")
   const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [duration, setDuration] = useState(0)
+  const [durationModalOpen, setDurationModalOpen] = useState<boolean>(false)
+
   const [modalConfirmAction, setModalConfirmAction] = useState<() => void>(() => { })
   const dispatch = useAppDispatch();
   async function handleAcceptAppointment() {
@@ -38,6 +41,15 @@ export default function ActivityRequestCard({ appointment, disableEditing }: App
     setModalOpen(false);
     toast("Activité Rejeté");
   }
+  async function handleUpdateAppointmentDuration() {
+    const newAppointment = { ...appointment, duration };
+    const savedAppointment = await api.updateActivity(appointment.id, newAppointment);
+    if (savedAppointment) {
+      dispatch(updateAppointment(savedAppointment));
+      setDurationModalOpen(false);
+      toast("activité mise à jour avec succès");
+    }
+  }
   return <Card className="bg-primary-foreground hover:shadow-lg transition-all w-full flex flex-col">
     <ConfirmActionModal
       title={modalTitle}
@@ -46,6 +58,15 @@ export default function ActivityRequestCard({ appointment, disableEditing }: App
       onConfirm={modalConfirmAction}
       onCancel={() => setModalOpen(false)}
     />
+    <Dialog open={durationModalOpen} onOpenChange={(state) => setDurationModalOpen(state)}>
+      <DialogContent>
+        <div className="flex flex-col gap-4">
+          <p className="text-sm text-light">combien de temps pensez-vous être suffisant pour completer cette activité?</p>
+          <Input value={duration} onChange={(e: any) => setDuration(+e.target?.value)} type="number" placeholder="Durée en heures" />
+          <Button onClick={handleUpdateAppointmentDuration}>envoyer</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
     <CardHeader className="flex flex-row justify-between p-4">
       <div className="flex gap-1 items-center">
         <div className="flex gap-2 font-bold items-center">
@@ -102,9 +123,13 @@ export default function ActivityRequestCard({ appointment, disableEditing }: App
               })}</div>
           </div>
           <div className="flex gap-2">
-            <div className="p-1 text-sm rounded-lg bg-amber-400 text-white">
-              {appointment.duration}h
-            </div>
+            {appointment?.duration !== 0 ?
+              <div className="p-1 text-sm rounded-lg bg-amber-400 text-white">
+                {appointment.duration}h
+              </div> :
+              appointment.accepted ?
+                <Button variant="outline" size="sm" onClick={() => setDurationModalOpen(true)}>specifier durée</Button> : null
+            }
             {appointment.status &&
               <div className="text-sm rounded-lg p-2 py-1 lowercase" style={getBadgeStyle(appointment.status)}>{appointment.status}</div>
             }

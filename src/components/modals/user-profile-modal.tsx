@@ -31,8 +31,8 @@ export default function ProfileModal({ user, children }: React.PropsWithChildren
     </DialogTrigger>
     <DialogContent className="w-full max-w-[90vw] h-full overflow-y-scroll max-h-[90vh]">
       <DialogHeader>
-        <DialogTitle>Anass Dabaghi</DialogTitle>
-        <DialogDescription>Patient</DialogDescription>
+        <DialogTitle>{`${user?.firstName} ${user?.lastName}`}</DialogTitle>
+        <DialogDescription>{user?.role}</DialogDescription>
       </DialogHeader>
       <section className="profile-container flex flex-col gap-8 w-full h-full bg-primary-foreground p-6">
         <ProfileHeader user={user} hideEditLink />

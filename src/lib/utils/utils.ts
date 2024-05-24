@@ -132,3 +132,13 @@ export function calculateProgress(now: Date, startHour: number,endHour:number): 
 export function getTimeString(date: Date) {
     return date.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
 }
+
+export function getRoleName(role: string) {
+    const Role :any = {
+        DOCTOR: "Medcine",
+        NURSE: "Infermiere",
+        PATIENT: "Patient",
+        CAREGIVER: "Aide-Soignant",
+    }
+    return Role[role] ?? "Unknown";
+}

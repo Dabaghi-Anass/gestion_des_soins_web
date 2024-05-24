@@ -8,7 +8,7 @@ type Props = {
 export default function ProfileBasicinformations({ user }: Props) {
   const age = user?.profile?.birthDate ? new Date().getFullYear() - new Date(user.profile.birthDate).getFullYear() : null;
   return <div className="p-4 with-border flex flex-col gap-4 rounded-lg w-full sm:row-span-1 lg:row-span-full">
-    <h1 className="font-semibold capitalize mb-4">basic informations</h1>
+    <h1 className="font-semibold capitalize mb-4">informations</h1>
     <InfoWithIcon title="Gender" content={user?.profile?.gender || "male"} icon={<Dna size={20} />} />
     <InfoWithIcon title="Birthday" content={new Date(user?.profile?.birthDate).toLocaleDateString("fr-FR", { dateStyle: "long" }) || "n/a"} icon={<Cake size={20} />} />
     <InfoWithIcon title="Phone Number" content={user?.profile?.phoneNumber || "n/a"} icon={<Phone size={20} />} />
