@@ -16,9 +16,11 @@ import { useSearch } from "@/hooks/use-search"
 import { updateAppointments } from "@/lib/features/appointment-reducer"
 import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
+import dynamic from "next/dynamic"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
-export default function UserActivitiesRequestsPage() {
+
+function UserActivitiesRequestsPage() {
   if (typeof window === 'undefined') return;
   const { id } = useParams();
   const sortMap: {
@@ -221,3 +223,7 @@ function XIcon(props: IconProps) {
     </svg>
   )
 }
+
+export default dynamic(() => Promise.resolve(UserActivitiesRequestsPage), {
+  ssr: false
+});

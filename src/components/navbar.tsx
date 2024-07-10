@@ -4,12 +4,13 @@ import Loading from "@/components/ui/loading"
 import useAuth from "@/hooks/use-auth"
 import { getRoleName } from '@/lib/utils/utils'
 import { Moon, Sun } from "lucide-react"
+import dynamic from 'next/dynamic'
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from 'react'
 import AppBreadCrump from './app-bread-crumb'
 import { Button } from "./ui/button"
 import UserProfileBadge from "./User-profile-badge"
-export default function NavBar() {
+function NavBar() {
   const pathname = usePathname();
   const [darkMode, setDarkMode] = useState(false)
   const isAuthPage = pathname === "/login" || pathname === "/register";
@@ -18,7 +19,7 @@ export default function NavBar() {
   } = {
     "DOCTOR": "medcine",
     "PATIENT": "patient",
-    "CAREGIVER": "aid soignant",
+    "CAREGIVER": "aide soignant",
 
   }
   const [links, setLinks] = useState([
@@ -72,10 +73,15 @@ export default function NavBar() {
           }} className="only-md-screen" />
           <div className="nav-user-name-displayer flex flex-col items-start">
             <span className="leading-tight capitalize font-bold">{user?.firstName} {user?.lastName}</span>
-            <span className='leading-tight'><span className='lowercase'>{getRoleName(user?.role)}</span></span>
+            <span className='leading-tight'><span className='lowercase'>{getRoleName(user?.role || "")}</span></span>
           </div>
         </div>
       </div>
     </nav>
   </>
 }
+
+
+export default dynamic(() => Promise.resolve(NavBar), {
+  ssr: false
+})

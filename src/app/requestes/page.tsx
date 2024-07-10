@@ -1,15 +1,28 @@
 "use client"
 import api from "@/api/api";
-import TreatmentResponseEditor from "@/components/modals/treatment-response-editor";
-import TreatmentRequestDetails from "@/components/treatment-request-details";
-import { TreatmentRequestPatients } from "@/components/treatment-request-patients";
-import Loading from "@/components/ui/loading";
 import { useAppSelector } from "@/hooks/redux-hooks";
 import { useSearch } from "@/hooks/use-search";
 import { useQuery } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-export default function TreatmentsRequestsPage() {
+
+
+const TreatmentResponseEditor = dynamic(() => import("@/components/modals/treatment-response-editor"), {
+  ssr: false
+})
+const TreatmentRequestDetails = dynamic(() => import("@/components/treatment-request-details"), {
+  ssr: false
+})
+const TreatmentRequestPatients = dynamic(() => import("@/components/treatment-request-patients").then(m => m.TreatmentRequestPatients), {
+  ssr: false
+})
+const Loading = dynamic(() => import("@/components/ui/loading"), {
+  ssr: false
+})
+
+
+function TreatmentsRequestsPage() {
   if (typeof window === 'undefined') return;
   const currentUser: any = useAppSelector(state => state.UserReducer.user)
   const [searchQuery, setSearchQuery] = useState<string>("")
@@ -64,3 +77,7 @@ export default function TreatmentsRequestsPage() {
     <TreatmentRequestDetails data={selectedRequest} onEdit={handleEditSelectedRequest} onOpenModal={openResponseModal} />
   </main>
 }
+
+export default dynamic(() => Promise.resolve(TreatmentsRequestsPage), {
+  ssr: false,
+});

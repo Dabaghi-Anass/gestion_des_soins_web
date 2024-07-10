@@ -1,29 +1,57 @@
 "use client"
 import api from "@/api/api"
-import AppointmentRequestCard from "@/components/appointment-request-card"
-import AppointmentsHeader from "@/components/appointments-header"
 import { Button } from "@/components/ui/button"
-import DateRangePicker from "@/components/ui/date-range-picker"
-import Loading from "@/components/ui/loading"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
-} from "@/components/ui/pagination"
-import StatusPicker from "@/components/ui/status-picker"
-import UserPicker from "@/components/ui/user-picker"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux-hooks"
 import { useSearch } from "@/hooks/use-search"
 import { updateAppointments } from "@/lib/features/appointment-reducer"
 import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
 import { FilterX } from "lucide-react"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-export default function AppointmentRequestsPage() {
+
+
+
+const AppointmentsHeader = dynamic(() => import("@/components/appointments-header"), {
+  ssr: false
+})
+const AppointmentRequestCard = dynamic(() => import("@/components/appointment-request-card"), {
+  ssr: false
+})
+const DateRangePicker = dynamic(() => import("@/components/ui/date-range-picker"), {
+  ssr: false
+})
+const Loading = dynamic(() => import("@/components/ui/loading"), {
+  ssr: false
+})
+
+const StatusPicker = dynamic(() => import("@/components/ui/status-picker"), {
+  ssr: false
+})
+const UserPicker = dynamic(() => import("@/components/ui/user-picker"), {
+  ssr: false
+})
+const Pagination = dynamic(() => import("@/components/ui/pagination").then(m => m.Pagination), {
+  ssr: false
+})
+const PaginationContent = dynamic(() => import("@/components/ui/pagination").then(m => m.PaginationContent), {
+  ssr: false
+})
+const PaginationItem = dynamic(() => import("@/components/ui/pagination").then(m => m.PaginationItem), {
+  ssr: false
+})
+const PaginationLink = dynamic(() => import("@/components/ui/pagination").then(m => m.PaginationLink), {
+  ssr: false
+})
+const PaginationNext = dynamic(() => import("@/components/ui/pagination").then(m => m.PaginationNext), {
+  ssr: false
+})
+const PaginationPrevious = dynamic(() => import("@/components/ui/pagination").then(m => m.PaginationPrevious), {
+  ssr: false
+})
+
+function AppointmentRequestsPage() {
   const sortMap: {
     [key: string]: (a: any, b: any) => number;
   } = {
@@ -218,84 +246,6 @@ function CalendarCheckIcon(props: IconProps) {
 }
 
 
-function CalendarIcon(props: IconProps) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-      <line x1="16" x2="16" y1="2" y2="6" />
-      <line x1="8" x2="8" y1="2" y2="6" />
-      <line x1="3" x2="21" y1="10" y2="10" />
-    </svg>
-  )
-}
-
-
-function CheckIcon(props: IconProps) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  )
-}
-
-
-function ChevronDownIcon(props: IconProps) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  )
-}
-
-function XIcon(props: IconProps) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
-  )
-}
+export default dynamic(() => Promise.resolve(AppointmentRequestsPage), {
+  ssr: false
+})
