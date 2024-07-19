@@ -2,6 +2,7 @@ import Dynamic from "@/components/dynamic-route";
 import NavBar from "@/components/navbar";
 import SideNav from "@/components/side-nav";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from '@vercel/analytics/react';
 import QueryProvider from "@/lib/query-client-provider";
 import StoreProvider from "@/lib/storeProvider";
 import "@/styles/index.css";
@@ -36,6 +37,7 @@ export default function RootLayout({
                 {children}
               </main>
             </div>
+            <Analytics />
           </body>
         </StoreProvider>
       </QueryProvider>

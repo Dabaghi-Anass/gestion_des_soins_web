@@ -9,6 +9,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { z } from "zod";
+
+console.log(process.env.NEXT_PUBLIC_API_DOMAIN);
 const RegisterSchema = z
 	.object({
 		username: z

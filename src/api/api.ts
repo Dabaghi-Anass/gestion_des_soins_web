@@ -1,5 +1,4 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_DOMAIN;
-console.log(BASE_URL);
 const API_URL = `${BASE_URL}/api` as const;
 const AUTH_URL = `${API_URL}/auth` as const;
 const STORAGE_URL = `${BASE_URL}/media` as const;
