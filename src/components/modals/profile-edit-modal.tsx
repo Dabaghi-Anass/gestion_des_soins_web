@@ -70,7 +70,7 @@ export default function ProfileEditModal() {
           </Button>
         </WithToolTip>
       </DialogTrigger>
-      <DialogContent className="w-full lg:max-w-[90vw] max-w-[97vw]">
+      <DialogContent className="w-full lg:max-w-[90vw] max-w-[97vw] max-h-[90vh] overflow-y-scroll">
         <div className="mx-auto space-y-8 py-12 w-full">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Edit Profile</h1>
@@ -79,11 +79,14 @@ export default function ProfileEditModal() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-[300px_1fr]">
             <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-44 w-44 object-cover">
-                <AvatarImage alt="Profile Image" src={api.getUrlFromPath(user?.profile?.imageUrl) || "user-m.svg"} />
+                <AvatarImage alt="Profile Image"
+                  src={!user?.profile?.imageUrl ? "/user-m.svg"
+                    : user?.profile?.imageUrl?.startsWith("blob") ? user?.profile?.imageUrl
+                      : api.getUrlFromPath(user?.profile?.imageUrl)} />
                 <AvatarFallback className="uppercase">{user?.firstName?.charAt(0) + user?.lastName?.charAt(0)}</AvatarFallback>
               </Avatar>
               {fileError && <div className="text-red-500">{fileError}</div>}
-              <Input type='file' onChange={(e) => setImage(e.target.files?.[0])} placeholder="Changer L'image" />
+              <Input type='file' accept="image/*" onChange={(e) => setImage(e.target.files?.[0])} placeholder="Changer L'image" />
             </div>
             <div className="space-y-6">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

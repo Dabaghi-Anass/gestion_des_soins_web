@@ -56,7 +56,7 @@ function TreatmentsRequestsPage() {
       toast.error("Failed to fetch treatment requests server responded with this error : " + error.message)
   }, [error])
   if (isLoading) return <Loading />
-  return <main className="appointments-container flex w-full h-full p-4 gap-2">
+  return <main className="appointments-container flex w-full h-full min-h-full p-4 gap-2">
     <TreatmentRequestPatients
       onDeleteRequest={(id) => {
         setRequests(requests.filter((request: any) => request.id !== id))

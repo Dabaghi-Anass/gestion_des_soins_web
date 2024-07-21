@@ -1,4 +1,5 @@
 "use client";
+import api from "@/api/api";
 import caregiverSvg from "@/assets/svgs/caregiver.svg";
 import doctorSvg from "@/assets/svgs/doctor.svg";
 import nurseSvg from "@/assets/svgs/nurse.svg";
@@ -14,10 +15,14 @@ type Props = {
   role?: Role;
 }
 export default function UserTypeSelector({ onBack, onNext, onSkip, role }: Props) {
-  const [selectedRole, setSelectedRole] = useState<Role | undefined>(role);
+  const [selectedRole, setSelectedRole] = useState<Role>();
   useEffect(() => {
-    if (!selectedRole) return;
-    onSkip();
+    (async () => {
+      const user = await api.currentUser()
+      setSelectedRole(await user.role);
+      if (!user.role) return;
+      onSkip();
+    })()
   }, [])
   return (
     <div className="w-full h-full flex flex-col items-center p-4 ">

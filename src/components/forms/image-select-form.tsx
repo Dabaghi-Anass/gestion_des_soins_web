@@ -40,7 +40,7 @@ export default function ProfileImageSelect({
     if (!imageFile) return;
     onImage(URL.createObjectURL(imageFile));
     const imageUrlFromDB = await api.uploadImage(user?.id, imageFile);
-    console.log(imageUrlFromDB)
+    console.log(imageUrlFromDB);
     if (imageUrlFromDB) onImage(imageUrlFromDB);
     setLoading(false);
   }

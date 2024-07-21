@@ -31,7 +31,8 @@ const registerUser = async (user: User) => {
 };
 const logout = async () => {
 	try {
-		return await http.get(`${AUTH_URL}/logout`);
+		localStorage.removeItem("x-auth");
+		await http.get(`${AUTH_URL}/logout`);
 	} catch (e: any) {
 		return null;
 	}

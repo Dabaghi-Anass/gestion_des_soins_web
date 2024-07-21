@@ -8,7 +8,6 @@ import UserTypeSelector from "@/components/forms/user-type-selector";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/ui/loading";
 import { StepProgress } from "@/components/ui/progress-steps";
-import { useAppSelector } from "@/hooks/redux-hooks";
 import { RegisterUserFormData, Role, User, UserProfile } from "@/types/types";
 import { OctagonAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -21,15 +20,9 @@ export default function RegisterPage() {
 	const router = useRouter()
 	const [currentComponentIndex, setCurrentComponentIndex] = useState<number>(1); //starts from 1
 	const [loading, setLoading] = useState<boolean>(false);
-	const currentUser = useAppSelector((state: any) => state.UserReducer.user);
-	const [user, setUser] = useState<any>(currentUser);
+	const [user, setUser] = useState<any>(null);
 	const [imageUrl, setImageUrl] = useState<string | null>(null);
-	function handleNext(summary: string, message: string) {
-		setCurrentComponentIndex((prev) => prev + 1);
-		toast(summary, {
-			description: message,
-		})
-	}
+
 	const components = [
 		<RegisterForm
 			onSkip={() => setCurrentComponentIndex(2)}
@@ -111,17 +104,23 @@ export default function RegisterPage() {
 		document.documentElement.style.setProperty("--nav-height", "0");
 		const isFullyRegistred = (user?.profile?.imageUrl && user?.profile?.address && user?.role && user?.username)
 		if (isFullyRegistred) {
-			if (user.role === "DOCTOR" && user?.specialities?.length) window.location.replace("/")
-			else if (user.role === "NURSE" && user?.qualities?.length) window.location.replace("/")
-			else if (user.role === "CAREGIVER") window.location.replace("/")
+			if (user.role === "DOCTOR" && user?.specialities?.length) router.replace("/")
+			else if (user.role === "NURSE" && user?.qualities?.length) router.replace("/")
+			else if (user.role === "CAREGIVER") router.replace("/")
 		}
 	}, [user])
+	useEffect(() => {
+		(async () => {
+			setUser(await api.currentUser());
+		})()
+	}, [currentComponentIndex])
 	return <main className='w-full flex flex-col gap-8 items-center md:px-8 md:py-2 md:max-w-50 bg-primary-background'>
 		<div className="flex items-center justify-center gap-4 w-full">
 			<StepProgress currentStep={currentComponentIndex} stepsCount={components.length} />
-			{currentUser &&
+			{user &&
 				<Button onClick={async () => {
 					await api.logout()
+					window.location.replace("/");
 				}} type='button' className="text-sm" variant="destructive">Se deconnecter</Button>
 			}
 		</div>

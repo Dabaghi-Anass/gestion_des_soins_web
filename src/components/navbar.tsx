@@ -14,14 +14,7 @@ function NavBar() {
   const pathname = usePathname();
   const [darkMode, setDarkMode] = useState(false)
   const isAuthPage = pathname === "/login" || pathname === "/register";
-  const roles: {
-    [key: string]: string | undefined
-  } = {
-    "DOCTOR": "medcine",
-    "PATIENT": "patient",
-    "CAREGIVER": "aide soignant",
 
-  }
   const [links, setLinks] = useState([
     { path: "/home", label: "home" },
   ]);
@@ -43,10 +36,8 @@ function NavBar() {
   if (pending) return <Loading />;
   const logout = async () => {
     localStorage.removeItem("x-auth");
-    const logoutPromise = await api.logout();
-    if (logoutPromise) {
-      window.location.href = "/login";
-    }
+    await api.logout();
+    window.location.replace("/login")
   }
   const toggleDarkMode = () => {
     setDarkMode(p => !p);
@@ -65,12 +56,12 @@ function NavBar() {
         <Button onClick={toggleDarkMode} variant="ghost" className='p-0 aspect-square'>
           {!darkMode ? <Moon color='#aaa' /> : <Sun color='#fff' />}
         </Button>
-        <div className="dark:bg-slate-700 bg-slate-200 w-[1px] self-stretch"></div>
+        {/* <div className="dark:bg-slate-700 bg-slate-200 w-[1px] self-stretch"></div> */}
         <div className="flex items-center py-3 gap-4 text-secondary-foreground">
           <UserProfileBadge lastLogin={lastLogin || 0} onLogout={logout} user={user || {
             username: "no user",
             password: "doctor",
-          }} className="only-md-screen" />
+          }} />
           <div className="nav-user-name-displayer flex flex-col items-start">
             <span className="leading-tight capitalize font-bold">{user?.firstName} {user?.lastName}</span>
             <span className='leading-tight'><span className='lowercase'>{getRoleName(user?.role || "")}</span></span>
