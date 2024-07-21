@@ -6,7 +6,7 @@ import { useAppSelector } from "@/hooks/redux-hooks";
 
 export default function ProfilePage() {
   const currentUser: any = useAppSelector(state => state.UserReducer.user);
-  return <section className="profile-container flex flex-col gap-8 w-full h-full bg-primary-foreground p-6">
+  return <section className="profile-container flex flex-col gap-8 w-full h-full bg-primary-foreground p-6 overflow-y-scroll">
     <ProfileHeader user={currentUser} />
     <div className="w-full h-full px-1 overflow-y-scroll gap-4 grid lg:grid-cols-3 grid-flow-row">
       <ProfileContent user={currentUser} currentUser />

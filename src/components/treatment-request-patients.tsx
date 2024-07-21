@@ -42,7 +42,7 @@ export function TreatmentRequestPatients({ requests, onSearch, onReply, onDelete
       }}
     />
     <div className="pr-4 py-2 bg-primary-foreground  flex items-center rounded-lg border shadow-sm">
-      <Input type="search" onInput={(e: any) => onSearch(e?.target?.value)} name="patient-search" placeholder='search patient' className="focus-visible:ring-0 bg-primary-foreground border-0 shadow-transparent" />
+      <Input type="search" onInput={(e: any) => onSearch(e?.target?.value)} name="patient-search" placeholder='chercher un patient' className="focus-visible:ring-0 bg-primary-foreground border-0 shadow-transparent" />
       <div className="text-gray-600">
         <Search size={20} />
       </div>

@@ -63,7 +63,7 @@ export default function TreatmentRequestDetails({ data, onEdit, onOpenModal }: P
   }
   if (!request)
     return <section className="profile bg-primary-foreground rounded-lg with-border flex flex-col gap-8 w-full p-6 items-center justify-center">
-      <h1 className="text-3xl font-bold text-gray-400">no request selected</h1>
+      <h1 className="text-3xl font-bold text-gray-400">clicker sur une requete pour le selectionner</h1>
     </section>
   if (isLoading) return <Loading />
   return <section className="profile bg-primary-foreground rounded-lg with-border flex flex-col gap-8 w-full p-6 overflow-y-scroll relative">

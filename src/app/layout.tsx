@@ -28,7 +28,7 @@ export default function RootLayout({
           <body className={inter.className}>
             <SideNav />
             <Toaster />
-            <div className="flex flex-col w-full h-full">
+            <div className="flex flex-col w-full h-screen">
               <NavBar />
               <main className="main-content bg-secondary">
                 <AuthProvider>
