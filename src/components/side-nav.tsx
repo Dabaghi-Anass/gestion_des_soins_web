@@ -28,7 +28,7 @@ export default function SideNav() {
     </Button>
     <nav className="flex flex-col gap-8 p-4">
       <Link href="/">
-        <AppLogo navOpen={open} />
+        <AppLogo />
       </Link>
       {currentUser?.role === "CAREGIVER" ?
         <>
