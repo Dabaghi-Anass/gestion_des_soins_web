@@ -9,7 +9,7 @@ type Props = {
 const Loading = ({ scope = "body", type = "bars", color = "#2563eb", ...rest }: React.PropsWithChildren<Props>) => {
     const isBodyScope = scope === "body" as const;
     return (
-        <div className={`${isBodyScope ? "fixed" : "absolute"} backdrop-blur-sm grid place-content-center inset-0 bg-white dark:bg-slate-700 bg-opacity-50 backdrop:filter backdrop:blur-sm z-50`}>
+        <div className={`${isBodyScope ? "fixed" : "absolute"} backdrop-blur-sm grid place-content-center inset-0 bg-white dark:bg-slate-700 bg-opacity-50 backdrop:filter backdrop:blur-sm z-40`}>
             <ReactLoading type={type} color={color}  {...rest} />
         </div>
     );

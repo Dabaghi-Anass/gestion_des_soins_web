@@ -1,3 +1,4 @@
+import { LoadingScreen } from "@/components/loading-screen";
 import NavBar from "@/components/navbar";
 import SideNav from "@/components/side-nav";
 import { Toaster } from "@/components/ui/sonner";
@@ -55,6 +56,7 @@ export default function RootLayout({
       <QueryProvider>
         <StoreProvider>
           <body className={inter.className}>
+            <LoadingScreen />
             <SideNav />
             <Toaster />
             <div className="flex flex-col w-full h-screen">

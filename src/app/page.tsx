@@ -9,5 +9,5 @@ export default function Home() {
 		if (user?.role === "CAREGIVER") router.replace("/agendas")
 		else router.replace("/calendrier")
 	}, [user])
-	return <div className="w-full h-full grid place-content-center">Redirecting...</div>;
+	return <div className="w-full h-full grid place-content-center text-lg">Redirecting...</div>;
 }

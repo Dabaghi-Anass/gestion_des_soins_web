@@ -212,3 +212,18 @@ input:focus {
 	left: 0;
 	border: 1px dashed var(--primary-clr);
 }
+
+.logoSvg {
+	transform-style: preserve-3d;
+	/*make it rotate in all axes*/
+	animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotateX(5deg) rotateY(0deg);
+	}
+	100% {
+		transform: rotateX(5deg) rotateY(360deg);
+	}
+}
