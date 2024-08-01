@@ -25,7 +25,7 @@ export default function UserProfileBadge({ className, lastLogin, user, onLogout 
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className={cn("hover:opacity-65 transition-all duration-300", className)}>
-          <AvatarImage src={user.profile?.imageUrl?.startsWith("/user") ? user.profile?.imageUrl : api.getUrlFromPath(user.profile?.imageUrl)} />
+          <AvatarImage src={user.profile?.imageUrl?.startsWith("/user") ? user.profile?.imageUrl : (api.getUrlFromPath(user.profile?.imageUrl) || '/user-m.svg')} />
           <AvatarFallback>
             {user.firstName?.toUpperCase().slice(0, 1)}
             {user.lastName?.toUpperCase().slice(0, 1)}

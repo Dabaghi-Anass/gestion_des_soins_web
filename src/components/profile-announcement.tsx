@@ -26,7 +26,7 @@ export default function ProfileAnnouncement({ user }: { user: any }) {
               owner={doc.owner}
               creator={doc.creator}
               size={doc.size}
-              url={api.getUrlFromPath(doc.url)}
+              url={api.getUrlFromPath(doc.url) || "/"}
             />)
           }
         </div>

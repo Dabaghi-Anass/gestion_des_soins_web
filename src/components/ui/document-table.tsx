@@ -120,7 +120,7 @@ export default function DocumentTable({ data, inModal, ownerId, onUpdate, isCurr
                   </Link>
                 </TableCell>
                 <TableCell>
-                  <Link href={api.getUrlFromPath(document.url)} download target="_blank" className="link">
+                  <Link href={api.getUrlFromPath(document.url) || "/"} download target="_blank" className="link">
                     telecharger
                   </Link>
                 </TableCell>

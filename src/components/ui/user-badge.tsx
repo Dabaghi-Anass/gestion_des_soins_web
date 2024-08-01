@@ -6,7 +6,7 @@ export default function UserBadge({ user }: { user: any }) {
   return <div className="w-full flex items-center gap-2">
     <ProfileModal user={user}>
       <Avatar className="rounded-full">
-        <AvatarImage src={api.getUrlFromPath(user.profile.imageUrl)} />
+        <AvatarImage src={api.getUrlFromPath(user.profile.imageUrl) || "/user-m.svg"} />
         <AvatarFallback className="uppercase">
           {user.firstName.charAt(0) + user.lastName.charAt(0)}
         </AvatarFallback>

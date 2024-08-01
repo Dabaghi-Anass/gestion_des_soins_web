@@ -19,7 +19,7 @@ export default function ProfileHeader({ user, hideEditLink }: Props) {
   else currentUser = useAppSelector(state => state.UserReducer.user);
   return <div className="profile-header flex justify-between gap-4 md:items-center w-full">
     <Avatar className="with-border w-16 h-16">
-      <AvatarImage src={api.getUrlFromPath(currentUser?.profile?.imageUrl)} />
+      <AvatarImage src={api.getUrlFromPath(currentUser?.profile?.imageUrl) || "/user-m.svg"} />
       <AvatarFallback className="uppercase font-semibold">{currentUser?.firstName?.charAt(0)}{currentUser?.lastName?.charAt(0)}</AvatarFallback>
     </Avatar>
     <div className="flex md:items-center gap-4 flex-col md:flex-row justify-between w-full">

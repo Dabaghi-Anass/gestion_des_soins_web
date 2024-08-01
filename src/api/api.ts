@@ -513,7 +513,8 @@ async function getActivityById(id: number) {
 		console.log(e.message);
 	}
 }
-function getUrlFromPath(path: string | undefined): string {
+function getUrlFromPath(path: string | undefined): string | null {
+	if (!path) return null;
 	return BASE_URL! + path;
 }
 async function uploadImage(user_id: number, image: any) {
